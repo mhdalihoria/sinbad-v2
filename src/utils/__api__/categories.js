@@ -1,5 +1,3 @@
-import axios from "axios";
-
 const getAllCategories = (async () => {
   const myHeaders = new Headers();
   myHeaders.append("X-localization", "ar");
@@ -25,6 +23,6 @@ const getAllCategories = (async () => {
 }) ();
 
 const allCategories = await getAllCategories;
-export { allCategories };
+export default allCategories ;
 
 

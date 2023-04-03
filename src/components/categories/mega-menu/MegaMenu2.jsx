@@ -15,8 +15,8 @@ const MegaMenu2 = ({
       ml: "1rem",
       py: "0.5rem"
     }}>
-        {data?.map(item => <CategoryMenuItem href={item.href} icon={item.icon} key={item.title} title={item.title} caret={!!item.menuData}>
-            {item.menuData && <MegaMenu3 minWidth="560px" data={item.menuData} />}
+        {data?.map(item => <CategoryMenuItem href={item.category_url} key={item.category_slug} title={item.category_name} caret={!!item.subcategories}>
+            {item.subcategories && <MegaMenu3 minWidth="560px" data={item.subcategories} />}
           </CategoryMenuItem>)}
       </BazaarCard>
     </StyledMegaMenu>;

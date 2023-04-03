@@ -1,6 +1,6 @@
 import { Box, styled } from "@mui/material";
 // import navigations from "data/navigations";
-import { allCategories } from "../../utils/__api__/categories";
+import allCategories from "../../utils/__api__/categories";
 import CategoryMenuItem from "./CategoryMenuItem";
 import MegaMenu1 from "./mega-menu/MegaMenu1";
 import MegaMenu2 from "./mega-menu/MegaMenu2";
@@ -36,7 +36,7 @@ const CategoryMenuCard = (props) => {
   return (
     <Wrapper open={open} position={position}>
       {categories.data.map((item) => {
-        // let MegaMenu = megaMenu[item.subcategories ? MegaMenu1 : MegaMenu2];
+        let MegaMenu = megaMenu[item.subcategories !== [] ? MegaMenu2 : MegaMenu1];
         return (
           <CategoryMenuItem
             key={item.id}
@@ -47,7 +47,7 @@ const CategoryMenuCard = (props) => {
             title={item.category_name}
             caret={!!item.subcategories}
           >
-            <MegaMenu1 data={item || {}} />
+            <MegaMenu data={item || {}} />
           </CategoryMenuItem>
         );
       })}

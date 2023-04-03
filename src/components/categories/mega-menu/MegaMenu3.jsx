@@ -27,26 +27,26 @@ const MegaMenu3 = ({
           <Box flex="1 1 0">
             <Grid container spacing={4}>
               {categories?.map((item, ind) => <Grid item md={3} key={ind}>
-                  {item.href ? <NavLink className="title-link" href={item.href}>
-                      {item.title}
-                    </NavLink> : <Box className="title-link">{item.title}</Box>}
-                  {item.subCategories?.map((sub, ind) => <NavLink className="child-link" href={sub.href} key={ind}>
-                      {sub.title}
+                  {item.category_url ? <NavLink className="title-link" href={item.category_url}>
+                      {item.category_name}
+                    </NavLink> : <Box className="title-link">{item.category_name}</Box>}
+                  {item.subcategories?.map((sub, ind) => <NavLink className="child-link" href={sub.category_url} key={ind}>
+                      {sub.category_name}
                     </NavLink>)}
                 </Grid>)}
             </Grid>
           </Box>
-
+{/* 
           {rightImage && <Link href={rightImage.href}>
               <a>
                 <Box position="relative" width="153px" height="100%">
                   <LazyImage alt="banner" layout="fill" objectFit="contain" src={rightImage.imgUrl} />
                 </Box>
               </a>
-            </Link>}
+            </Link>} */}
         </FlexBox>
 
-        <Link href="/sale-page-2">
+        {/* <Link href="/sale-page-2">
           <a>
             <Grid className="h-full" container spacing={0} wrap="wrap-reverse" alignItems="center">
               <Grid item sm={6} xs={12}>
@@ -69,7 +69,7 @@ const MegaMenu3 = ({
               </Grid>
             </Grid>
           </a>
-        </Link>
+        </Link> */}
       </BazaarCard>
     </StyledMegaMenu> : null;
 };
