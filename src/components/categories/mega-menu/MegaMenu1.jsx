@@ -27,7 +27,6 @@ const MegaMenu1 = ({
             <Grid container spacing={4}>
               {subcategories?.map((item, ind) => (
                 <Grid item md={3} key={ind}>
-                  {/* {item.category_url ? <NavLink className="title-link" href={item.href}> */}
                   {item.category_url ? (
                     <NavLink className="title-link" href={item.category_url}>
                       {item.category_name}
@@ -35,7 +34,6 @@ const MegaMenu1 = ({
                   ) : (
                     <Box className="title-link">{item.category_name}</Box>
                   )}
-                  {/* {item.subcategories?.map((sub, ind) => <NavLink className="child-link" href={sub.href} key={ind}> */}
                   {item.subcategories?.map((sub, ind) => (
                     <NavLink className="child-link" href={"/"} key={ind}>
                       {sub.category_name}

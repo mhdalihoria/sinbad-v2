@@ -33,13 +33,10 @@ const CategoryMenuCard = (props) => {
     MegaMenu2,
   };
 
-  const categoriesUrl = "https://sinbad-store.com/api/v2/categories";
-
-  console.log(categories.data[0].subcategories);
   return (
     <Wrapper open={open} position={position}>
       {categories.data.map((item) => {
-        let MegaMenu = megaMenu[MegaMenu1];
+        // let MegaMenu = megaMenu[item.subcategories ? MegaMenu1 : MegaMenu2];
         return (
           <CategoryMenuItem
             key={item.id}
@@ -50,7 +47,7 @@ const CategoryMenuCard = (props) => {
             title={item.category_name}
             caret={!!item.subcategories}
           >
-            <MegaMenu data={item || {}} />
+            <MegaMenu1 data={item || {}} />
           </CategoryMenuItem>
         );
       })}
