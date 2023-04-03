@@ -1,15 +1,12 @@
 import { Box, styled } from "@mui/material";
-import navigations from "data/navigations";
+// import navigations from "data/navigations";
+import { allCategories } from "../../utils/__api__/categories";
 import CategoryMenuItem from "./CategoryMenuItem";
 import MegaMenu1 from "./mega-menu/MegaMenu1";
 import MegaMenu2 from "./mega-menu/MegaMenu2";
 
 // styled component
-const Wrapper = styled(Box)(({
-  theme,
-  position,
-  open
-}) => ({
+const Wrapper = styled(Box)(({ theme, position, open }) => ({
   left: 0,
   zIndex: 98,
   right: "auto",
@@ -21,32 +18,46 @@ const Wrapper = styled(Box)(({
   transition: "all 250ms ease-in-out",
   transform: open ? "scaleY(1)" : "scaleY(0)",
   backgroundColor: theme.palette.background.paper,
-  top: position === "absolute" ? "calc(100% + 0.7rem)" : "0.5rem"
+  top: position === "absolute" ? "calc(100% + 0.7rem)" : "0.5rem",
 }));
 
 // ===============================================================
 
 // ===============================================================
+const categories = allCategories;
 
-const CategoryMenuCard = props => {
-  const {
-    open,
-    position
-  } = props;
+const CategoryMenuCard = (props) => {
+  const { open, position } = props;
   const megaMenu = {
     MegaMenu1,
-    MegaMenu2
+    MegaMenu2,
   };
-  return <Wrapper open={open} position={position}>
-      {navigations.map(item => {
-      let MegaMenu = megaMenu[item.menuComponent];
-      return <CategoryMenuItem key={item.title} href={item.href} icon={item.icon} title={item.title} caret={!!item.menuData}>
-            <MegaMenu data={item.menuData || {}} />
-          </CategoryMenuItem>;
-    })}
-    </Wrapper>;
+
+  const categoriesUrl = "https://sinbad-store.com/api/v2/categories";
+
+  console.log(categories.data[0].subcategories);
+  return (
+    <Wrapper open={open} position={position}>
+      {categories.data.map((item) => {
+        let MegaMenu = megaMenu[MegaMenu1];
+        return (
+          <CategoryMenuItem
+            key={item.id}
+            href={item.category_url}
+            // icon={
+            //   "https://www.iconarchive.com/download/i103365/paomedia/small-n-flat/calendar.ico"
+            // }
+            title={item.category_name}
+            caret={!!item.subcategories}
+          >
+            <MegaMenu data={item || {}} />
+          </CategoryMenuItem>
+        );
+      })}
+    </Wrapper>
+  );
 };
 CategoryMenuCard.defaultProps = {
-  position: "absolute"
+  position: "absolute",
 };
 export default CategoryMenuCard;

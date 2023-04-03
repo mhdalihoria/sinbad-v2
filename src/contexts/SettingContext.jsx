@@ -7,7 +7,7 @@ import { createContext, useEffect, useState } from "react";
 // SET "rtl" OR "ltr" HERE
 // THEN GOTO BROWSER CONSOLE AND RUN localStorage.clear() TO CLEAR LOCALSTORAGE
 const initialSettings = {
-  direction: "ltr"
+  direction: "rtl"
 };
 export const SettingsContext = createContext({
   settings: initialSettings,
