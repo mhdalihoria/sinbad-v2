@@ -9,6 +9,7 @@ import CategoryMenuItem from "../CategoryMenuItem";
 
 const MegaMenu2 = ({ data }) => {
   const isArrOfObj = Object.prototype.toString.call(data) === "[object Array]";
+  
   return (
     <StyledMegaMenu>
       <BazaarCard
@@ -24,10 +25,10 @@ const MegaMenu2 = ({ data }) => {
               href={item.category_url}
               key={item.category_slug}
               title={item.category_name}
-              caret={!!item.subcategories}
+              caret={item.subcategories.length > 0}
             >
               {item.subcategories && (
-                <MegaMenu3 minWidth="560px" data={item.subcategories} />
+                <MegaMenu2 minWidth="560px" data={item.subcategories} />
               )}
             </CategoryMenuItem>
           ))

@@ -33,11 +33,12 @@ const CategoryMenuCard = (props) => {
     MegaMenu2,
   };
 
+    
   return (
     <Wrapper open={open} position={position}>
       {categories.data.map((item) => {
         let MegaMenu = item.subcategories !== [] ? megaMenu['MegaMenu2'] : megaMenu['MegaMenu1']
-        // console.log(MegaMenu)
+        const shouldHaveCaret = item.subcategories.length > 0 ? true : false
         return (
           <CategoryMenuItem
             key={item.id}
@@ -46,7 +47,7 @@ const CategoryMenuCard = (props) => {
             //   "https://www.iconarchive.com/download/i103365/paomedia/small-n-flat/calendar.ico"
             // }
             title={item.category_name}
-            caret={!!item.subcategories}
+            caret={shouldHaveCaret}
           >
             <MegaMenu data={item.subcategories || {}} />
           </CategoryMenuItem>
