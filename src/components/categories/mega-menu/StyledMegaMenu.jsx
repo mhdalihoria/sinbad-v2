@@ -8,7 +8,8 @@ const Wrapper = styled(Box)(({
   position: "absolute",
   left: "100%",
   right: "auto",
-  top: 0,
+  top: "auto",
+  marginTop: "-15%",
   zIndex: 99,
   "& .title-link, & .child-link": {
     color: "inherit",
