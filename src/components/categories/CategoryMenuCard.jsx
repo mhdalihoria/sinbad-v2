@@ -36,7 +36,8 @@ const CategoryMenuCard = (props) => {
   return (
     <Wrapper open={open} position={position}>
       {categories.data.map((item) => {
-        let MegaMenu = megaMenu[item.subcategories !== [] ? MegaMenu2 : MegaMenu1];
+        let MegaMenu = item.subcategories !== [] ? megaMenu['MegaMenu2'] : megaMenu['MegaMenu1']
+        // console.log(MegaMenu)
         return (
           <CategoryMenuItem
             key={item.id}
@@ -47,7 +48,7 @@ const CategoryMenuCard = (props) => {
             title={item.category_name}
             caret={!!item.subcategories}
           >
-            <MegaMenu data={item || {}} />
+            <MegaMenu data={item.subcategories || {}} />
           </CategoryMenuItem>
         );
       })}
