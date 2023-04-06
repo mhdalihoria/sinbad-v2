@@ -46,7 +46,6 @@ const CategoryCard = ({ product }) => {
         <Link href={`/categories/${product.category_slug}`}>
           <a>
             <Image
-              loader={() => product.category_image}
               width={1000}
               height={400}
               alt="category"
