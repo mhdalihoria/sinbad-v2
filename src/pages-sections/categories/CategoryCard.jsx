@@ -47,8 +47,8 @@ const CategoryCard = ({ product }) => {
           <a>
             <Image
               loader={() => product.category_image}
-              width={600}
-              height={300}
+              width={1000}
+              height={400}
               alt="category"
               objectFit="cover"
               layout="responsive"
