@@ -43,7 +43,7 @@ const CategoryCard = ({ product }) => {
   return (
     <Card>
       <CardMedia>
-        <Link href={`/product/${product.category_slug}`}>
+        <Link href={`/categories/${product.category_slug}`}>
           <a>
             <Image
               loader={() => product.category_image}
