@@ -43,12 +43,15 @@ const SubLink = styled(Box)(({ theme }) => ({
 
 const SubLinksPadding = styled(Box)({
   padding: "1rem",
-  paddingTop: 0,
 });
 
 const CategoryCardTitle = styled(Box)({
   fontSize: ".8rem",
   padding: "0 1rem",
+});
+
+const CardInfoHeight = styled(Box)({
+  minHeight: 150,
 });
 // ==============================================================
 
@@ -107,15 +110,17 @@ const CategoryCard = ({ product }) => {
             />
           </a>
         </Link>
-        <CategoryCardTitle>
-          <h3>{product.category_name}</h3>
-        </CategoryCardTitle>
-        <SubLinksPadding>
-          <div>
-            {subCategoriesLinks.slice(0, 4)}
-            {product.subcategories.length > 0 && readMore}
-          </div>
-        </SubLinksPadding>
+        <CardInfoHeight>
+          <CategoryCardTitle>
+            <h3>{product.category_name}</h3>
+          </CategoryCardTitle>
+          <SubLinksPadding>
+            <div>
+              {subCategoriesLinks.slice(0, 4)}
+              {product.subcategories.length > 0 && readMore}
+            </div>
+          </SubLinksPadding>
+        </CardInfoHeight>
       </CardMedia>
     </Card>
   );
