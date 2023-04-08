@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, IconButton, Rating, styled } from "@mui/material";
 import { AddShoppingCart, Favorite, FavoriteBorder } from "@mui/icons-material";
 import { currency } from "lib";
@@ -40,6 +40,15 @@ const CardMedia = styled(Box)(({ theme }) => ({
 // ==============================================================
 
 const CategoryCard = ({ product }) => {
+  const [defaultImage, setdefaultImage] = useState(
+    "https://placehold.jp/300x150.png?text=category+img"
+  );
+  const [imgSrc, setImgSrc] = useState(product.category_image);
+
+  useEffect(() => {
+    setImgSrc(product.category_image);
+  }, [product.category_image]);
+
   return (
     <Card>
       <CardMedia>
@@ -52,7 +61,16 @@ const CategoryCard = ({ product }) => {
               objectFit="cover"
               layout="responsive"
               className="product-img"
-              src={product.category_image}
+              src={imgSrc}
+              onLoadingComplete={(result) => {
+                if (result.naturalWidth === 0) {
+                  // If Broken image
+                  setImgSrc(defaultImage);
+                }
+              }}
+              onError={() => {
+                setImgSrc(defaultImage);
+              }}
             />
           </a>
         </Link>

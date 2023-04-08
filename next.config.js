@@ -2,7 +2,7 @@ const { i18n } = require("./next-i18next.config");
 
 module.exports = {
   images: {
-    domains: ['sinbad-store.com'],
+    domains: ["sinbad-store.com", "placehold.jp"],
   },
 
   i18n,
@@ -11,7 +11,7 @@ module.exports = {
     // this will override the experiments
     config.experiments = { ...config.experiments, topLevelAwait: true };
     // this will just update topLevelAwait property of config.experiments
-    // config.experiments.topLevelAwait = true 
+    // config.experiments.topLevelAwait = true
     return config;
   },
   publicRuntimeConfig: {
