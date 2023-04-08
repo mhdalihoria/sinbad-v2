@@ -35,6 +35,12 @@ const CardMedia = styled(Box)(({ theme }) => ({
   },
 }));
 
+const SubLink = styled(Box)(({ theme }) => ({
+  "&:hover": {
+    color: theme.palette.primary[400],
+  },
+}));
+
 // ==============================================================
 
 // ==============================================================
@@ -48,6 +54,24 @@ const CategoryCard = ({ product }) => {
   useEffect(() => {
     setImgSrc(product.category_image);
   }, [product.category_image]);
+
+  const subCategoriesLinks = product.subcategories.map((sub, idx) => {
+    return (
+      <>
+        <Link href={sub.category_url} key={idx}>
+          <SubLink sx={{ display: "inline" }}>
+            <span>{sub.category_name} - </span>
+          </SubLink>
+        </Link>
+      </>
+    );
+  });
+
+  const readMore = (
+    <SubLink sx={{ display: "inline" }}>
+      <Link href={`/categories/${product.category_slug}`}>...مزيد</Link>
+    </SubLink>
+  );
 
   return (
     <Card>
@@ -75,6 +99,10 @@ const CategoryCard = ({ product }) => {
           </a>
         </Link>
         <h3>{product.category_name}</h3>
+        <p>
+          {subCategoriesLinks.slice(0, 4)}
+          {product.subcategories.length > 1 ?? readMore}
+        </p>
       </CardMedia>
     </Card>
   );
