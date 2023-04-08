@@ -41,6 +41,15 @@ const SubLink = styled(Box)(({ theme }) => ({
   },
 }));
 
+const SubLinksPadding = styled(Box)({
+  padding: "1rem",
+  paddingTop: 0,
+});
+
+const CategoryCardTitle = styled(Box)({
+  fontSize: ".8rem",
+  padding: "0 1rem",
+});
 // ==============================================================
 
 // ==============================================================
@@ -57,7 +66,7 @@ const CategoryCard = ({ product }) => {
 
   const subCategoriesLinks = product.subcategories.map((sub, idx) => {
     return (
-      <div key={idx} style={{display: "inline"}}>
+      <div key={idx} style={{ display: "inline" }}>
         <Link href={sub.category_url}>
           <SubLink sx={{ display: "inline" }}>
             <span>{sub.category_name} - </span>
@@ -69,7 +78,7 @@ const CategoryCard = ({ product }) => {
 
   const readMore = (
     <SubLink sx={{ display: "inline" }}>
-      <Link href={`/categories/${product.category_slug}`}>...مزيد</Link>
+      <Link href={`/categories/${product.category_slug}`}>...المزيد</Link>
     </SubLink>
   );
 
@@ -98,11 +107,15 @@ const CategoryCard = ({ product }) => {
             />
           </a>
         </Link>
-        <h3>{product.category_name}</h3>
-        <div>
-          {subCategoriesLinks.slice(0, 4)}
-          {product.subcategories.length > 0 && readMore}
-        </div>
+        <CategoryCardTitle>
+          <h3>{product.category_name}</h3>
+        </CategoryCardTitle>
+        <SubLinksPadding>
+          <div>
+            {subCategoriesLinks.slice(0, 4)}
+            {product.subcategories.length > 0 && readMore}
+          </div>
+        </SubLinksPadding>
       </CardMedia>
     </Card>
   );
