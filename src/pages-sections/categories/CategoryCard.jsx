@@ -52,8 +52,8 @@ const CategoryCard = ({ product }) => {
   const [imgSrc, setImgSrc] = useState(product.category_image);
 
   useEffect(() => {
-    setImgSrc(product.category_image);
-  }, [product.category_image]);
+    setImgSrc(imgSrc);
+  }, [imgSrc]);
 
   const subCategoriesLinks = product.subcategories.map((sub, idx) => {
     return (
