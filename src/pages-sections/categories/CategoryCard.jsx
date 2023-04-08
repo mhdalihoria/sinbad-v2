@@ -57,13 +57,13 @@ const CategoryCard = ({ product }) => {
 
   const subCategoriesLinks = product.subcategories.map((sub, idx) => {
     return (
-      <>
-        <Link href={sub.category_url} key={idx}>
+      <div key={idx} style={{display: "inline"}}>
+        <Link href={sub.category_url}>
           <SubLink sx={{ display: "inline" }}>
             <span>{sub.category_name} - </span>
           </SubLink>
         </Link>
-      </>
+      </div>
     );
   });
 
@@ -99,10 +99,10 @@ const CategoryCard = ({ product }) => {
           </a>
         </Link>
         <h3>{product.category_name}</h3>
-        <p>
+        <div>
           {subCategoriesLinks.slice(0, 4)}
-          {product.subcategories.length > 1 ?? readMore}
-        </p>
+          {product.subcategories.length > 0 && readMore}
+        </div>
       </CardMedia>
     </Card>
   );
