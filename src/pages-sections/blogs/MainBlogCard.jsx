@@ -1,11 +1,6 @@
 import Link from "next/link";
-import { Add, Close, Remove } from "@mui/icons-material";
-import { Box, Button, Card, IconButton, styled } from "@mui/material";
+import { Box, Card, styled } from "@mui/material";
 import Image from "components/BazaarImage";
-import { Span } from "components/Typography";
-import { FlexBox } from "components/flex-box";
-import { useAppContext } from "contexts/AppContext";
-import { currency } from "lib";
 
 // styled components
 const Wrapper = styled(Card)(({ theme }) => ({
@@ -130,7 +125,7 @@ const MainBlogCard = (props) => {
           )}
         </BlogPostMetaData>
         <BlogDesc>
-          {description.replace(/(<([^>]+)>)/gi, "").slice(0, 200)}
+          {(description ?? short_description).replace(/(<([^>]+)>)/gi, "").slice(0, 200)}
           <Link href={"/"}>
             <span>...المزيد</span>
           </Link>
