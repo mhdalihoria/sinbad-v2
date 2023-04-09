@@ -1,5 +1,5 @@
 import allBlogs from "../../src/utils/__api__/blogsList";
-import blogPost from "../../src/utils/__api__/blogSinglePost";
+import getBlogPost from "../../src/utils/__api__/blogSinglePost";
 
 const SingleBlogPage = ({ id, postData }) => {
   console.log(postData);
@@ -17,9 +17,29 @@ export const getStaticPaths = (ctx) => {
   };
 };
 
-export const getStaticProps = (ctx) => {
+export const getStaticProps = async (ctx) => {
+  // -----------------------------------
+  // Fetch Headers
+  // -----------------------------------
+  const myHeaders = new Headers();
+  myHeaders.append("X-localization", "ar");
+
+  const requestOptions = {
+    method: "GET",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+  // -----------------------------------
+  // Fetch Headers
+  // -----------------------------------
+
   const currentId = ctx.params.id;
-  const postObj = blogPost;
+  const postObj = await fetch(
+    `http://sinbad-store.com/api/v2/blog/${currentId}`,
+    requestOptions
+  )
+    .then((res) => res.json())
+    .catch((error) => console.log("error", error));
 
   return {
     props: {
