@@ -44,7 +44,7 @@ export const getStaticProps = async (ctx) => {
   return {
     props: {
       id: currentId,
-      postData: postObj,
+      postData: postObj.data,
     },
   };
 };
