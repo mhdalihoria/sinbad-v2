@@ -62,7 +62,9 @@ const BlogDesc = styled(Box)(({ theme }) => ({
     color: theme.palette.primary.main,
     cursor: "pointer",
     padding: ".2rem",
-
+  },
+  "&:hover span": {
+    textDecoration: "underline",
   },
 }));
 
@@ -86,7 +88,7 @@ const MainBlogCard = (props) => {
   return (
     <Wrapper>
       <Image
-        alt={category_name}
+        alt={title}
         width={280}
         height={280}
         style={{ objectFit: "cover" }}
@@ -125,9 +127,12 @@ const MainBlogCard = (props) => {
           )}
         </BlogPostMetaData>
         <BlogDesc>
-          {(description ?? short_description).replace(/(<([^>]+)>)/gi, "").slice(0, 200)}
-          <Link href={"/"}>
-            <span>...المزيد</span>
+          {(short_description ?? description)
+            .replace(/(<([^>]+)>)/gi, "")
+            .slice(0, 200)}
+          {"..."}
+          <Link href={`/blogs/${id}`}>
+            <span>المزيد</span>
           </Link>
         </BlogDesc>
       </BlogInfo>
