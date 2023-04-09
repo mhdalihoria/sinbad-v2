@@ -19,18 +19,20 @@ Router.events.on("routeChangeComplete", () => nProgress.done());
 Router.events.on("routeChangeError", () => nProgress.done());
 // small change
 nProgress.configure({
-  showSpinner: false
+  showSpinner: false,
 });
-const App = ({
-  Component,
-  pageProps
-}) => {
+const App = ({ Component, pageProps }) => {
   const AnyComponent = Component;
-  const getLayout = AnyComponent.getLayout ?? (page => page);
-  return <Fragment>
+  const getLayout = AnyComponent.getLayout ?? ((page) => page);
+  return (
+    <Fragment>
       <Head>
         <meta charSet="utf-8" />
-        <meta name="description" content="React Next.js ecommerce template. Build SEO friendly Online store, delivery app and Multivendor store" />
+        <meta
+          name="description"
+          content="React Next.js ecommerce template. Build SEO friendly Online store, delivery app and Multivendor store"
+        />
+
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta httpEquiv="Content-Type" content="text/html; charset=utf-8" />
         <OpenGraphTags />
@@ -46,7 +48,8 @@ const App = ({
           </MuiTheme>
         </AppProvider>
       </SettingsProvider>
-    </Fragment>;
+    </Fragment>
+  );
 };
 
 // Only uncomment this method if you have blocking data requirements for
