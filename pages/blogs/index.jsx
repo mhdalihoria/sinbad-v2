@@ -39,26 +39,7 @@ const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
               }}
             />
 
-            {/* <FlexBox alignItems="center" flexDirection="column" columnGap={1} mb={2}>
-              <Span fontWeight="600">Additional Comments</Span>
-
-              <Span
-                p="6px 10px"
-                fontSize={12}
-                lineHeight="1"
-                borderRadius="3px"
-                color="primary.main"
-                bgcolor="primary.light"
-              >
-                Note
-              </Span>
-            </FlexBox> */}
-
-            {/* <Link href="/checkout" passHref legacyBehavior>
-              <Button variant="contained" color="primary" fullWidth>
-                Checkout Now
-              </Button>
-            </Link> */}
+            
           </Card>
         </Grid>
       </Grid>
