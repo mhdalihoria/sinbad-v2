@@ -11,7 +11,6 @@ import MainBlogCard from "../../src/pages-sections/blogs/MainBlogCard";
 import allBlogs from "../../src/utils/__api__/blogsList";
 
 const BlogList = ({ allBlogsData }) => {
-  console.log(allBlogsData);
   return (
     <>
       <SEO title="Blogs" />
