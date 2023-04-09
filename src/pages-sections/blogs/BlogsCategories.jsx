@@ -37,7 +37,7 @@ const BlogsCategories = ({ allBlogsCatesData }) => {
       {allBlogsCatesData.map((blogCate) => {
         // "Cate" is short for "category"
         return (
-          <Link href={"/blogs"} className="cate-name">
+          <Link href={"/blogs"} className="cate-name" key={blogCate.name}>
             <CateLink>
               <i className="fa-solid fa-circle fa-2xs"></i> {blogCate.name}
             </CateLink>
