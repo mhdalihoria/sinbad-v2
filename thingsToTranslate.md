@@ -5,3 +5,5 @@
 1- The "more" in "/categories/index.jsx"
 
 2- The meta data "author / date / etc" in "/blogs/index.jsx"
+
+3- the table headers in /pos //or// /page-sections/pos/Table.jsx
