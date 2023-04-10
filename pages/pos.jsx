@@ -1,9 +1,11 @@
 import BasicTable from "../src/pages-sections/pos/Table";
+import Map from "../src/pages-sections/pos/Map";
 
 const Pos = ({ posData }) => {
   return (
     <div>
       <BasicTable posData={posData} />
+      <Map />
     </div>
   );
 };

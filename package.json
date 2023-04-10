@@ -29,6 +29,7 @@
     "@mui/lab": "^5.0.0-alpha.106",
     "@mui/material": "^5.10.12",
     "@mui/x-date-pickers": "^5.0.6",
+    "@react-google-maps/api": "^2.18.1",
     "apexcharts": "^3.35.3",
     "axios": "^0.27.2",
     "axios-mock-adapter": "^1.21.1",
