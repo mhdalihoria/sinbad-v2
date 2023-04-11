@@ -8,12 +8,13 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 
+
 export default function BasicTable({ posData }) {
   const { pos } = posData;
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
+        <TableHead style={{background:  "#cfcfcf"}}>
           <TableRow>
             <TableCell align="center">اسم الفرع</TableCell>
             <TableCell align="center">الوصف</TableCell>
