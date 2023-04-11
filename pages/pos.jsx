@@ -1,12 +1,25 @@
-import BasicTable from "../src/pages-sections/pos/Table";
+import { Box, styled } from "@mui/material";
 import Map from "../src/pages-sections/pos/Map";
+import BasicTable from "../src/pages-sections/pos/Table";
+import CustomFooter from "../src/pages-sections/footer/CustomFooter"
+
+const PosConttentContainer = styled(Box)({
+  width: "90%",
+  margin: "1rem auto",
+  display: "flex",
+  flexDirection: "column",
+  gap: 10,
+});
 
 const Pos = ({ posData }) => {
   return (
-    <div>
+    <>
+    <PosConttentContainer>
       <BasicTable posData={posData} />
-      <Map />
-    </div>
+      <Map posData={posData} />
+    </PosConttentContainer>
+    <CustomFooter />
+    </>
   );
 };
 
