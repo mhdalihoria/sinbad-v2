@@ -13,7 +13,7 @@ const Map = ({ posData }) => {
 
 
   const MarkerElements = data.map(position => {
-    return <Marker position={{
+    return <Marker key={position.description} position={{
       lat: Number(position.lat),
       lng: Number(position.lng)
     }} title={position.description}/>
