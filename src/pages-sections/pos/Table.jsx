@@ -10,7 +10,7 @@ import { useTheme } from "@mui/material";
 
 
 
-export default function BasicTable({ posData }) {
+export default function wBasicTable({ posData }) {
   const { pos } = posData;
   const theme = useTheme()
   
