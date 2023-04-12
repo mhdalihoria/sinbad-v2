@@ -6,20 +6,23 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { useTheme } from "@mui/material";
 
 
 
 export default function BasicTable({ posData }) {
   const { pos } = posData;
+  const theme = useTheme()
+  
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead style={{background:  "#cfcfcf"}}>
-          <TableRow>
-            <TableCell align="center">اسم الفرع</TableCell>
-            <TableCell align="center">الوصف</TableCell>
-            <TableCell align="center">رقم الموبايل</TableCell>
-            <TableCell align="center">العنوان</TableCell>
+        <TableHead style={{background:  theme.palette.primary.main}}>
+          <TableRow >
+            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">اسم الفرع</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">الوصف</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">رقم الموبايل</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">العنوان</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
