@@ -7,3 +7,5 @@
 2- The meta data "author / date / etc" in "/blogs/index.jsx"
 
 3- the table headers in /pos //or// /page-sections/pos/Table.jsx
+
+4- The Table Headers in /carrier //or// /page-sections/carrier/Table.jsx
