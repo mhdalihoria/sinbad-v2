@@ -2,7 +2,6 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 const Form = ({ data, setSelected, selected, label }) => {
 
-  console.log(data)
 
   const handleChange = (e) => {
     setSelected(e.target.value);

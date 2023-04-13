@@ -7,11 +7,12 @@ const Carrier = ({ allCountries }) => {
   const [countrySelect, setCountrySelect] = useState("");
   const [citySelect, setCitySelect] = useState("");
   const [locationSelect, setLocationSelect] = useState("");
-  const {cities} ={...allCountries[Number(countrySelect)]}
-  const {locations} = {...cities[Number(citySelect)]}
-  //  console.log({...allCountries[Number(countrySelect)]})
+  const { cities } = { ...allCountries[Number(countrySelect) - 1] };
+  const { locations } =
+    citySelect !== "" ? { ...cities[Number(citySelect) - 1] } : {};
+
   return (
-    <div style={{width: "90%", margin:"0 auto", padding: "5rem 0"}}>
+    <div style={{ width: "90%", margin: "0 auto", padding: "5rem 0" }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={12} md={4} lg={4}>
           <Form
@@ -22,19 +23,19 @@ const Carrier = ({ allCountries }) => {
           />
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
-          <Form 
-          data={cities}
-          setSelected={setCitySelect}
-          selected={citySelect}
-          label={"المدينة"}
+          <Form
+            data={cities}
+            setSelected={setCitySelect}
+            selected={citySelect}
+            label={"المدينة"}
           />
         </Grid>
         <Grid item xs={12} sm={12} md={4} lg={4}>
-          <Form 
-          data={locations}
-          setSelected={setLocationSelect}
-          selected={locationSelect}
-          label={"الموقع"}
+          <Form
+            data={locations}
+            setSelected={setLocationSelect}
+            selected={locationSelect}
+            label={"الموقع"}
           />
         </Grid>
       </Grid>
