@@ -10,7 +10,7 @@ import { useTheme } from "@mui/material";
 
 
 
-export default function wBasicTable({ posData }) {
+export default function BasicTable({ posData }) {
   const { pos } = posData;
   const theme = useTheme()
   
@@ -19,10 +19,10 @@ export default function wBasicTable({ posData }) {
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead style={{background:  theme.palette.primary.main}}>
           <TableRow >
-            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">اسم الفرع</TableCell>
-            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">الوصف</TableCell>
-            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">رقم الموبايل</TableCell>
-            <TableCell style={{ color: theme.palette.primary.contrastText}} align="center">العنوان</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText, fontWeight: "700"}} align="center">اسم الفرع</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText, fontWeight: "700"}} align="center">الوصف</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText, fontWeight: "700"}} align="center">رقم الموبايل</TableCell>
+            <TableCell style={{ color: theme.palette.primary.contrastText, fontWeight: "700"}} align="center">العنوان</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
