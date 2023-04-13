@@ -3,17 +3,22 @@ import { Grid } from "@mui/material";
 import allCountries from "../src/utils/__api__/deliveryCountries";
 import Form from "../src/pages-sections/carrier/Form";
 import DeliveryTable from "../src/pages-sections/carrier/Table";
+import Loader from "../src/components/loader-spinner/Loader";
 
 const Carrier = ({ allCountries }) => {
+  // --------------------------------------------------------------------
   const [countrySelect, setCountrySelect] = useState("");
   const [citySelect, setCitySelect] = useState("");
   const [locationSelect, setLocationSelect] = useState("");
   const [deliveryDetails, setDeliveryDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  // --------------------------------------------------------------------
+
+  // --------------------------------------------------------------------
   const { cities } = { ...allCountries[Number(countrySelect) - 1] };
   const { locations } =
     citySelect !== "" ? { ...cities[Number(citySelect) - 1] } : {};
-
-  console.log(deliveryDetails);
+  // --------------------------------------------------------------------
 
   useEffect(() => {
     const getDeliveryDetails = async () => {
@@ -32,9 +37,16 @@ const Carrier = ({ allCountries }) => {
         }
       } catch (err) {
         console.log(err);
+        setLoading(false);
       }
     };
+    if (countrySelect !== "" && citySelect !== "" && locationSelect !== "") {
+      setLoading(true);
+    }
     getDeliveryDetails();
+    if (deliveryDetails) {
+      setLoading(false);
+    }
   }, [locationSelect]);
 
   return (
@@ -65,10 +77,12 @@ const Carrier = ({ allCountries }) => {
           />
         </Grid>
 
-        {deliveryDetails && (
+        {deliveryDetails !== null ? (
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <DeliveryTable deliveryData={deliveryDetails}/>
+            <DeliveryTable deliveryData={deliveryDetails} />
           </Grid>
+        ) : (
+          <Loader loading={loading} />
         )}
       </Grid>
     </div>
