@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import allCountries from "../src/utils/__api__/deliveryCountries";
+import Header from "../src/pages-sections/header/Header"
 import Form from "../src/pages-sections/carrier/Form";
 import DeliveryTable from "../src/pages-sections/carrier/Table";
 import Loader from "../src/components/loader-spinner/Loader";
@@ -50,7 +51,9 @@ const Carrier = ({ allCountries }) => {
   }, [locationSelect]);
 
   return (
-    <div style={{ width: "90%", margin: "0 auto", padding: "5rem 0" }}>
+    <div>
+      <Header />
+      <div style={{ width: "90%", margin: "0 auto", padding: "5rem 0" }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4} md={4} lg={4}>
           <Form
@@ -85,6 +88,7 @@ const Carrier = ({ allCountries }) => {
           <Loader loading={loading} />
         )}
       </Grid>
+    </div>
     </div>
   );
 };
