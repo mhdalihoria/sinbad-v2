@@ -9,12 +9,13 @@ const AppStore = () => {
     title: "Google Play",
     subtitle: "Get it on",
     url: "/"
-  }, {
-    icon: AppleStore,
-    title: "App Store",
-    subtitle: "Download on the",
-    url: "/"
-  }];
+  // }, {
+  //   icon: AppleStore,
+  //   title: "App Store",
+  //   subtitle: "Download on the",
+  //   url: "/"
+  }
+];
   return <FlexBox flexWrap="wrap" m={-1}>
       {appList.map(item => <a href="/" key={item.title} target="_blank" rel="noreferrer noopener">
           <Box m={1} gap={1} p="10px 16px" color="white" display="flex" bgcolor="#161d2b" borderRadius="5px" alignItems="center">
