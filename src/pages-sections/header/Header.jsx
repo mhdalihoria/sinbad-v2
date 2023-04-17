@@ -3,6 +3,7 @@ import AppStore from "components/AppStore";
 import Image from "next/image";
 import LeftSectionItem from "./LeftSectionItem";
 import Logo from "../../../public/assets/images/header/logo.jpg";
+import { useEffect, useState } from "react";
 
 const AppStoreSection = styled(Box)({
   width: "145px",
@@ -19,11 +20,6 @@ const LeftSideSection = styled(Box)({
   justifyContent: "space-evenly",
   alignItems: "flex-end",
   margin: "auto 0",
-  // flexWrap: "wrap",
-
-  "& div": {
-    // height: "15px",
-  },
 });
 
 const LogoSection = styled(Box)({
@@ -36,6 +32,26 @@ const LogoSection = styled(Box)({
 });
 
 const Header = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [windowSize, setWindowSize] = useState(null);
+  const breakPointMD = 960;
+
+  useEffect(() => {
+    const handleResizeWindow = () => {
+      setWindowSize(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResizeWindow);
+
+    return () => {
+      window.removeEventListener("resize", handleResizeWindow);
+    };
+  }, [windowSize]);
+
+  const searchHandler = () => {
+    console.log("searched");
+  };
+
   return (
     <div
       style={{
@@ -53,9 +69,16 @@ const Header = () => {
           xs={6}
           order={{ lg: 1, md: 1, sm: 2, xs: 2 }}
         >
-          <AppStoreSection>
-            <AppStore />
-          </AppStoreSection>
+          {windowSize < breakPointMD && isOpen && (
+            <AppStoreSection>
+              <AppStore />
+            </AppStoreSection>
+          )}
+          {windowSize > breakPointMD && (
+            <AppStoreSection>
+              <AppStore />
+            </AppStoreSection>
+          )}
         </Grid>
         <Grid
           item
@@ -72,12 +95,29 @@ const Header = () => {
               height={"185px"}
               objectFit="cover"
             />
-            <TextField
-              id="outlined-basic"
-              label="Search"
-              variant="outlined"
-              style={{ width: "80%" }}
-            />
+
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {windowSize < breakPointMD && (
+                <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
+                  <i className={`fa-solid fa-${isOpen ? "x" : "bars"}`}></i>
+                </button>
+              )}
+              <TextField
+                id="outlined-basic"
+                label="Search"
+                variant="outlined"
+                style={{ width: "50%" }}
+              />
+
+              <button onClick={searchHandler}>Search</button>
+            </div>
+            <div className="buttons"></div>
           </LogoSection>
         </Grid>
         <Grid
@@ -88,12 +128,54 @@ const Header = () => {
           xs={6}
           order={{ lg: 3, md: 3, sm: 3, xs: 3 }}
         >
-          <LeftSideSection>
-            <LeftSectionItem iconClass={"fa-regular fa-comments"} topText={"Chat"} bottomText={"with us"} />
-            <LeftSectionItem iconClass={"fa-regular fa-comments"} topText={"Chat"} bottomText={"with us"} />
-            <LeftSectionItem iconClass={"fa-regular fa-comments"} topText={"Chat"} bottomText={"with us"} />
-            <LeftSectionItem iconClass={"fa-regular fa-comments"} topText={"Chat"} bottomText={"with us"} />
-          </LeftSideSection>
+          {windowSize < breakPointMD && isOpen && (
+            <LeftSideSection>
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+            </LeftSideSection>
+          )}
+          {windowSize > breakPointMD && (
+            <LeftSideSection>
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+              <LeftSectionItem
+                iconClass={"fa-regular fa-comments"}
+                topText={"Chat"}
+                bottomText={"with us"}
+              />
+            </LeftSideSection>
+          )}
         </Grid>
       </Grid>
     </div>
