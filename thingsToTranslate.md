@@ -9,3 +9,5 @@
 3- the table headers in /pos //or// /page-sections/pos/Table.jsx
 
 4- The Table Headers in /carrier //or// /page-sections/carrier/Table.jsx
+
+5- The Empty File error page in /files //or// /page-sections/files/EmptyFiles.jsx
