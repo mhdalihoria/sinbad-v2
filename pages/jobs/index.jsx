@@ -275,7 +275,7 @@ export default function SignInSide() {
               </FormButton>
               {cv && (
                 <p>
-                  {cv.name}({(cv.size / 1000000).toFixed(2)} MB)
+                  {cv.name} {" - "}({(cv.size / 1000000).toFixed(2)} MB)
                 </p>
               )}
               <FormButton
