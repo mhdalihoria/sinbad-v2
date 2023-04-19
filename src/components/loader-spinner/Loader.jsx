@@ -3,11 +3,10 @@ import { PulseLoader } from "react-spinners";
 
 const override = {
   display: "block",
-  margin: "5rem auto",
   borderColor: "red",
 };
 
-export default function Loader({loading}) {
+export default function Loader({loading, size}) {
   const theme = useTheme();
 
   return (
@@ -16,7 +15,7 @@ export default function Loader({loading}) {
         color={theme.palette.primary.main}
         loading={loading}
         cssOverride={override}
-        size={15}
+        size={size}
         aria-label="Loading Spinner"
         data-testid="loader"
       />
