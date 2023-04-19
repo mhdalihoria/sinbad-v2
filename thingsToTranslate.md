@@ -11,3 +11,5 @@
 4- The Table Headers in /carrier //or// /page-sections/carrier/Table.jsx
 
 5- The Empty File error page in /files //or// /page-sections/files/EmptyFiles.jsx
+
+6- Content of Jobs Page in /Jobs
