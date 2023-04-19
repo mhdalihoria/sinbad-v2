@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Image from "next/image";
 import { styled } from "@mui/material";
+import useDownloader from "react-use-downloader";
+import Loader from "../../components/loader-spinner/Loader"
 
 import Files from "../../../public/assets/images/files/doc.png";
 import Driver from "../../../public/assets/images/files/driver.png";
@@ -25,6 +27,10 @@ const DownloadButton = styled(Button)(({ theme }) => ({
 }));
 
 export default function ImgMediaCard({ type, name, id, file }) {
+  const { download, isInProgress } = useDownloader();
+  const fileUrl = "https://sinbad-store.com/api/v2/files"
+  const fileName = file
+
   const imageSelector = (type) => {
     switch (type) {
       case "Programs": {
@@ -43,6 +49,7 @@ export default function ImgMediaCard({ type, name, id, file }) {
 
   const clickHandler = () => {
     console.log("hey");
+    download(fileUrl, fileName)
   };
 
   return (
@@ -51,13 +58,13 @@ export default function ImgMediaCard({ type, name, id, file }) {
         <Image alt={name} height="128" width="128" src={imageSelector(type)} />
       </div>
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
           {name}
         </Typography>
       </CardContent>
       <CardActions>
         <DownloadButton size="small" onClick={clickHandler}>
-          Download
+          {isInProgress ? <Loader size={4} loading={isInProgress}/> : "Download"}
         </DownloadButton>
       </CardActions>
     </Card>
