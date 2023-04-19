@@ -85,7 +85,9 @@ const Carrier = ({ allCountries }) => {
             <DeliveryTable deliveryData={deliveryDetails} />
           </Grid>
         ) : (
-          <Loader loading={loading} />
+          <div style={{margin: "5rem auto"}}>
+            <Loader loading={loading} size={15} />
+          </div>
         )}
       </Grid>
     </div>
