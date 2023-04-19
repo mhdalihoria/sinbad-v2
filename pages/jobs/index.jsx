@@ -9,9 +9,13 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { styled, useTheme } from "@mui/material/styles";
 import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+
 import Header from "../../src/pages-sections/header/Header";
 import CustomFooter from "../../src/pages-sections/footer/CustomFooter";
 
+// ------------STYlED COMPONENTS------------
 const FormButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
@@ -23,7 +27,28 @@ const FormButton = styled(Button)(({ theme }) => ({
     border: `1px solid ${theme.palette.primary.main}`,
   },
 }));
+const ErrorSpan = styled("span")(({ theme }) => ({
+  color: theme.palette.primary.main,
+}));
+// ------------STYlED COMPONENTS------------
 
+// ---------Setting up Form Validation------
+const SUPPORTED_FORMATS = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+const FILE_SIZE = 100000 * 55;
+
+const schema = Yup.object().shape({
+  name: Yup.string().required(),
+  email: Yup.string().required().email(),
+  number: Yup.number().required(),
+});
+
+// ---------Setting up Form Validation------
+
+// -------------EXTERNAL COMPONENT----------
 function Copyright(props) {
   return (
     <Typography
@@ -41,6 +66,7 @@ function Copyright(props) {
     </Typography>
   );
 }
+// -------------EXTERNAL COMPONENT----------
 
 export default function SignInSide() {
   const [cv, setCv] = useState(null);
@@ -50,56 +76,108 @@ export default function SignInSide() {
     phoneNum: null,
   });
 
-  const uplaodToSever = async () => {
-    const { fullName, email, phoneNum } = form;
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      email: "",
+      number: "",
+    },
 
-    // Request Body Data
-    const body = new FormData();
-    body.append("name", fullName);
-    body.append("email", email);
-    body.append("mobile", phoneNum);
-    body.append("cv", cv, cv.name);
-    // Request Body Data
+    // Pass the Yup schema to validate the form
+    validationSchema: schema,
 
-    console.log(cv);
+    // Handle form submission
+    onSubmit: async ({ name, email, number }) => {
+      // Make a request to your backend to store the data
 
-    // Request Header Data
-    const myHeaders = new Headers();
-    myHeaders.append("X-localization", "ar");
-    // Request Header Data
+      if (cv?.size < 2500000) {
+        // Request Body Data
+        const body = new FormData();
+        body.append("name", name);
+        body.append("email", email);
+        body.append("mobile", number);
+        body.append("cv", cv, cv.name);
+        // Request Body Data
 
-    // Fetch API Options
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      body: body,
-      redirect: "follow",
-    };
-    // Fetch API Options
+        console.log(cv);
 
-    const response = await fetch(
-      "https://sinbad-store.com/api/v2/job",
-      requestOptions
-    );
-    const data = await response;
+        // Request Header Data
+        const myHeaders = new Headers();
+        myHeaders.append("X-localization", "ar");
+        // Request Header Data
 
-    console.log(data);
-  };
+        // Fetch API Options
+        const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          body: body,
+          redirect: "follow",
+        };
+        // Fetch API Options
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    uplaodToSever();
-  };
+        const response = await fetch(
+          "https://sinbad-store.com/api/v2/job",
+          requestOptions
+        );
+        const data = await response;
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prevFrom) => {
-      return {
-        ...prevFrom,
-        [name]: value,
-      };
-    });
-  };
+        console.log(data);
+      }
+    },
+  });
+
+  const { errors, touched, values, handleChange, handleSubmit } = formik;
+
+  // const uplaodToSever = async () => {
+  //   const { fullName, email, phoneNum } = form;
+
+  //   // Request Body Data
+  //   const body = new FormData();
+  //   body.append("name", fullName);
+  //   body.append("email", email);
+  //   body.append("mobile", phoneNum);
+  //   body.append("cv", cv, cv.name);
+  //   // Request Body Data
+
+  //   console.log(cv);
+
+  //   // Request Header Data
+  //   const myHeaders = new Headers();
+  //   myHeaders.append("X-localization", "ar");
+  //   // Request Header Data
+
+  //   // Fetch API Options
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: myHeaders,
+  //     body: body,
+  //     redirect: "follow",
+  //   };
+  //   // Fetch API Options
+
+  //   const response = await fetch(
+  //     "https://sinbad-store.com/api/v2/job",
+  //     requestOptions
+  //   );
+  //   const data = await response;
+
+  //   console.log(data);
+  // };
+
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   uplaodToSever();
+  // };
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setForm((prevFrom) => {
+  //     return {
+  //       ...prevFrom,
+  //       [name]: value,
+  //     };
+  //   });
+  // };
 
   const handleFileChange = (e) => {
     setCv(e.target.files[0]);
@@ -140,16 +218,22 @@ export default function SignInSide() {
               احصل على فرصة احلامك!
             </Typography>
             <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              {errors.name && touched.name && (
+                <ErrorSpan>{errors.name}</ErrorSpan>
+              )}
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                name="fullName"
+                name="name"
                 label="Full Name"
-                type="fullName"
+                type="text"
                 id="fullName"
-                onChange={(e) => handleInputChange(e)}
+                onChange={handleChange}
               />
+              {errors.email && touched.email && (
+                <ErrorSpan>{errors.email}</ErrorSpan>
+              )}
               <TextField
                 margin="normal"
                 required
@@ -158,27 +242,42 @@ export default function SignInSide() {
                 label="Email Address"
                 name="email"
                 autoFocus
-                onChange={(e) => handleInputChange(e)}
+                onChange={handleChange}
               />
+              {errors.number && touched.number && (
+                <ErrorSpan>enter valid number</ErrorSpan>
+              )}
               <TextField
                 margin="normal"
                 required
                 fullWidth
                 id="number"
                 label="Phone Number"
-                name="phoneNum"
-                onChange={(e) => handleInputChange(e)}
+                name="number"
+                onChange={handleChange}
                 autoFocus
               />
+              {cv?.size > 2500000 && (
+                <div>
+                  <ErrorSpan>Error - file too big</ErrorSpan>
+                </div>
+              )}
               <FormButton variant="contained" component="label">
                 Upload CV
                 <input
                   type="file"
+                  name="cv"
                   hidden
+                  required
+                  accept=".doc, .docx,.txt,.pdf"
                   onChange={(e) => handleFileChange(e)}
                 />
               </FormButton>
-              {cv && <span style={{ paddingRight: "1rem" }}>{cv.name}</span>}
+              {cv && (
+                <p>
+                  {cv.name}({(cv.size / 1000000).toFixed(2)} MB)
+                </p>
+              )}
               <FormButton
                 type="submit"
                 fullWidth
