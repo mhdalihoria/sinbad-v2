@@ -34,7 +34,6 @@ const ErrorSpan = styled("span")(({ theme }) => ({
 
 // ---------Setting up Form Validation------
 
-
 const schema = Yup.object().shape({
   name: Yup.string().required(),
   email: Yup.string().required().email(),
@@ -65,11 +64,6 @@ function Copyright(props) {
 
 export default function SignInSide() {
   const [cv, setCv] = useState(null);
-  const [form, setForm] = useState({
-    fullName: null,
-    email: null,
-    phoneNum: null,
-  });
 
   const formik = useFormik({
     initialValues: {
@@ -87,99 +81,35 @@ export default function SignInSide() {
 
       if (cv?.size < 2500000) {
         // Request Body Data
-        const body = new FormData();
-        body.append("name", name);
-        body.append("email", email);
-        body.append("mobile", number);
-        body.append("cv", cv, cv.name);
-        // Request Body Data
-
-        console.log(cv);
-
-        // Request Header Data
-        const myHeaders = new Headers();
+        var myHeaders = new Headers();
         myHeaders.append("X-localization", "ar");
-        // Request Header Data
 
-        // Fetch API Options
-        const requestOptions = {
+        var formdata = new FormData();
+        formdata.append("name", name);
+        formdata.append("email", email);
+        formdata.append("mobile", number);
+        formdata.append("cv", cv, cv.name);
+
+        var requestOptions = {
           method: "POST",
           headers: myHeaders,
-          body: body,
+          body: formdata,
           redirect: "follow",
         };
-        // Fetch API Options
 
-        const response = await fetch(
-          "https://sinbad-store.com/api/v2/job",
-          requestOptions
-        );
-        const data = await response;
-
-        console.log(data);
+        fetch("https://sinbad-store.com/api/v2/job", requestOptions)
+          .then((response) => response.text())
+          .then((result) => console.log(result))
+          .catch((error) => console.log("error", error));
       }
     },
   });
 
   const { errors, touched, handleBlur, handleChange, handleSubmit } = formik;
 
-
-  // const uplaodToSever = async () => {
-  //   const { fullName, email, phoneNum } = form;
-
-  //   // Request Body Data
-  //   const body = new FormData();
-  //   body.append("name", fullName);
-  //   body.append("email", email);
-  //   body.append("mobile", phoneNum);
-  //   body.append("cv", cv, cv.name);
-  //   // Request Body Data
-
-  //   console.log(cv);
-
-  //   // Request Header Data
-  //   const myHeaders = new Headers();
-  //   myHeaders.append("X-localization", "ar");
-  //   // Request Header Data
-
-  //   // Fetch API Options
-  //   const requestOptions = {
-  //     method: "POST",
-  //     headers: myHeaders,
-  //     body: body,
-  //     redirect: "follow",
-  //   };
-  //   // Fetch API Options
-
-  //   const response = await fetch(
-  //     "https://sinbad-store.com/api/v2/job",
-  //     requestOptions
-  //   );
-  //   const data = await response;
-
-  //   console.log(data);
-  // };
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   uplaodToSever();
-  // };
-
-  // const handleInputChange = (e) => {
-  //   const { name, value } = e.target;
-  //   setForm((prevFrom) => {
-  //     return {
-  //       ...prevFrom,
-  //       [name]: value,
-  //     };
-  //   });
-  // };
-
   const handleFileChange = (e) => {
     setCv(e.target.files[0]);
   };
-
-  console.log(touched)
 
   return (
     <>
