@@ -52,6 +52,7 @@
     "react-i18next": "^12.0.0",
     "react-scroll": "^1.8.8",
     "react-spinners": "^0.13.8",
+    "react-use-downloader": "^1.2.4",
     "sharp": "^0.31.1",
     "simplebar-react": "^2.4.3",
     "stylis": "^4.1.3",
