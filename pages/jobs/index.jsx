@@ -33,12 +33,7 @@ const ErrorSpan = styled("span")(({ theme }) => ({
 // ------------STYlED COMPONENTS------------
 
 // ---------Setting up Form Validation------
-const SUPPORTED_FORMATS = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
-const FILE_SIZE = 100000 * 55;
+
 
 const schema = Yup.object().shape({
   name: Yup.string().required(),
@@ -126,7 +121,8 @@ export default function SignInSide() {
     },
   });
 
-  const { errors, touched, values, handleChange, handleSubmit } = formik;
+  const { errors, touched, handleBlur, handleChange, handleSubmit } = formik;
+
 
   // const uplaodToSever = async () => {
   //   const { fullName, email, phoneNum } = form;
@@ -183,6 +179,8 @@ export default function SignInSide() {
     setCv(e.target.files[0]);
   };
 
+  console.log(touched)
+
   return (
     <>
       <Grid container component="main" sx={{ height: "100vh" }}>
@@ -229,6 +227,7 @@ export default function SignInSide() {
                 label="Full Name"
                 type="text"
                 id="fullName"
+                onBlur={handleBlur}
                 onChange={handleChange}
               />
               {errors.email && touched.email && (
@@ -242,6 +241,7 @@ export default function SignInSide() {
                 label="Email Address"
                 name="email"
                 autoFocus
+                onBlur={handleBlur}
                 onChange={handleChange}
               />
               {errors.number && touched.number && (
@@ -254,6 +254,7 @@ export default function SignInSide() {
                 id="number"
                 label="Phone Number"
                 name="number"
+                onBlur={handleBlur}
                 onChange={handleChange}
                 autoFocus
               />
