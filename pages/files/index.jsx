@@ -18,9 +18,9 @@ const Files = ({ allFiles }) => {
         <EmptyFiles />
       ) : (
         <Grid container spacing={6} style={{ width: "100%", margin: "0 auto" }}>
-          {data.map((entry) => {
+          {data.map((entry, idx) => {
             return (
-              <Grid item md={4} lg={3} key={entry.created_at}>
+              <Grid item md={4} lg={3} key={`${entry.created_at}-${entry.name}-${entry.type}-${idx}`}>
                 <FileCard
                   type={entry.document_type}
                   name={entry.name}
@@ -32,31 +32,6 @@ const Files = ({ allFiles }) => {
           })}
         </Grid>
       )}
-      {/* <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Doc.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Driver.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Programs.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Doc.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Programs.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Doc.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Driver.src} />
-      </Grid>
-      <Grid item md={4} lg={3}>
-        <FileCard imgUrl={Programs.src} />
-      </Grid> */}
-      {/* </Grid> */}
     </PageContainer>
   );
 };
