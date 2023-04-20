@@ -9,19 +9,36 @@ import {
   TextField,
   styled,
 } from "@mui/material";
-import BazaarCard from "components/BazaarCard";
+import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { SettingsContext } from "contexts/SettingContext";
-import Image from "next/image";
+import allCategories from "../../utils/__api__/categories";
 
 const NavBarLowerWrapper = styled(Box)(({ theme, border }) => ({
   background: "white",
   padding: "1rem 0",
 }));
+const NavBarUpperWrapper = styled(Box)(({ theme, border }) => ({
+  width: "90%",
+  margin: "1rem auto",
+  display: "flex",
+  justifyContent: "space-between",
+}));
+
+const SelectStyling = {
+  fontSize: "10px",
+};
+const SearchFieldStyling = {
+  maxWidth: "60%",
+};
+const SearchButtonStyling = {
+  padding: "7px 25px",
+};
 
 const PageHeaderUpper = () => {
   const { siteSettingsData } = useContext(SettingsContext);
   const [settingsData, setSettingsData] = useState();
+  const categories = allCategories.data;
 
   useEffect(() => {
     if (siteSettingsData !== {}) {
@@ -33,79 +50,118 @@ const PageHeaderUpper = () => {
     console.log("search");
   };
 
+  const categoryMenuItemSelectElements = categories.map((category, idx) => {
+    if (category.parent_id === null) {
+      return (
+        <MenuItem key={idx} value={category.category_slug}>
+          {category.category_name}
+        </MenuItem>
+      );
+    }
+  });
+
   return (
-    <NavBarLowerWrapper>
-      <Grid container>
-        <Grid
-          item
-          lg={3}
-          md={3}
-          sm={9}
-          xs={9}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          order={{ xs: 1, sm: 1, md: 1, lg: 1}}
-        >
-          {settingsData && (
-            <Image
-              src={settingsData.Logo}
-              width={170}
-              height={100}
-              objectFit="cover"
+    <>
+      <NavBarUpperWrapper>
+        {settingsData && (
+          <>
+            <div>
+              <span
+                style={{
+                  paddingLeft: "1em",
+                  marginLeft: "1em",
+                  borderLeft: "1px solid black",
+                }}
+              >
+                {settingsData.WebsiteTitle}
+              </span>
+              <span>اتصل بنا: {settingsData.SupportNumber}</span>
+            </div>
+            <div>
+              <i className="fa-solid fa-user"></i> تسجيل الدخول
+            </div>
+          </>
+        )}
+      </NavBarUpperWrapper>
+      <NavBarLowerWrapper>
+        <Grid container>
+          <Grid
+            item
+            lg={3}
+            md={3}
+            sm={6}
+            xs={6}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            order={{ xs: 1, sm: 1, md: 1, lg: 1 }}
+          >
+            {settingsData && (
+              <Image
+                src={settingsData.Logo}
+                width={170}
+                height={100}
+                objectFit="cover"
+              />
+            )}
+          </Grid>
+
+          <Grid
+            item
+            lg={6}
+            md={6}
+            sm={12}
+            xs={12}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            order={{ xs: 2, sm: 2, md: 2, lg: 2 }}
+          >
+            {settingsData && (
+              <FormControl style={{ width: "130px" }}>
+                <InputLabel id="demo-simple-select-label">
+                  جميع التصنيفات
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={""}
+                  style={SelectStyling}
+                  size="medium"
+                  label="Age"
+                  onChange={searchHandler}
+                >
+                  {categoryMenuItemSelectElements}
+                </Select>
+              </FormControl>
+            )}
+            <TextField
+              id="outlined-basic"
+              label="Search"
+              variant="outlined"
+              style={SearchFieldStyling}
             />
-          )}
-        </Grid>
 
-        <Grid
-          item
-          lg={6}
-          md={6}
-          sm={9}
-          xs={12}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          order={{ xs: 2, sm: 2, md: 2, lg: 2 }}
-        >
-          <FormControl style={{width:"130px"}}>
-            <InputLabel id="demo-simple-select-label">جميع التصنيفات</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={""}
-              label="Age"
-              onChange={searchHandler}
-            >
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
-          <TextField
-            id="outlined-basic"
-            label="Search"
-            variant="outlined"
-            style={{ maxWidth: "50%" }}
-          />
-
-          <button onClick={searchHandler}>Search</button>
+            <button style={SearchButtonStyling} onClick={searchHandler}>
+              Search
+            </button>
+          </Grid>
+          <Grid
+            item
+            lg={3}
+            md={3}
+            sm={6}
+            xs={6}
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            order={{ xs: 1, sm: 1, md: 3, lg: 3 }}
+          >
+            <i className="fa-solid fa-cart-shopping"></i>
+          </Grid>
         </Grid>
-        <Grid
-          item
-          lg={3}
-          md={3}
-          sm={3}
-          xs={3}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-          order={{ xs: 2, sm: 2, md: 3, lg: 3 }}
-        >
-          something
-        </Grid>
-      </Grid>
-    </NavBarLowerWrapper>
+      </NavBarLowerWrapper>
+    </>
   );
 };
 
