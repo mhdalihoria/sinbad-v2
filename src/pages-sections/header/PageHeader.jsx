@@ -1,13 +1,22 @@
 import Navbar from "components/navbar/Navbar"
-import Header from "components/header/Header"
+import PageHeaderUpper from "./PageHeaderUpper"
+
+// styled component
+
+
+// ==============================================================
+
+// ==============================================================
 
 const PageHeader = () => {
   return (
     <>
-    <Header />
+    <PageHeaderUpper />
+    <div style={{height: 100}}>
     <Navbar />
+    </div>
     </>
   )
 }
-
+ 
 export default PageHeader
