@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import Header from "../../src/pages-sections/header/Header";
+import Header from "../../src/pages-sections/header/MainHeader";
 import CustomFooter from "../../src/pages-sections/footer/CustomFooter";
 
 // ------------STYlED COMPONENTS------------
