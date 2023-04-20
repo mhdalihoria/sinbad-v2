@@ -1,4 +1,4 @@
-import {useContext} from "react"
+import { useContext } from "react";
 import { SettingsContext } from "contexts/SettingContext";
 import Link from "next/link";
 import { Box, Container, Grid, IconButton, styled } from "@mui/material";
@@ -43,33 +43,34 @@ const FooterLowerPart = styled(Box)({
   justifyContent: "space-between",
   width: "99%",
   flexWrap: "wrap",
-
 });
 const CustomFooter = () => {
-  // CONTEXT DATA
-  // const {siteSettingsData} = useContext(SettingsContext)
-  // if(siteSettingsData) console.log(siteSettingsData)
-  // CONTEXT DATA
+  const { siteSettingsData } = useContext(SettingsContext);
+  const { social_links:socialLinks, offer_pages: offerPages, product_pages: productPages, site_pages: sitePages} = siteSettingsData
+  if (siteSettingsData) console.log(socialLinks);
+
+  // const socialMediaIconElements = 
 
   return (
     <footer>
-      <Box bgcolor="#222935">
-        <Box
-          py={10}
-          overflow="hidden"
-          sx={{ maxWidth: "90%", margin: "0 auto" }}
-        >
-          <Grid container spacing={3}>
-            <Grid item lg={12} md={12} sm={12} xs={12}>
-              <FooterTitle>صفحات المواقع</FooterTitle>
-              <FlexBox flexWrap="wrap" justifyContent={"space-between"}>
-                <DummyFooterSection />
-                <DummyFooterSection />
-                <DummyFooterSection />
-                <DummyFooterSection />
-                <DummyFooterSection />
-                <DummyFooterSection />
-                {/* <Box>
+      {siteSettingsData && (
+        <Box bgcolor="#222935">
+          <Box
+            py={10}
+            overflow="hidden"
+            sx={{ maxWidth: "90%", margin: "0 auto" }}
+          >
+            <Grid container spacing={3}>
+              <Grid item lg={12} md={12} sm={12} xs={12}>
+                <FooterTitle>صفحات المواقع</FooterTitle>
+                <FlexBox flexWrap="wrap" justifyContent={"space-between"}>
+                  <DummyFooterSection data={offerPages} title={"صفحات العروض"} />
+                  <DummyFooterSection data={productPages} title={"صفحات المنتجات"}/>
+                  <DummyFooterSection data={sitePages} title={"صفحات الموقع"}/>
+                  {/* <DummyFooterSection /> */}
+                  {/* <DummyFooterSection /> */}
+                  {/* <DummyFooterSection /> */}
+                  {/* <Box>
                   <Box
                     fontSize="18px"
                     fontWeight="600"
@@ -112,15 +113,14 @@ const CustomFooter = () => {
                     Phone: +1 1123 456 780
                   </Box>
                 </Box> */}
-              </FlexBox>
-            </Grid>
+                </FlexBox>
+              </Grid>
 
-            {/* <FlexBox flexWrap="wrap" justifyContent={"space-between"}></FlexBox> */}
-            <FooterLowerPart>
-              <DummyFooterLower />
+              {/* <FlexBox flexWrap="wrap" justifyContent={"space-between"}></FlexBox> */}
+              <FooterLowerPart>
+                <DummyFooterLower />
 
-
-              <FlexBox className="flex" mx={-0.625}>
+                <FlexBox className="flex" mx={-0.625}>
                   {iconList.map((item, ind) => (
                     <a
                       href={item.url}
@@ -146,12 +146,13 @@ const CustomFooter = () => {
                     </a>
                   ))}
                 </FlexBox>
-              
-              {/* <Grid item lg={3} md={3} sm={4} xs={12}></Grid> */}
-            </FooterLowerPart>
-          </Grid>
+
+                {/* <Grid item lg={3} md={3} sm={4} xs={12}></Grid> */}
+              </FooterLowerPart>
+            </Grid>
+          </Box>
         </Box>
-      </Box>
+      )}
     </footer>
   );
 };

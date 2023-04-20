@@ -13,7 +13,16 @@ const StyledLink = styled("a")(({ theme }) => ({
     color: theme.palette.grey[100],
   },
 }));
-const DummyFooterSection = () => {
+const DummyFooterSection = ({data, title,}) => {
+  console.log(data)
+
+  const subHeaderElements = data?.map(item => {
+    return (
+      <Link href={item.url} key={item.slug} passHref>
+          <StyledLink>{item.title}</StyledLink>
+        </Link>
+    )
+  })
   return (
     <Box mr={2} mb={4}>
       <Box
@@ -23,13 +32,14 @@ const DummyFooterSection = () => {
         lineHeight="1"
         color="white"
       >
-        <i className="fa-solid fa-car"></i> مركبات{" "}
-        <span style={{ fontSize: ".6rem" }}>(1112)</span>
+        {/* <i className="fa-solid fa-car"></i> */}
+         {title}{" "}
+        {/* <span style={{ fontSize: ".6rem" }}>(1112)</span> */}
       </Box>
 
       {/* subLink */}
       <div>
-        <Link href="/" passHref>
+        {/* <Link href="/" passHref>
           <StyledLink>{"سيارات"}</StyledLink>
         </Link>
         <Link href="/" passHref>
@@ -43,7 +53,8 @@ const DummyFooterSection = () => {
         </Link>
         <Link href="/" passHref>
           <StyledLink>{"سيارات للأيجار"}</StyledLink>
-        </Link>
+        </Link> */}
+        {subHeaderElements}
       </div>
     </Box>
   );
