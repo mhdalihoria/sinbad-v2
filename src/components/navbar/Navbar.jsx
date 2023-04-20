@@ -62,6 +62,7 @@ const NavBarWrapper = styled(BazaarCard)(({
   display: "block",
   borderRadius: "0px",
   position: "relative",
+  boxShadow: "none",
   ...(border && {
     borderBottom: `1px solid ${theme.palette.grey[200]}`
   }),
