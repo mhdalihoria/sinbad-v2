@@ -36,7 +36,7 @@ const CategoryMenuCard = (props) => {
     
   return (
     <Wrapper open={open} position={position}>
-      {categories.data.map((item) => {
+      {categories?.data.map((item) => {
         let MegaMenu = item.subcategories !== [] ? megaMenu['MegaMenu2'] : megaMenu['MegaMenu1']
         const shouldHaveCaret = item.subcategories.length > 0 ? true : false
         return (
