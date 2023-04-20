@@ -2,6 +2,7 @@ import { Box, styled } from "@mui/material";
 import Map from "../src/pages-sections/pos/Map";
 import BasicTable from "../src/pages-sections/pos/Table";
 import CustomFooter from "../src/pages-sections/footer/CustomFooter"
+import PageHeader from "../src/pages-sections/header/PageHeader"
 
 const PosConttentContainer = styled(Box)({
   width: "90%",
@@ -14,6 +15,7 @@ const PosConttentContainer = styled(Box)({
 const Pos = ({ posData }) => {
   return (
     <>
+    <PageHeader />
     <PosConttentContainer>
       <BasicTable posData={posData} />
       <Map posData={posData} />
