@@ -1,3 +1,5 @@
+import {useContext} from "react"
+import { SettingsContext } from "contexts/SettingContext";
 import Link from "next/link";
 import { Box, Container, Grid, IconButton, styled } from "@mui/material";
 import AppStore from "components/AppStore";
@@ -44,7 +46,10 @@ const FooterLowerPart = styled(Box)({
 
 });
 const CustomFooter = () => {
-  // console.log(newFooterData)
+  // CONTEXT DATA
+  // const {siteSettingsData} = useContext(SettingsContext)
+  // if(siteSettingsData) console.log(siteSettingsData)
+  // CONTEXT DATA
 
   return (
     <footer>
