@@ -1,6 +1,7 @@
 import { Box, Card, styled } from "@mui/material";
 import Image from "next/image";
 import allBlogs from "../../src/utils/__api__/blogsList";
+import useGetFetch from "../../src/components/fetch/useGetFetch";
 // import getBlogPost from "../../src/utils/__api__/blogSinglePost";
 
 const Wrapper = styled(Card)(({ theme }) => ({
@@ -22,7 +23,6 @@ const BlogTitle = styled(Box)({
   margin: ".5em 0 1em ",
 });
 
-
 const BlogPostMetaData = styled(Box)({
   display: "flex",
   flexWrap: "wrap",
@@ -39,7 +39,7 @@ const BlogDesc = styled(Box)(({ theme }) => ({
   marginTop: "1.7rem",
   fontSize: "1rem",
   "@media only screen and (max-width: 625px)": {
-    fontSize: ".8rem"
+    fontSize: ".8rem",
   },
 }));
 // =========================================================
@@ -64,11 +64,11 @@ const SingleBlogPage = ({ urlId, postData }) => {
     <Wrapper>
       <BlogTitle>{title}</BlogTitle>
       <Image
-          src={`https://sinbad-store.com${image}`}
-          height={"400"}
-          width={"100%"}
-          objectFit="cover"
-        />
+        src={`https://sinbad-store.com${image}`}
+        height={"400"}
+        width={"100%"}
+        objectFit="cover"
+      />
       <BlogPostMetaData>
         {author_name && (
           <span>
@@ -113,26 +113,21 @@ export const getStaticProps = async (ctx) => {
   // -----------------------------------
   // Fetch Headers
   // -----------------------------------
-  const myHeaders = new Headers();
-  myHeaders.append("X-localization", "ar");
 
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
   // -----------------------------------
   // Fetch Headers
   // -----------------------------------
 
   const urlId = ctx.params.id;
-  const postObj = await fetch(
+
+  const requestOptions = {
+    method: "GET",
+    headers: { "X-localization": "ar" },
+  };
+  const postObj = await useGetFetch(
     `http://sinbad-store.com/api/v2/blog/${urlId}`,
     requestOptions
-  )
-    .then((res) => res.json())
-    .catch((error) => console.log("error", error));
-
+  );
   return {
     props: {
       urlId,

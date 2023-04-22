@@ -11,12 +11,12 @@ import BlogsCategories from "../../src/pages-sections/blogs/BlogsCategories";
 
 import allBlogs from "../../src/utils/__api__/blogsList";
 import allBlogCates from "../../src/utils/__api__/blogCategories";
+import useGetFetch from "../../src/components/fetch/useGetFetch";
 
 const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
   return (
     <>
       <SEO title="Blogs" />
-
       <Grid container spacing={3}>
         {/* CART PRODUCT LIST */}
         <Grid item md={9} xs={12}>
@@ -38,8 +38,6 @@ const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
                 mb: 2,
               }}
             />
-
-            
           </Card>
         </Grid>
       </Grid>
@@ -47,11 +45,24 @@ const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
   );
 };
 
-export const getStaticProps = (ctx) => {
-  const allBlogsData = allBlogs.data;
-  const allBlogsCatesData = allBlogCates.data;
+export const getStaticProps = async (ctx) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "X-localization": "ar" },
+  };
+  const getFetchBlogs = await useGetFetch(
+    "https://sinbad-store.com/api/v2/blog",
+    requestOptions
+  );
+  const getFetchBlogCates = await useGetFetch(
+    "https://sinbad-store.com/api/v2/blog/categories",
+    requestOptions
+  );
   return {
-    props: { allBlogsData, allBlogsCatesData },
+    props: {
+      allBlogsData: getFetchBlogs.data,
+      allBlogsCatesData: getFetchBlogCates.data,
+    },
   };
 };
 

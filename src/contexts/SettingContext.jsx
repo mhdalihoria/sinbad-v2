@@ -1,3 +1,4 @@
+import useGetFetch from "components/fetch/useGetFetch";
 import { createContext, useEffect, useState } from "react";
 
 // ============================================================
@@ -42,23 +43,22 @@ const SettingsProvider = ({ children }) => {
       // -----------REQUEST OPTIONS---------
       const requestOptions = {
         method: "GET",
-        headers: myHeaders,
-        redirect: "follow",
+        headers: { "X-localization": "ar" },
       };
       // -----------REQUEST OPTIONS---------
 
       try {
-        const response = await fetch(
+        const settingsResponse = await useGetFetch(
           "https://sinbad-store.com/api/v2/settings",
           requestOptions
         );
-        const data = await response.json();
-        setFetchSiteSettings(data.data);
+        setFetchSiteSettings(settingsResponse.data);
       } catch (err) {
         console.error(err);
       }
     };
     getAllSettings();
+    
   }, []);
   // UseEffect to Get Data from LocalStorage and Assigning it to State
   useEffect(() => {

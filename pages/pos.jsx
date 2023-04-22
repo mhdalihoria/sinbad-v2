@@ -1,8 +1,9 @@
 import { Box, styled } from "@mui/material";
 import Map from "../src/pages-sections/pos/Map";
 import BasicTable from "../src/pages-sections/pos/Table";
-import CustomFooter from "../src/pages-sections/footer/CustomFooter"
-import PageHeader from "../src/pages-sections/header/PageHeader"
+import CustomFooter from "../src/pages-sections/footer/CustomFooter";
+import PageHeader from "../src/pages-sections/header/PageHeader";
+import useGetFetch from "../src/components/fetch/useGetFetch";
 
 const PosConttentContainer = styled(Box)({
   width: "90%",
@@ -15,39 +16,26 @@ const PosConttentContainer = styled(Box)({
 const Pos = ({ posData }) => {
   return (
     <>
-    <PageHeader />
-    <PosConttentContainer>
-      <BasicTable posData={posData} />
-      <Map posData={posData} />
-    </PosConttentContainer>
-    <CustomFooter />
+      <PageHeader />
+      <PosConttentContainer>
+        <BasicTable posData={posData} />
+        <Map posData={posData} />
+      </PosConttentContainer>
+      <CustomFooter />
     </>
   );
 };
 
 export const getStaticProps = async () => {
-  // --------------------------------------------
-  //  FETCH OPTOINS // REQUEST HEADERS
-  // --------------------------------------------
-  const myHeaders = new Headers();
-  myHeaders.append("X-localization", "ar");
-
   const requestOptions = {
     method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
+    headers: { "X-localization": "ar" },
   };
-  // --------------------------------------------
-  //  FETCH OPTOINS // REQUEST HEADERS
-  // --------------------------------------------
 
-  const posData = await fetch(
+  const posData = await useGetFetch(
     "https://sinbad-store.com/api/v2/pos",
     requestOptions
-  )
-    .then((response) => response.json())
-    .catch((error) => console.log("error", error));
-
+  );
   return {
     props: { posData: posData.data },
   };
