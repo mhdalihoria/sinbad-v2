@@ -35,11 +35,6 @@ const SettingsProvider = ({ children }) => {
   // UseEffect to Get Data from API and assigning it to seperate State
   useEffect(() => {
     const getAllSettings = async () => {
-      // -----------REQUEST HEADER---------
-      const myHeaders = new Headers();
-      myHeaders.append("X-localization", "ar");
-      // -----------REQUEST HEADER ---------
-
       // -----------REQUEST OPTIONS---------
       const requestOptions = {
         method: "GET",

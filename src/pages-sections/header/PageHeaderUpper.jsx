@@ -13,6 +13,7 @@ import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 import { SettingsContext } from "contexts/SettingContext";
 import allCategories from "../../utils/__api__/categories";
+import useGetFetch from "components/fetch/useGetFetch";
 
 const NavBarLowerWrapper = styled(Box)(({ theme, border }) => ({
   background: "white",
@@ -38,7 +39,9 @@ const SearchButtonStyling = {
 const PageHeaderUpper = () => {
   const { siteSettingsData } = useContext(SettingsContext);
   const [settingsData, setSettingsData] = useState();
-  const categories = allCategories.data;
+  const [categories, setCategories] = useState();
+
+console.log("category state", categories)
 
   useEffect(() => {
     if (siteSettingsData !== {}) {
@@ -46,11 +49,30 @@ const PageHeaderUpper = () => {
     }
   }, [siteSettingsData]);
 
+  useEffect(() => {
+    const fetchCates = async () => {
+
+      try {
+        const requestOptions= {
+          method: "GET",
+          headers: {"X-localization": "ar"},
+        }
+        const url = "https://sinbad-store.com/api/v2/categories"
+        const categoryResponse = await useGetFetch(url, requestOptions)
+      
+        setCategories(categoryResponse.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCates();
+  }, []);
+
   const searchHandler = () => {
     console.log("search");
   };
 
-  const categoryMenuItemSelectElements = categories.map((category, idx) => {
+  const categoryMenuItemSelectElements = categories?.map((category, idx) => {
     if (category.parent_id === null) {
       return (
         <MenuItem key={idx} value={category.category_slug}>
