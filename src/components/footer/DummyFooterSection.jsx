@@ -14,7 +14,7 @@ const StyledLink = styled("a")(({ theme }) => ({
   },
 }));
 const DummyFooterSection = ({data, title,}) => {
-  console.log(data)
+  // console.log(data)
 
   const subHeaderElements = data?.map(item => {
     return (

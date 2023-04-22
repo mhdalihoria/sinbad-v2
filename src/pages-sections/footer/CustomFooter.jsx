@@ -47,7 +47,7 @@ const FooterLowerPart = styled(Box)({
 const CustomFooter = () => {
   const { siteSettingsData } = useContext(SettingsContext);
   const { social_links:socialLinks, offer_pages: offerPages, product_pages: productPages, site_pages: sitePages} = siteSettingsData
-  if (siteSettingsData) console.log(socialLinks);
+  // if (siteSettingsData) console.log(socialLinks);
 
   // const socialMediaIconElements = 
 
