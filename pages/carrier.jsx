@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
 import allCountries from "../src/utils/__api__/deliveryCountries";
-import Header from "../src/pages-sections/header/Header"
+import MainHeader from "../src/pages-sections/header/MainHeader"
 import Form from "../src/pages-sections/carrier/Form";
 import DeliveryTable from "../src/pages-sections/carrier/Table";
 import Loader from "../src/components/loader-spinner/Loader";
+import useGetFetch from "../src/components/fetch/useGetFetch";
 
 const Carrier = ({ allCountries }) => {
   // --------------------------------------------------------------------
@@ -52,7 +53,7 @@ const Carrier = ({ allCountries }) => {
 
   return (
     <div>
-      <Header />
+      <MainHeader />
       <div style={{ width: "90%", margin: "0 auto", padding: "5rem 0" }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4} md={4} lg={4}>
@@ -96,7 +97,13 @@ const Carrier = ({ allCountries }) => {
 };
 
 export const getStaticProps = async () => {
-  const everyCountry = await allCountries;
+  const requestOptions= {
+    method: "GET",
+    headers: {"X-localization": "ar"},
+  }
+  const url = "https://sinbad-store.com/api/v2/countries"
+  const everyCountry = await useGetFetch(url, requestOptions)
+
   return {
     props: {
       allCountries: everyCountry.data.countries,

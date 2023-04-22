@@ -1,5 +1,5 @@
 import { Box, Grid, styled } from "@mui/material";
-import allFiles from "../../src/utils/__api__/files";
+import useGetFetch from "../../src/components/fetch/useGetFetch";
 import EmptyFiles from "../../src/pages-sections/files/EmptyFiles";
 import FileCard from "../../src/pages-sections/files/FileCard";
 const PageContainer = styled(Box)({
@@ -11,7 +11,6 @@ const PageContainer = styled(Box)({
 
 const Files = ({ allFiles }) => {
   const { data } = allFiles.files;
-  console.log(data);
   return (
     <PageContainer>
       {data.length === 0 ? (
@@ -37,7 +36,12 @@ const Files = ({ allFiles }) => {
 };
 
 export const getStaticProps = async (ctx) => {
-  const everyFile = await allFiles;
+  const requestOptions= {
+    method: "GET",
+    headers: {"X-localization": "ar"},
+  }
+  const url = "https://sinbad-store.com/api/v2/files"
+  const everyFile = await useGetFetch(url, requestOptions)
 
   return {
     props: {
