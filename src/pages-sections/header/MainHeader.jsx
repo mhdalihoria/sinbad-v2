@@ -4,7 +4,7 @@ import Image from "next/image";
 import LeftSectionItem from "./LeftSectionItem";
 import Logo from "../../../public/assets/images/header/logo.jpg";
 import { useEffect, useState } from "react";
-
+import NewsTicker from "./NewsTicker";
 const AppStoreSection = styled(Box)({
   width: "145px",
   display: "flex",
@@ -56,7 +56,7 @@ const Header = () => {
     <div
       style={{
         boxShadow: "0px 3px 7px -1px rgba(0,0,0,0.25)",
-        paddingBottom: "1.5rem",
+        
         marginBottom: "1rem",
       }}
     >
@@ -176,6 +176,17 @@ const Header = () => {
               />
             </LeftSideSection>
           )}
+        </Grid>
+
+        <Grid
+          item
+          lg={12}
+          md={12}
+          sm={12}
+          xs={12}
+          order={{ lg: 4, md: 4, sm: 4, xs: 4 }}
+        >
+          <NewsTicker />
         </Grid>
       </Grid>
     </div>
