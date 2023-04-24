@@ -10,6 +10,7 @@ import BazaarTextField from "components/BazaarTextField";
 import { Wrapper } from "./Login";
 import SocialButtons from "./SocialButtons";
 import EyeToggleButton from "./EyeToggleButton";
+import usePostFetch from "components/fetch/usePostFetch";
 const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
@@ -26,23 +27,31 @@ const Signup = () => {
     const { name, password, address, mobile } = values;
 
     try {
-      console.log(values);
+      // console.log(values);
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
+      // const requestOptions = {
+      //   method: "POST",
+      //   headers: {
+      //     "X-localization": "ar",
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify({ name, password, address, mobile }),
+      //   redirect: "follow",
+      // };
+
+      // const response = await fetch(
+      //   "https://sinbad-store.com/api/v2/register",
+      //   requestOptions
+      // );
+      // const data = await response.json();
+      const data = await usePostFetch(
+        "https://sinbad-store.com/api/v2/register",
+        {
           "X-localization": "ar",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, password, address, mobile }),
-        redirect: "follow",
-      };
-
-      const response = await fetch(
-        "https://sinbad-store.com/api/v2/register",
-        requestOptions
+        JSON.stringify({ name, password, address, mobile })
       );
-      const data = await response.json();
       console.log(data);
       if (data.data.length > 0) {
         setToken(data.data[0].token);
@@ -121,7 +130,7 @@ const Signup = () => {
           value={values.address}
           onChange={handleChange}
           label="Address"
-          placeholder="0999999999"
+          placeholder="Khalid Ibn Waleed St., Damascus, Syria"
           error={!!touched.address && !!errors.address}
           helperText={touched.address && errors.address}
         />
@@ -220,10 +229,19 @@ const initialValues = {
   // agreement: false
 };
 const formSchema = yup.object().shape({
-  name: yup.string().min(5, "Full Name is Too short").required("Name is required"),
-  mobile: yup.number().min(9, "Phone Number is Too short").required("Phone Number is required"),
+  name: yup
+    .string()
+    .min(5, "Full Name is Too short")
+    .required("Name is required"),
+  mobile: yup
+    .number()
+    .min(9, "Phone Number is Too short")
+    .required("Phone Number is required"),
   address: yup.string().required("Address is required"),
-  password: yup.string().min(8, "Password must be at least 8 characters long").required("Password is required"),
+  password: yup
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .required("Password is required"),
   re_password: yup
     .string()
     .oneOf([yup.ref("password"), null], "Passwords must match")

@@ -11,6 +11,7 @@ import { styled, useTheme } from "@mui/material/styles";
 import { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import usePostFetch from "../../src/components/fetch/usePostFetch"
 
 import Header from "../../src/pages-sections/header/MainHeader";
 import CustomFooter from "../../src/pages-sections/footer/CustomFooter";
@@ -81,26 +82,30 @@ export default function SignInSide() {
 
       if (cv?.size < 2500000) {
         // Request Body Data
-        var myHeaders = new Headers();
+        const myHeaders = new Headers();
         myHeaders.append("X-localization", "ar");
 
-        var formdata = new FormData();
+        const formdata = new FormData();
         formdata.append("name", name);
         formdata.append("email", email);
         formdata.append("mobile", number);
         formdata.append("cv", cv, cv.name);
 
-        var requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          body: formdata,
-          redirect: "follow",
-        };
 
-        fetch("https://sinbad-store.com/api/v2/job", requestOptions)
-          .then((response) => response.text())
-          .then((result) => console.log(result))
-          .catch((error) => console.log("error", error));
+        // const requestOptions = {
+        //   method: "POST",
+        //   headers: myHeaders,
+        //   body: formdata,
+        //   redirect: "follow",
+        // };
+
+        const data = await usePostFetch("https://sinbad-store.com/api/v2/job", myHeaders, formdata)
+        console.log(data)
+
+        // fetch("https://sinbad-store.com/api/v2/job", requestOptions)
+        //   .then((response) => response.text())
+        //   .then((result) => console.log(result))
+        //   .catch((error) => console.log("error", error));
       }
     },
   });

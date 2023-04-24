@@ -9,6 +9,7 @@ import BazaarTextField from "components/BazaarTextField";
 import SocialButtons from "./SocialButtons";
 import EyeToggleButton from "./EyeToggleButton";
 import { FlexBox, FlexRowCenter } from "components/flex-box";
+import usePostFetch from "components/fetch/usePostFetch";
 const fbStyle = {
   background: "#3B5998",
   color: "white",
@@ -57,21 +58,14 @@ const Login = () => {
     try {
       console.log(values);
 
-      const requestOptions = {
-        method: "POST",
-        headers: {
+      const data = await usePostFetch(
+        "https://sinbad-store.com/api/v2/login",
+        {
           "X-localization": "ar",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(values),
-        redirect: "follow",
-      };
-
-      const response = await fetch(
-        "https://sinbad-store.com/api/v2/login",
-        requestOptions
+        JSON.stringify(values)
       );
-      const data = await response.json();
       if (data.data.length > 0) {
         setToken(data.data[0].token);
       } else {
