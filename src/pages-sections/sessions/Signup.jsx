@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useContext } from "react";
 import { Button, Checkbox, Box, FormControlLabel } from "@mui/material";
 import Link from "next/link";
 import * as yup from "yup";
@@ -11,11 +11,14 @@ import { Wrapper } from "./Login";
 import SocialButtons from "./SocialButtons";
 import EyeToggleButton from "./EyeToggleButton";
 import usePostFetch from "components/fetch/usePostFetch";
+import { SettingsContext } from "contexts/SettingContext";
+
 const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
     setPasswordVisibility((visible) => !visible);
   }, []);
+  const { siteSettingsData } = useContext(SettingsContext);
 
   const [token, setToken] = useState(null);
   const [loginError, setLoginError] = useState(null);
@@ -77,13 +80,16 @@ const Signup = () => {
   return (
     <Wrapper elevation={3} passwordVisibility={passwordVisibility}>
       <form onSubmit={handleSubmit}>
-        <BazaarImage
-          src="/assets/images/bazaar-black-sm.svg"
-          sx={{
-            m: "auto",
-          }}
-        />
-
+        {siteSettingsData.settings && (
+          <BazaarImage
+            src={siteSettingsData.settings.Logo}
+            width={"160px"}
+            height={"90px"}
+            sx={{
+              m: "auto",
+            }}
+          />
+        )}
         <H1 textAlign="center" mt={1} mb={4} fontSize={16}>
           Create Your Account
         </H1>
