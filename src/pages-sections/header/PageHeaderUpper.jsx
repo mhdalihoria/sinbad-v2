@@ -41,8 +41,6 @@ const PageHeaderUpper = () => {
   const [settingsData, setSettingsData] = useState();
   const [categories, setCategories] = useState();
 
-console.log("category state", categories)
-
   useEffect(() => {
     if (siteSettingsData !== {}) {
       setSettingsData(siteSettingsData.settings);
