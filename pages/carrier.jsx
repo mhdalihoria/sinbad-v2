@@ -53,7 +53,7 @@ const Carrier = ({ allCountries }) => {
 
   return (
     <div>
-      <MainHeader />
+      {/* <MainHeader /> */}
       <div style={{ width: "90%", margin: "0 auto", padding: "5rem 0" }}>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4} md={4} lg={4}>
