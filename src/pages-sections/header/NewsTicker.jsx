@@ -1,9 +1,8 @@
 import { Box, styled } from "@mui/material";
 import useGetFetch from "components/fetch/useGetFetch";
 import React, { useEffect, useState } from "react";
-import Ticker from "react-ticker";
 
-const NewsContainer = styled(Box)({
+const NewsContainer = styled(Box)(({theme}) => ({
   //   position: "fixed",
   //   top: 0,
   //   left: 0,
@@ -13,12 +12,12 @@ const NewsContainer = styled(Box)({
 
   "& .title": {
     position: "absolute",
-    background: "#df2020",
+    background: theme.palette.primary.main,
     height: "41px",
     display: "flex",
     alignItems: "center",
     padding: " 0 24px",
-    color: "white",
+    color: theme.palette.primary.contrastText,
     fontWeight: "bold",
     zIndex: "200",
   },
@@ -33,7 +32,6 @@ const NewsContainer = styled(Box)({
   "& ul li": {
     whiteSpace: " nowrap",
     padding: "10px 24px",
-    color: "#494949",
     position: "relative",
   },
 
@@ -41,7 +39,6 @@ const NewsContainer = styled(Box)({
     // content: "",
     width: "1px",
     height: "100%",
-    background: "#b8b8b8",
     position: "absolute",
     top: "0",
     right: "0",
@@ -60,8 +57,8 @@ const NewsContainer = styled(Box)({
       transform: "translateX(1083px)",
     },
   },
-});
-
+})
+)
 const NewsTicker = () => {
   const [news, setNews] = useState();
 
@@ -88,10 +85,9 @@ const NewsTicker = () => {
   const newsElements = news?.map((item) => {
     return <li key={item.slug}> | {item.title} | </li>;
   });
-  console.log(newsElements);
   return (
     <NewsContainer>
-      <div class="title">الأخبار</div>
+      <div className="title">الأخبار</div>
 
       <ul>{newsElements}</ul>
     </NewsContainer>
