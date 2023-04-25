@@ -103,7 +103,8 @@ const PageHeaderUpper = () => {
           </>
         )}
       </NavBarUpperWrapper>
-      <NavBarLowerWrapper>
+      {/* Hiding Secondary Header */}
+      {/* <NavBarLowerWrapper>
         <Grid container>
           <Grid
             item
@@ -180,7 +181,7 @@ const PageHeaderUpper = () => {
             <i className="fa-solid fa-cart-shopping"></i>
           </Grid>
         </Grid>
-      </NavBarLowerWrapper>
+      </NavBarLowerWrapper> */}
     </>
   );
 };
