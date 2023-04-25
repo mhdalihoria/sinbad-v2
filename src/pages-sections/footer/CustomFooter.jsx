@@ -46,10 +46,12 @@ const FooterLowerPart = styled(Box)({
 });
 const CustomFooter = () => {
   const { siteSettingsData } = useContext(SettingsContext);
-  const { social_links:socialLinks, offer_pages: offerPages, product_pages: productPages, site_pages: sitePages} = siteSettingsData
-  // if (siteSettingsData) console.log(socialLinks);
-
-  // const socialMediaIconElements = 
+  const {
+    social_links: socialLinks,
+    offer_pages: offerPages,
+    product_pages: productPages,
+    site_pages: sitePages,
+  } = siteSettingsData;
 
   return (
     <footer>
@@ -64,90 +66,49 @@ const CustomFooter = () => {
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <FooterTitle>صفحات المواقع</FooterTitle>
                 <FlexBox flexWrap="wrap" justifyContent={"space-between"}>
-                  <DummyFooterSection data={offerPages} title={"صفحات العروض"} />
-                  <DummyFooterSection data={productPages} title={"صفحات المنتجات"}/>
-                  <DummyFooterSection data={sitePages} title={"صفحات الموقع"}/>
-                  {/* <DummyFooterSection /> */}
-                  {/* <DummyFooterSection /> */}
-                  {/* <DummyFooterSection /> */}
-                  {/* <Box>
-                  <Box
-                    fontSize="18px"
-                    fontWeight="600"
-                    mb={1.5}
-                    lineHeight="1"
-                    color="white"
-                  >
-                    Customer Care
-                  </Box>
-                  <div>
-                    {customerCareLinks.map((item, ind) => (
-                      <Link href="/" key={ind} passHref>
-                        <StyledLink>{item}</StyledLink>
-                      </Link>
-                    ))}
-                  </div>
-                </Box>
-
-                <Box>
-                  <Box
-                    fontSize="18px"
-                    fontWeight="600"
-                    mb={1.5}
-                    lineHeight="1"
-                    color="white"
-                  >
-                    Contact Us
-                  </Box>
-
-                  <Box py={0.6} color="grey.500">
-                    70 Washington Square South, New York, NY 10012, United
-                    States
-                  </Box>
-
-                  <Box py={0.6} color="grey.500">
-                    Email: uilib.help@gmail.com
-                  </Box>
-
-                  <Box py={0.6} mb={2} color="grey.500">
-                    Phone: +1 1123 456 780
-                  </Box>
-                </Box> */}
+                  <DummyFooterSection
+                    data={offerPages}
+                    title={"صفحات العروض"}
+                  />
+                  <DummyFooterSection
+                    data={productPages}
+                    title={"صفحات المنتجات"}
+                  />
+                  <DummyFooterSection data={sitePages} title={"صفحات الموقع"} />
                 </FlexBox>
               </Grid>
 
-              {/* <FlexBox flexWrap="wrap" justifyContent={"space-between"}></FlexBox> */}
               <FooterLowerPart>
                 <DummyFooterLower />
 
                 <FlexBox className="flex" mx={-0.625}>
-                  {iconList.map((item, ind) => (
-                    <a
-                      href={item.url}
-                      target="_blank"
-                      rel="noreferrer noopenner"
-                      key={ind}
-                    >
-                      <IconButton
-                        sx={{
-                          margin: 0.5,
-                          fontSize: 12,
-                          padding: "10px",
-                          backgroundColor: "rgba(0,0,0,0.2)",
-                        }}
-                      >
-                        <item.icon
-                          fontSize="inherit"
-                          sx={{
-                            color: "white",
-                          }}
-                        />
-                      </IconButton>
-                    </a>
-                  ))}
+                  {socialLinks?.map((item, ind) => {
+                    if (item.url.includes("http")) {
+                      return (
+                        <a
+                          href={item.url}
+                          target="_blank"
+                          rel="noreferrer noopenner"
+                          key={ind}
+                        >
+                          <IconButton
+                            sx={{
+                              margin: 0.5,
+                              fontSize: 12,
+                              padding: "10px",
+                              backgroundColor: "rgba(0,0,0,0.2)",
+                            }}
+                          >
+                            <i
+                              className={`fa-brands fa-${item.name.toLowerCase()}`}
+                              style={{ color: "white" }}
+                            ></i>
+                          </IconButton>
+                        </a>
+                      );
+                    }
+                  })}
                 </FlexBox>
-
-                {/* <Grid item lg={3} md={3} sm={4} xs={12}></Grid> */}
               </FooterLowerPart>
             </Grid>
           </Box>
@@ -156,40 +117,5 @@ const CustomFooter = () => {
     </footer>
   );
 };
-const aboutLinks = [
-  "Careers",
-  "Our Stores",
-  "Our Cares",
-  "Terms & Conditions",
-  "Privacy Policy",
-];
-const customerCareLinks = [
-  "Help Center",
-  "How to Buy",
-  "Track Your Order",
-  "Corporate & Bulk Purchasing",
-  "Returns & Refunds",
-];
-const iconList = [
-  {
-    icon: Facebook,
-    url: "https://www.facebook.com/UILibOfficial",
-  },
-  {
-    icon: Twitter,
-    url: "https://twitter.com/uilibofficial",
-  },
-  {
-    icon: Youtube,
-    url: "https://www.youtube.com/channel/UCsIyD-TSO1wQFz-n2Y4i3Rg",
-  },
-  {
-    icon: Google,
-    url: "https://www.google.com/search?q=ui-lib.com",
-  },
-  {
-    icon: Instagram,
-    url: "https://www.instagram.com/uilibofficial/",
-  },
-];
+
 export default CustomFooter;
