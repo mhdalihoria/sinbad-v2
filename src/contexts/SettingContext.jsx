@@ -53,7 +53,6 @@ const SettingsProvider = ({ children }) => {
       }
     };
     getAllSettings();
-    
   }, []);
   // UseEffect to Get Data from LocalStorage and Assigning it to State
   useEffect(() => {
@@ -64,13 +63,22 @@ const SettingsProvider = ({ children }) => {
     // -----------------------------------------------
     const getSiteSettings = window.localStorage.getItem("siteData_settings");
     // if it exists assign it to state (siteSettings)
-    if (getSiteSettings && getSiteSettings !== "undefined"){
+    if (getSiteSettings && getSiteSettings !== "undefined") {
       setSiteSettingsData(JSON.parse(getSiteSettings));
     }
     // if it doesn't, get the info from the fetch state and assign the local storage and the settings state to the fetched state
-    if(!getSiteSettings || getSiteSettings === "undefined" || getSiteSettings === {}) {
-      window.localStorage.setItem("siteData_settings", JSON.stringify(fetchSiteSettings));
-      setSiteSettingsData(fetchSiteSettings);
+    if (
+      !getSiteSettings ||
+      getSiteSettings === "undefined" ||
+      getSiteSettings === {}
+    ) {
+      if (typeof fetchSiteSettings !== "undefined") {
+        window.localStorage.setItem(
+          "siteData_settings",
+          JSON.stringify(fetchSiteSettings)
+        );
+        setSiteSettingsData(fetchSiteSettings);
+      }
     }
   }, [fetchSiteSettings]);
 
