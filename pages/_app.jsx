@@ -13,6 +13,8 @@ import nextI18NextConfig from "../next-i18next.config";
 import "nprogress/nprogress.css";
 import "simplebar/dist/simplebar.min.css";
 import "../src/__server__";
+import MainHeader from "../src/pages-sections/header/MainHeader"
+import CustomFooter from "../src/pages-sections/footer/CustomFooter"
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
@@ -43,7 +45,11 @@ const App = ({ Component, pageProps }) => {
         <AppProvider>
           <MuiTheme>
             <SnackbarProvider>
-              <RTL>{getLayout(<AnyComponent {...pageProps} />)}</RTL>
+              <RTL>
+                <MainHeader />
+                {getLayout(<AnyComponent {...pageProps} />)}
+                <CustomFooter />
+              </RTL>
             </SnackbarProvider>
           </MuiTheme>
         </AppProvider>
