@@ -1,4 +1,4 @@
-import { Box, Grid, TextField, styled } from "@mui/material";
+import { Box, Button, Grid, TextField, styled } from "@mui/material";
 import AppStore from "components/AppStore";
 import Image from "next/image";
 import LeftSectionItem from "./LeftSectionItem";
@@ -31,9 +31,17 @@ const LogoSection = styled(Box)({
   gap: "1rem",
 });
 
+const OptionsButton = styled(Button)(({theme}) => ({
+  color: theme.palette.primary.contrastText,
+  background: theme.palette.primary.main,
+  border: "none",
+  padding: "5px 10px",
+  borderRadius: "5px"
+}))
+
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [windowSize, setWindowSize] = useState(null);
+  const [windowSize, setWindowSize] = useState();
   const breakPointMD = 960;
 
   useEffect(() => {
@@ -42,7 +50,7 @@ const Header = () => {
     };
 
     window.addEventListener("resize", handleResizeWindow);
-
+    handleResizeWindow();
     return () => {
       window.removeEventListener("resize", handleResizeWindow);
     };
@@ -56,7 +64,7 @@ const Header = () => {
     <div
       style={{
         boxShadow: "0px 3px 7px -1px rgba(0,0,0,0.25)",
-        
+
         marginBottom: "1rem",
       }}
     >
@@ -104,9 +112,14 @@ const Header = () => {
               }}
             >
               {windowSize < breakPointMD && (
-                <button onClick={() => setIsOpen((isOpen) => !isOpen)}>
+                <OptionsButton
+                  onClick={() => setIsOpen((isOpen) => !isOpen)}
+                  style={{
+                    
+                  }}
+                >
                   <i className={`fa-solid fa-${isOpen ? "x" : "bars"}`}></i>
-                </button>
+                </OptionsButton>
               )}
               <TextField
                 id="outlined-basic"
@@ -115,7 +128,7 @@ const Header = () => {
                 style={{ width: "50%" }}
               />
 
-              <button onClick={searchHandler}>Search</button>
+              <OptionsButton onClick={searchHandler}>Search</OptionsButton>
             </div>
             <div className="buttons"></div>
           </LogoSection>
