@@ -2,13 +2,14 @@ import { Box, styled } from "@mui/material";
 import useGetFetch from "components/fetch/useGetFetch";
 import React, { useEffect, useState } from "react";
 
-const NewsContainer = styled(Box)(({theme}) => ({
+const NewsContainer = styled(Box)(({ theme }) => ({
   //   position: "fixed",
   //   top: 0,
   //   left: 0,
   //   right: 0,
   //   boxShadow: "0 4px 8px -4px rgba(0, 0, 0, 0.3)",
   //   border: "1px solid black",
+  overflow: "hidden",
 
   "& .title": {
     position: "absolute",
@@ -57,8 +58,7 @@ const NewsContainer = styled(Box)(({theme}) => ({
       transform: "translateX(1083px)",
     },
   },
-})
-)
+}));
 const NewsTicker = () => {
   const [news, setNews] = useState();
 
