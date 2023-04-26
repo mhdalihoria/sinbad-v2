@@ -65,7 +65,7 @@ const CustomFooter = () => {
             <Grid container spacing={3}>
               <Grid item lg={12} md={12} sm={12} xs={12}>
                 <FooterTitle>صفحات المواقع</FooterTitle>
-                <FlexBox flexWrap="wrap" justifyContent={"space-between"}>
+                <FlexBox flexWrap="wrap" justifyContent={"space-around"}>
                   <DummyFooterSection
                     data={offerPages}
                     title={"صفحات العروض"}
