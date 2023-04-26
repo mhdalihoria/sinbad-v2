@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useContext } from "react";
-import { Button, Checkbox, Box, FormControlLabel } from "@mui/material";
+import { Button, Checkbox, Box, FormControlLabel, useTheme, styled } from "@mui/material";
 import Link from "next/link";
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -13,6 +13,17 @@ import EyeToggleButton from "./EyeToggleButton";
 import usePostFetch from "components/fetch/usePostFetch";
 import { SettingsContext } from "contexts/SettingContext";
 import ConfirmCode from "./ConfirmCode";
+import Loader from "../../components/loader-spinner/Loader";
+
+
+const ErrorStyle = styled(H1)(({theme}) => ({
+  color: theme.palette.primary.main,
+  textAlign:"center" ,
+  marginTop: 2,
+  marginBottom: 4,
+  fontSize: "12px"
+  // mt={2} mb={4} fontSize={12}
+}))
 
 const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -24,6 +35,7 @@ const Signup = () => {
   const [token, setToken] = useState(null);
   const [loginError, setLoginError] = useState(null);
   const [stage, setStage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   console.log(token);
   console.log(loginError);
@@ -32,23 +44,8 @@ const Signup = () => {
     const { name, password, address, mobile } = values;
 
     try {
-      // console.log(values);
+      setLoading(true);
 
-      // const requestOptions = {
-      //   method: "POST",
-      //   headers: {
-      //     "X-localization": "ar",
-      //     "Content-Type": "application/json",
-      //   },
-      //   body: JSON.stringify({ name, password, address, mobile }),
-      //   redirect: "follow",
-      // };
-
-      // const response = await fetch(
-      //   "https://sinbad-store.com/api/v2/register",
-      //   requestOptions
-      // );
-      // const data = await response.json();
       const data = await usePostFetch(
         "https://sinbad-store.com/api/v2/register",
         {
@@ -61,8 +58,10 @@ const Signup = () => {
       if (data.data.length > 0) {
         setToken(data.data[0].token);
         setStage(1);
+        setLoading(false);
       } else {
         setLoginError(data.message);
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
@@ -86,150 +85,161 @@ const Signup = () => {
       {stage === 1 && <ConfirmCode token={token} setStage={setStage} />}
       {stage === 0 && (
         <>
-          <form onSubmit={handleSubmit}>
-            {siteSettingsData.settings && (
-              <BazaarImage
-                src={siteSettingsData.settings.Logo}
-                width={"160px"}
-                height={"90px"}
-                sx={{
-                  m: "auto",
-                }}
-              />
-            )}
-            <H1 textAlign="center" mt={1} mb={4} fontSize={16}>
-              Create Your Account
-            </H1>
-
-            <BazaarTextField
-              mb={1.5}
-              fullWidth
-              name="name"
-              size="small"
-              label="Full Name"
-              variant="outlined"
-              onBlur={handleBlur}
-              value={values.name}
-              onChange={handleChange}
-              placeholder="Ralph Adwards"
-              error={!!touched.name && !!errors.name}
-              helperText={touched.name && errors.name}
-            />
-
-            <BazaarTextField
-              mb={1.5}
-              fullWidth
-              name="mobile"
-              size="small"
-              type="mobile"
-              variant="outlined"
-              onBlur={handleBlur}
-              value={values.mobile}
-              onChange={handleChange}
-              label="Phone Number"
-              placeholder="0999999999"
-              error={!!touched.mobile && !!errors.mobile}
-              helperText={touched.mobile && errors.mobile}
-            />
-
-            <BazaarTextField
-              mb={1.5}
-              fullWidth
-              name="address"
-              size="small"
-              type="address"
-              variant="outlined"
-              onBlur={handleBlur}
-              value={values.address}
-              onChange={handleChange}
-              label="Address"
-              placeholder="Khalid Ibn Waleed St., Damascus, Syria"
-              error={!!touched.address && !!errors.address}
-              helperText={touched.address && errors.address}
-            />
-
-            <BazaarTextField
-              mb={1.5}
-              fullWidth
-              size="small"
-              name="password"
-              label="Password"
-              variant="outlined"
-              autoComplete="on"
-              placeholder="*********"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.password}
-              type={passwordVisibility ? "text" : "password"}
-              error={!!touched.password && !!errors.password}
-              helperText={touched.password && errors.password}
-              InputProps={{
-                endAdornment: (
-                  <EyeToggleButton
-                    show={passwordVisibility}
-                    click={togglePasswordVisibility}
+          {loading ? (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Loader loading={loading} size={15} />
+            </div>
+          ) : (
+            <>
+              <form onSubmit={handleSubmit}>
+                {siteSettingsData.settings && (
+                  <BazaarImage
+                    src={siteSettingsData.settings.Logo}
+                    width={"160px"}
+                    height={"90px"}
+                    sx={{
+                      m: "auto",
+                    }}
                   />
-                ),
-              }}
-            />
+                )}
+                <H1 textAlign="center" mt={1} mb={4} fontSize={16}>
+                  Create Your Account
+                </H1>
+                <ErrorStyle >
+                {loginError}
+                </ErrorStyle>
 
-            <BazaarTextField
-              fullWidth
-              size="small"
-              autoComplete="on"
-              name="re_password"
-              variant="outlined"
-              label="Retype Password"
-              placeholder="*********"
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.re_password}
-              type={passwordVisibility ? "text" : "password"}
-              error={!!touched.re_password && !!errors.re_password}
-              helperText={touched.re_password && errors.re_password}
-              InputProps={{
-                endAdornment: (
-                  <EyeToggleButton
-                    show={passwordVisibility}
-                    click={togglePasswordVisibility}
-                  />
-                ),
-              }}
-            />
+                <BazaarTextField
+                  mb={1.5}
+                  fullWidth
+                  name="name"
+                  size="small"
+                  label="Full Name"
+                  variant="outlined"
+                  onBlur={handleBlur}
+                  value={values.name}
+                  onChange={handleChange}
+                  placeholder="Ralph Adwards"
+                  error={!!touched.name && !!errors.name}
+                  helperText={touched.name && errors.name}
+                />
 
-            {/* <FormControlLabel name="agreement" className="agreement" onChange={handleChange} control={<Checkbox size="small" color="secondary" checked={values.agreement || false} />} label={<FlexBox flexWrap="wrap" alignItems="center" justifyContent="flex-start">
-              By signing up, you agree to
-              <a href="/" target="_blank" rel="noreferrer noopener">
-                <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
-                  Terms & Condtion
-                </H6>
-              </a>
-            </FlexBox>} /> */}
+                <BazaarTextField
+                  mb={1.5}
+                  fullWidth
+                  name="mobile"
+                  size="small"
+                  type="mobile"
+                  variant="outlined"
+                  onBlur={handleBlur}
+                  value={values.mobile}
+                  onChange={handleChange}
+                  label="Phone Number"
+                  placeholder="0999999999"
+                  error={!!touched.mobile && !!errors.mobile}
+                  helperText={touched.mobile && errors.mobile}
+                />
 
-            <Button
-              fullWidth
-              type="submit"
-              color="primary"
-              variant="contained"
-              sx={{
-                height: 44,
-              }}
-            >
-              Create Account
-            </Button>
-          </form>
+                <BazaarTextField
+                  mb={1.5}
+                  fullWidth
+                  name="address"
+                  size="small"
+                  type="address"
+                  variant="outlined"
+                  onBlur={handleBlur}
+                  value={values.address}
+                  onChange={handleChange}
+                  label="Address"
+                  placeholder="Khalid Ibn Waleed St., Damascus, Syria"
+                  error={!!touched.address && !!errors.address}
+                  helperText={touched.address && errors.address}
+                />
+
+                <BazaarTextField
+                  mb={1.5}
+                  fullWidth
+                  size="small"
+                  name="password"
+                  label="Password"
+                  variant="outlined"
+                  autoComplete="on"
+                  placeholder="*********"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.password}
+                  type={passwordVisibility ? "text" : "password"}
+                  error={!!touched.password && !!errors.password}
+                  helperText={touched.password && errors.password}
+                  InputProps={{
+                    endAdornment: (
+                      <EyeToggleButton
+                        show={passwordVisibility}
+                        click={togglePasswordVisibility}
+                      />
+                    ),
+                  }}
+                />
+
+                <BazaarTextField
+                  fullWidth
+                  size="small"
+                  autoComplete="on"
+                  name="re_password"
+                  variant="outlined"
+                  label="Retype Password"
+                  placeholder="*********"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.re_password}
+                  type={passwordVisibility ? "text" : "password"}
+                  error={!!touched.re_password && !!errors.re_password}
+                  helperText={touched.re_password && errors.re_password}
+                  InputProps={{
+                    endAdornment: (
+                      <EyeToggleButton
+                        show={passwordVisibility}
+                        click={togglePasswordVisibility}
+                      />
+                    ),
+                  }}
+                />
+
+                {/* <FormControlLabel name="agreement" className="agreement" onChange={handleChange} control={<Checkbox size="small" color="secondary" checked={values.agreement || false} />} label={<FlexBox flexWrap="wrap" alignItems="center" justifyContent="flex-start">
+            By signing up, you agree to
+            <a href="/" target="_blank" rel="noreferrer noopener">
+              <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+                Terms & Condtion
+              </H6>
+            </a>
+          </FlexBox>} /> */}
+
+                <Button
+                  fullWidth
+                  type="submit"
+                  color="primary"
+                  variant="contained"
+                  sx={{
+                    height: 44,
+                  }}
+                >
+                  Create Account
+                </Button>
+              </form>
+              <FlexRowCenter mt="1.25rem">
+                <Box>Already have an account?</Box>
+                <Link href="/login" passHref legacyBehavior>
+                  <a>
+                    <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+                      Login
+                    </H6>
+                  </a>
+                </Link>
+              </FlexRowCenter>
+            </>
+          )}
 
           {/* <SocialButtons /> */}
-          <FlexRowCenter mt="1.25rem">
-            <Box>Already have an account?</Box>
-            <Link href="/login" passHref legacyBehavior>
-              <a>
-                <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
-                  Login
-                </H6>
-              </a>
-            </Link>
-          </FlexRowCenter>
         </>
       )}
     </Wrapper>
