@@ -7,7 +7,7 @@ import Head from "next/head";
 const SEO = ({
   title,
   description,
-  sitename = "Bazaar Next.js Ecommerce"
+  sitename = "Sinbad V2"
 }) => {
   return <Head>
       <title>{`${title} | ${sitename}`}</title>
