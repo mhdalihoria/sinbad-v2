@@ -11,6 +11,7 @@ import EyeToggleButton from "./EyeToggleButton";
 import { FlexBox, FlexRowCenter } from "components/flex-box";
 import usePostFetch from "components/fetch/usePostFetch";
 import { SettingsContext } from "contexts/SettingContext";
+import Loading from "../../components/loader-spinner/Loader"
 
 const fbStyle = {
   background: "#3B5998",
@@ -56,11 +57,12 @@ const Login = () => {
 
   const [token, setToken] = useState(null);
   const [loginError, setLoginError] = useState(null);
-
+  const [loading, setLoading] = useState(false);
+  const [stage, setStage] = useState(0)
   const handleFormSubmit = async (values) => {
     try {
       console.log(values);
-
+      setLoading(true);
       const data = await usePostFetch(
         "https://sinbad-store.com/api/v2/login",
         {
@@ -71,11 +73,15 @@ const Login = () => {
       );
       if (data.data.length > 0) {
         setToken(data.data[0].token);
+        setStage(1)
+        setLoading(false);
       } else {
         setLoginError(data.message);
+        setLoading(false);
       }
     } catch (err) {
       console.error(err);
+      setLoading(false);
     }
   };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } =
@@ -93,90 +99,96 @@ const Login = () => {
   }, [token]);
   return (
     <Wrapper elevation={3} passwordVisibility={passwordVisibility}>
-      <form onSubmit={handleSubmit}>
-        {siteSettingsData.settings && (
-          <BazaarImage
-            src={siteSettingsData.settings.Logo}
-            width={"160px"}
-            height={"90px"}
-            sx={{
-              m: "auto",
-            }}
-          />
-        )}
-        <H1 textAlign="center" mt={1} mb={4} fontSize={16}>
-          Welcome To Sinbad Store
-        </H1>
-
-        {loginError && <span style={{ color: "red" }}> {loginError}</span>}
-
-        <BazaarTextField
-          mb={1.5}
-          fullWidth
-          name="username"
-          size="username"
-          type="text"
-          variant="outlined"
-          onBlur={handleBlur}
-          value={values.username}
-          onChange={handleChange}
-          label="User Name or Phone Number"
-          placeholder="Mohammad1980"
-          error={!!touched.username && !!errors.username}
-          helperText={touched.username && errors.username}
-        />
-
-        <BazaarTextField
-          mb={2}
-          fullWidth
-          size="small"
-          name="password"
-          label="Password"
-          autoComplete="on"
-          variant="outlined"
-          onBlur={handleBlur}
-          onChange={handleChange}
-          value={values.password}
-          placeholder="*********"
-          type={passwordVisibility ? "text" : "password"}
-          error={!!touched.password && !!errors.password}
-          helperText={touched.password && errors.password}
-          InputProps={{
-            endAdornment: (
-              <EyeToggleButton
-                show={passwordVisibility}
-                click={togglePasswordVisibility}
+      {stage === 1 && <span>Thank you for Logging in. You'll get redireted soon</span>}
+      {stage === 0 && (loading ? (
+        <div style={{display: "flex", justifyContent: "center"}}><Loading size={15} loading={loading} /></div>
+      ) : (
+        <>
+          <form onSubmit={handleSubmit}>
+            {siteSettingsData.settings && (
+              <BazaarImage
+                src={siteSettingsData.settings.Logo}
+                width={"160px"}
+                height={"90px"}
+                sx={{
+                  m: "auto",
+                }}
               />
-            ),
-          }}
-        />
+            )}
+            <H1 textAlign="center" mt={1} mb={4} fontSize={16}>
+              Welcome To Sinbad Store
+            </H1>
 
-        <Button
-          fullWidth
-          type="submit"
-          color="primary"
-          variant="contained"
-          sx={{
-            height: 44,
-          }}
-        >
-          Login
-        </Button>
-      </form>
+            {loginError && <span style={{ color: "red" }}> {loginError}</span>}
 
-      {/* <SocialButtons /> */}
+            <BazaarTextField
+              mb={1.5}
+              fullWidth
+              name="username"
+              size="username"
+              type="text"
+              variant="outlined"
+              onBlur={handleBlur}
+              value={values.username}
+              onChange={handleChange}
+              label="User Name or Phone Number"
+              placeholder="Mohammad1980"
+              error={!!touched.username && !!errors.username}
+              helperText={touched.username && errors.username}
+            />
 
-      <FlexRowCenter mt="1.25rem">
-        <Box>Don&apos;t have account?</Box>
-        <Link href="/signup" passHref legacyBehavior>
-          <a>
-            <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
-              Sign Up
-            </H6>
-          </a>
-        </Link>
-      </FlexRowCenter>
+            <BazaarTextField
+              mb={2}
+              fullWidth
+              size="small"
+              name="password"
+              label="Password"
+              autoComplete="on"
+              variant="outlined"
+              onBlur={handleBlur}
+              onChange={handleChange}
+              value={values.password}
+              placeholder="*********"
+              type={passwordVisibility ? "text" : "password"}
+              error={!!touched.password && !!errors.password}
+              helperText={touched.password && errors.password}
+              InputProps={{
+                endAdornment: (
+                  <EyeToggleButton
+                    show={passwordVisibility}
+                    click={togglePasswordVisibility}
+                  />
+                ),
+              }}
+            />
 
+            <Button
+              fullWidth
+              type="submit"
+              color="primary"
+              variant="contained"
+              sx={{
+                height: 44,
+              }}
+            >
+              Login
+            </Button>
+          </form>
+
+          {/* <SocialButtons /> */}
+
+          <FlexRowCenter mt="1.25rem">
+            <Box>Don&apos;t have account?</Box>
+            <Link href="/signup" passHref legacyBehavior>
+              <a>
+                <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
+                  Sign Up
+                </H6>
+              </a>
+            </Link>
+          </FlexRowCenter>
+        </>
+      ))}
       {/* <FlexBox justifyContent="center" bgcolor="grey.200" borderRadius="4px" py={2.5} mt="1.25rem">
         Forgot your password?
         <Link href="/reset-password" passHref legacyBehavior>
