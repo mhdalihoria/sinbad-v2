@@ -14,6 +14,7 @@ import { useContext, useEffect, useState } from "react";
 import { SettingsContext } from "contexts/SettingContext";
 import allCategories from "../../utils/__api__/categories";
 import useGetFetch from "components/fetch/useGetFetch";
+import Link from "next/link";
 
 const NavBarLowerWrapper = styled(Box)(({ theme, border }) => ({
   background: "white",
@@ -25,6 +26,13 @@ const NavBarUpperWrapper = styled(Box)(({ theme, border }) => ({
   display: "flex",
   justifyContent: "space-between",
 }));
+const SignUpButton = styled(Box)({
+  cursor: "pointer",
+
+  "&:hover" :{
+    opacity: "0.7"
+  }
+});
 
 const SelectStyling = {
   fontSize: "10px",
@@ -49,15 +57,14 @@ const PageHeaderUpper = () => {
 
   useEffect(() => {
     const fetchCates = async () => {
-
       try {
-        const requestOptions= {
+        const requestOptions = {
           method: "GET",
-          headers: {"X-localization": "ar"},
-        }
-        const url = "https://sinbad-store.com/api/v2/categories"
-        const categoryResponse = await useGetFetch(url, requestOptions)
-      
+          headers: { "X-localization": "ar" },
+        };
+        const url = "https://sinbad-store.com/api/v2/categories";
+        const categoryResponse = await useGetFetch(url, requestOptions);
+
         setCategories(categoryResponse.data);
       } catch (err) {
         console.error(err);
@@ -97,9 +104,11 @@ const PageHeaderUpper = () => {
               </span>
               <span>اتصل بنا: {settingsData.SupportNumber}</span>
             </div>
-            <div>
-              <i className="fa-solid fa-user"></i> تسجيل الدخول
-            </div>
+            <Link href={"/signup"}>
+              <SignUpButton >
+                <i className="fa-solid fa-user"></i> تسجيل الدخول
+              </SignUpButton>
+            </Link>
           </>
         )}
       </NavBarUpperWrapper>
