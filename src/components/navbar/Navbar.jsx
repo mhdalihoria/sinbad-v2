@@ -77,15 +77,18 @@ const NavBarWrapper = styled(BazaarCard)(({ theme, border }) => ({
     display: "none",
   },
 }));
-const InnerContainer = styled(Container)({
+const InnerContainer = styled(Box)({
   height: "100%",
+  margin: "0 2rem",
+  maxWidth: "1200px",
   display: "flex",
   alignItems: "center",
-  justifyContent: "space-between",
+  justifyContent: "start",
 });
 const CategoryMenuButton = styled(Button)(({ theme }) => ({
   width: "278px",
   height: "40px",
+  marginRight: "6rem",
   backgroundColor: theme.palette.grey[100],
 }));
 const ChildNavsWrapper = styled(Box)({
