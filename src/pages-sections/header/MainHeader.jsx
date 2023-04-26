@@ -201,10 +201,19 @@ const Header = () => {
             xs={12}
             order={{ lg: 4, md: 4, sm: 4, xs: 4 }}
           >
+            <Navbar />
+          </Grid>
+          <Grid
+            item
+            lg={12}
+            md={12}
+            sm={12}
+            xs={12}
+            order={{ lg: 5, md: 5, sm: 5, xs: 5 }}
+          >
             <NewsTicker />
           </Grid>
         </Grid>
-        <Navbar />
       </div>
     </>
   );
