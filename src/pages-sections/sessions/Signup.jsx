@@ -46,7 +46,7 @@ const Signup = () => {
     try {
       setLoading(true);
 
-      const data = await usePostFetch(
+      const {data, response} = await usePostFetch(
         "https://sinbad-store.com/api/v2/register",
         {
           "X-localization": "ar",
@@ -54,7 +54,7 @@ const Signup = () => {
         },
         JSON.stringify({ name, password, address, mobile })
       );
-      console.log(data);
+      console.log(data, response);
       if (data.data.length > 0) {
         setToken(data.data[0].token);
         setStage(1);

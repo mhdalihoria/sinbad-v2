@@ -7,7 +7,7 @@ const usePostFetch = async  (url, headers, body) => {
         body: body
       });;
       const data = await response.json();
-      return data;
+      return {data, response};
     } catch (error) {
       console.error('Error fetching data:', error);
       return null;

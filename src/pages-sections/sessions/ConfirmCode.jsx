@@ -44,7 +44,7 @@ const ConfirmCode = ({ token, setStage }) => {
     setInput(event.target.value);
   };
   const handleSubmit = async () => {
-    const data = await usePostFetch(
+    const {data} = await usePostFetch(
       "https://sinbad-store.com/api/v2/activate",
       {
         "X-localization": "ar",

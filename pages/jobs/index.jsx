@@ -99,7 +99,7 @@ export default function SignInSide() {
         //   redirect: "follow",
         // };
 
-        const data = await usePostFetch("https://sinbad-store.com/api/v2/job", myHeaders, formdata)
+        const {data} = await usePostFetch("https://sinbad-store.com/api/v2/job", myHeaders, formdata)
         console.log(data)
 
         // fetch("https://sinbad-store.com/api/v2/job", requestOptions)

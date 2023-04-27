@@ -63,7 +63,7 @@ const Login = () => {
     try {
       console.log(values);
       setLoading(true);
-      const data = await usePostFetch(
+      const {data} = await usePostFetch(
         "https://sinbad-store.com/api/v2/login",
         {
           "X-localization": "ar",
