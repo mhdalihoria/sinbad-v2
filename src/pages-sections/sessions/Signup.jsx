@@ -14,6 +14,7 @@ import usePostFetch from "components/fetch/usePostFetch";
 import { SettingsContext } from "contexts/SettingContext";
 import ConfirmCode from "./ConfirmCode";
 import Loader from "../../components/loader-spinner/Loader";
+import { useRouter } from "next/router";
 
 
 const ErrorStyle = styled(H1)(({theme}) => ({
@@ -36,9 +37,13 @@ const Signup = () => {
   const [loginError, setLoginError] = useState(null);
   const [stage, setStage] = useState(0);
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
-  console.log(token);
-  console.log(loginError);
+  const {query: {code}} = router
+
+  console.log("token", token);
+  console.log("error Login", loginError);
+  
 
   const handleFormSubmit = async (values) => {
     const { name, password, address, mobile } = values;
@@ -79,6 +84,13 @@ const Signup = () => {
       window.localStorage.setItem("user_token", JSON.stringify(token));
     }
   }, [token]);
+
+  useEffect(()=> {
+    if(code === "203") {
+      setStage(1)
+    }
+  }, [stage])
+ 
   return (
     <Wrapper elevation={3} passwordVisibility={passwordVisibility}>
       {stage === 2 && <h2>Thanks for Signing up, you will be redirected soon</h2>}
