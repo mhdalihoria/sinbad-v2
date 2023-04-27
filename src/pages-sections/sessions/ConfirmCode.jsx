@@ -1,8 +1,8 @@
 import { Box, Button, Input, styled } from "@mui/material";
 import { H2 } from "components/Typography";
+import usePostFetch from "components/fetch/usePostFetch";
+import { useState } from "react";
 
-const { default: usePostFetch } = require("components/fetch/usePostFetch");
-const { useState } = require("react");
 
 const HeaderStyle = styled(H2)({
   textAlign: "center",
@@ -76,5 +76,5 @@ const ConfirmCode = ({ token, setStage }) => {
     </CodeConfirmationWrapper>
   );
 };
-9
+
 export default ConfirmCode;
