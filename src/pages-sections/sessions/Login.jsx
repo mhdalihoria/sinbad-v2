@@ -118,6 +118,7 @@ const Login = () => {
           pathname: "/signup",
           query: {
             code: 203,
+            number: formValues.username
           },
         },
         "/signup"
