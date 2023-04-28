@@ -39,10 +39,11 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter()
 
-  const {query: {code}} = router
+  const {query: {code, number}} = router
 
-  console.log("token", token);
-  console.log("error Login", loginError);
+  // console.log("token", token);
+  // console.log("error Login", loginError);
+  // console.log("number", number);
   
 
   const handleFormSubmit = async (values) => {
@@ -94,7 +95,7 @@ const Signup = () => {
   return (
     <Wrapper elevation={3} passwordVisibility={passwordVisibility}>
       {stage === 2 && <h2>Thanks for Signing up, you will be redirected soon</h2>}
-      {stage === 1 && <ConfirmCode token={token} setStage={setStage} />}
+      {stage === 1 && <ConfirmCode token={token} setStage={setStage} number={{number}} />}
       {stage === 0 && (
         <>
           {loading ? (
