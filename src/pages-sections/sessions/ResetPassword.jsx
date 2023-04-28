@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Box, Button, Input, styled } from "@mui/material";
 import { H2 } from "components/Typography";
 import usePostFetch from "components/fetch/usePostFetch";
-import { useState } from "react";
+import Loader from "components/loader-spinner/Loader";
+import AssignNewPassword from "./AssignNewPassword";
 
 const HeaderStyle = styled(H2)({
   textAlign: "center",
@@ -39,39 +41,55 @@ const ButtonStyle = styled(Button)(({ theme }) => ({
 const ResetPassword = ({ token, setToken }) => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const [stage, setStage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const handleChange = (event) => {
     setInput(event.target.value);
   };
-  const handleSubmit = async () => {
+  const handleSubmitPhoneNum = async () => {
+    setIsLoading(true)
     const { data } = await usePostFetch(
-      "https://sinbad-store.com/api/v2/reset-password",
+      "https://sinbad-store.com/api/v2/resend-code",
       {
         "X-localization": "ar",
         "Content-Type": "application/json",
-        Authorization: `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
       },
-      JSON.stringify({ username: input })
+      JSON.stringify({ username: input, type: "reset" })
     );
     console.log(data);
-    
+    if(data) setIsLoading(false)
+    if(data.status) setStage(1)
   };
 
   return (
-    <CodeConfirmationWrapper>
-      <HeaderStyle>Reset your Password</HeaderStyle>
-      {error !== "" && <ErrorTxtStyle>{error}</ErrorTxtStyle>}
-      <div>
-        <InputStyle
-          type="text"
-          placeholder="Your Mobile Number Here"
-          value={input}
-          name={"input"}
-          onChange={handleChange}
-        />
-        <ButtonStyle onClick={handleSubmit}>Continue</ButtonStyle>
-      </div>
-      <span></span>
-    </CodeConfirmationWrapper>
+    <>
+      {stage === 0 && (
+        <CodeConfirmationWrapper>
+          {isLoading ? (
+            <div style={{display: "flex", flexDirection: "column", justifyContent: "center", height: "100%"}}><Loader size={15} loading={isLoading} /></div>
+          ) : (
+            <>
+              <HeaderStyle>Reset your Password</HeaderStyle>
+              {error !== "" && <ErrorTxtStyle>{error}</ErrorTxtStyle>}
+              <div>
+                <InputStyle
+                  type="text"
+                  placeholder="Your Mobile Number Here"
+                  value={input}
+                  name={"input"}
+                  onChange={handleChange}
+                />
+                <ButtonStyle onClick={handleSubmitPhoneNum}>
+                  Continue
+                </ButtonStyle>
+              </div>
+              <span></span>
+            </>
+          )}
+        </CodeConfirmationWrapper>
+      )}
+      {stage === 1 && <AssignNewPassword input={input}/>}
+    </>
   );
 };
 
