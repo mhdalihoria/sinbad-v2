@@ -3,18 +3,17 @@ import { H2 } from "components/Typography";
 import usePostFetch from "components/fetch/usePostFetch";
 import { useState } from "react";
 
-
 const HeaderStyle = styled(H2)({
   textAlign: "center",
   fontSize: "2rem",
   marginBottom: "1rem",
 });
-const ErrorTxtStyle = styled(H2)(({theme}) => ({
+const ErrorTxtStyle = styled(H2)(({ theme }) => ({
   textAlign: "center",
   fontSize: "1rem",
   marginBottom: "1rem",
-  color: theme.palette.primary.main
-}))
+  color: theme.palette.primary.main,
+}));
 
 const CodeConfirmationWrapper = styled(Box)({
   height: "300px",
@@ -37,23 +36,38 @@ const ButtonStyle = styled(Button)(({ theme }) => ({
   color: theme.palette.primary.contrastText,
 }));
 
-const ConfirmCode = ({ token, setStage }) => {
+const ConfirmCode = ({ token, setStage, number }) => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const handleChange = (event) => {
     setInput(event.target.value);
   };
-  const handleSubmit = async () => {
-    const {data} = await usePostFetch(
+  const handleAccountActivation = async () => {
+    const { data } = await usePostFetch(
+      "https://sinbad-store.com/api/v2/resend-code",
+      {
+        "X-localization": "ar",
+        "Content-Type": "application/json",
+        // Authorization: `Bearer ${token}`,
+      },
+      JSON.stringify({ username: number })
+    );
+    console.log(data);
+    if (!data.status) setError(data.message);
+  };
+
+
+  const handleCodeResending = async () => {
+    const { data } = await usePostFetch(
       "https://sinbad-store.com/api/v2/activate",
       {
         "X-localization": "ar",
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
-      JSON.stringify({ code: input })
+      JSON.stringify({ username: number, code: input })
     );
-    console.log(data);
+    console.log("confirm code", data);
     if (data.status) setStage(2);
     if (!data.status) setError(data.message);
   };
@@ -70,9 +84,17 @@ const ConfirmCode = ({ token, setStage }) => {
           name={"input"}
           onChange={handleChange}
         />
-        <ButtonStyle onClick={handleSubmit}>Submit</ButtonStyle>
+        <ButtonStyle onClick={handleAccountActivation}>Submit</ButtonStyle>
       </div>
-      <span>Didn't get code? <span onClick={()=>console.log("code resent!")} style={{cursor: "pointer", textDecoration: "underline"}}>click here</span></span>
+      <span>
+        Didn't get code?{" "}
+        <span
+          onClick={handleCodeResending}
+          style={{ cursor: "pointer", textDecoration: "underline" }}
+        >
+          click here
+        </span>
+      </span>
     </CodeConfirmationWrapper>
   );
 };
