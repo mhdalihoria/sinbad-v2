@@ -42,7 +42,7 @@ const ConfirmCode = ({ token, setStage, number }) => {
   const handleChange = (event) => {
     setInput(event.target.value);
   };
-  const handleAccountActivation = async () => {
+  const handleCodeResending  = async () => {
     const { data } = await usePostFetch(
       "https://sinbad-store.com/api/v2/resend-code",
       {
@@ -50,14 +50,14 @@ const ConfirmCode = ({ token, setStage, number }) => {
         "Content-Type": "application/json",
         // Authorization: `Bearer ${token}`,
       },
-      JSON.stringify({ username: number })
+      JSON.stringify({ username: number})
     );
     console.log(data);
     if (!data.status) setError(data.message);
   };
 
 
-  const handleCodeResending = async () => {
+  const handleAccountActivation = async () => {
     const { data } = await usePostFetch(
       "https://sinbad-store.com/api/v2/activate",
       {
