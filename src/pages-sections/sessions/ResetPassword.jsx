@@ -29,6 +29,7 @@ const InputStyle = styled(Input)({
   padding: "10px 20px",
   fontSize: "1rem",
   letterSpacing: "1px",
+  widht: "100%"
 });
 const ButtonStyle = styled(Button)(({ theme }) => ({
   padding: "10px 25px",
@@ -36,6 +37,8 @@ const ButtonStyle = styled(Button)(({ theme }) => ({
   fontSize: "1rem",
   background: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
+  width: "100%",
+  margin: "2rem auto"
 }));
 
 const ResetPassword = ({ token, setToken }) => {
@@ -71,7 +74,7 @@ const ResetPassword = ({ token, setToken }) => {
             <>
               <HeaderStyle>Reset your Password</HeaderStyle>
               {error !== "" && <ErrorTxtStyle>{error}</ErrorTxtStyle>}
-              <div>
+              <div style={{display: "flex", flexDirection: "column", justifyContent: "center", width: "350px"}}>
                 <InputStyle
                   type="text"
                   placeholder="Your Mobile Number Here"
