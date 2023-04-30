@@ -40,7 +40,7 @@ const ButtonStyle = styled(Button)(({ theme }) => ({
   margin: "2rem auto",
 }));
 
-const ConfirmCode = ({ token, setStage, number }) => {
+const ConfirmCode = ({ token, setStage, number, setIsActivated }) => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [codeResendLoader, setCodeResendLoader] = useState(false);
@@ -79,8 +79,13 @@ const ConfirmCode = ({ token, setStage, number }) => {
       JSON.stringify({ username: number, code: input })
     );
     console.log("confirm code", data);
-    if (data.status) setStage(2);
-    if (!data.status) setError(data.message);
+    if (data.status) {
+      setStage(2);
+      setIsActivated(true)
+    }
+    if (!data.status) {
+      setError(data.message);
+    }
   };
 
   return (
@@ -104,7 +109,11 @@ const ConfirmCode = ({ token, setStage, number }) => {
         />
         <ButtonStyle onClick={handleAccountActivation}>Submit</ButtonStyle>
       </div>
-      {codeResendLoader ? <span><Loader size={5} loading={codeResendLoader} /></span> :
+      {codeResendLoader ? (
+        <span>
+          <Loader size={5} loading={codeResendLoader} />
+        </span>
+      ) : (
         <span>
           Didn't get code?{" "}
           <span
@@ -114,7 +123,7 @@ const ConfirmCode = ({ token, setStage, number }) => {
             click here
           </span>
         </span>
-      }
+      )}
     </CodeConfirmationWrapper>
   );
 };

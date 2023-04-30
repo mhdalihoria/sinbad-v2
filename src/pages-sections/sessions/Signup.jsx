@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useState, useContext } from "react";
-import { Button, Checkbox, Box, FormControlLabel, useTheme, styled } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  Box,
+  FormControlLabel,
+  useTheme,
+  styled,
+} from "@mui/material";
 import Link from "next/link";
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -16,15 +23,14 @@ import ConfirmCode from "./ConfirmCode";
 import Loader from "../../components/loader-spinner/Loader";
 import { useRouter } from "next/router";
 
-
-const ErrorStyle = styled(H1)(({theme}) => ({
+const ErrorStyle = styled(H1)(({ theme }) => ({
   color: theme.palette.primary.main,
-  textAlign:"center" ,
+  textAlign: "center",
   marginTop: 2,
   marginBottom: 4,
-  fontSize: "12px"
+  fontSize: "12px",
   // mt={2} mb={4} fontSize={12}
-}))
+}));
 
 const Signup = () => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -37,14 +43,16 @@ const Signup = () => {
   const [loginError, setLoginError] = useState(null);
   const [stage, setStage] = useState(0);
   const [loading, setLoading] = useState(false);
-  const router = useRouter()
+  const [isActivated, setIsActivated] = useState(false);
+  const router = useRouter();
 
-  const {query: {code, number}} = router
+  const {
+    query: { code, number },
+  } = router;
 
   // console.log("token", token);
   // console.log("error Login", loginError);
   // console.log("number", number);
-  
 
   const handleFormSubmit = async (values) => {
     const { name, password, address, mobile } = values;
@@ -52,7 +60,7 @@ const Signup = () => {
     try {
       setLoading(true);
 
-      const {data, response} = await usePostFetch(
+      const { data, response } = await usePostFetch(
         "https://sinbad-store.com/api/v2/register",
         {
           "X-localization": "ar",
@@ -86,16 +94,28 @@ const Signup = () => {
     }
   }, [token]);
 
-  useEffect(()=> {
-    if(code === "203") {
-      setStage(1)
+  useEffect(() => {
+    if (code === "203" && !isActivated) {
+      setStage(1);
+      usePostFetch(
+        "https://sinbad-store.com/api/v2/resend-code",
+        {
+          "X-localization": "ar",
+          "Content-Type": "application/json",
+        },
+        JSON.stringify({ username: number })
+      );
     }
-  }, [stage])
- 
+  }, [stage]);
+
   return (
     <Wrapper elevation={3} passwordVisibility={passwordVisibility}>
-      {stage === 2 && <h2>Thanks for Signing up, you will be redirected soon</h2>}
-      {stage === 1 && <ConfirmCode token={token} setStage={setStage} number={{number}} />}
+      {stage === 2 && (
+        <h2>Thanks for Signing up, you will be redirected soon</h2>
+      )}
+      {stage === 1 && (
+        <ConfirmCode token={token} setStage={setStage} number={{ number }} setIsActivated={setIsActivated} />
+      )}
       {stage === 0 && (
         <>
           {loading ? (
@@ -118,9 +138,7 @@ const Signup = () => {
                 <H1 textAlign="center" mt={1} mb={4} fontSize={16}>
                   Create Your Account
                 </H1>
-                <ErrorStyle >
-                {loginError}
-                </ErrorStyle>
+                <ErrorStyle>{loginError}</ErrorStyle>
 
                 <BazaarTextField
                   mb={1.5}
