@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import { Box, styled } from "@mui/material";
 import Image from "next/image";
-import ReactImageMagnify from 'react-image-magnify';
+import InnerImageZoom from "react-inner-image-zoom";
+import 'react-inner-image-zoom/lib/InnerImageZoom/styles.min.css';
 
 const ImageSliderContainer = styled(Box)({
   maxWidth: "1200px",
@@ -15,7 +16,7 @@ const ImageSliderLeft = styled(Box)({
 const ImageSliderLef1 = styled(Box)({
   display: "flex",
   flexDirection: "column",
-//   justifyContent: "space-evenly",
+  //   justifyContent: "space-evenly",
   gap: "10px",
 
   "& .img_wrap": {
@@ -41,9 +42,9 @@ const ProductImageViewer = ({ productData }) => {
     refs.current[idx].classList.add("active");
 
     for (let j = 0; j < productData.product_images.length; j++) {
-        if(idx!==j){
-            refs.current[j].classList.remove('active')
-        }
+      if (idx !== j) {
+        refs.current[j].classList.remove("active");
+      }
     }
   };
 
@@ -55,6 +56,7 @@ const ProductImageViewer = ({ productData }) => {
 
   return (
     <ImageSliderContainer>
+
       <ImageSliderLeft>
         <ImageSliderLef1>
           {productData.product_images.map((image, idx) => (
@@ -68,28 +70,18 @@ const ProductImageViewer = ({ productData }) => {
             </div>
           ))}
         </ImageSliderLef1>
-        <div className="left_2">
-        <ReactImageMagnify
-                        {...{
-                            smallImage: {
-                                alt: 'Wristwatch by Ted Baker London',
-                                isFluidWidth: true,
-                                src: mainImg,
-                            },
-                            largeImage: {
-                                src: mainImg,
-                                width: 1200,
-                                height: 1800,
-                            },
-                            enlargedImageContainerDimensions: {
-                                width: '150%',
-                                height: '150%',
-                            },
-                        }}
-                    />
+        <div className="left_2" style={{ maxWidth: "640px" }}>
+          <InnerImageZoom
+            src={mainImg}
+            zoomSrc={mainImg}
+            width={750}
+            height={500}
+            hasSpacer={true}
+          />
         </div>
       </ImageSliderLeft>
       <ImageSliderRight></ImageSliderRight>
+
     </ImageSliderContainer>
   );
 };
