@@ -4,6 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Box, CardActionArea, styled, useTheme } from "@mui/material";
+import Link from "next/link";
 
 const ProductCardActionArea = styled(CardActionArea)({});
 
@@ -102,13 +103,12 @@ const Overlay = styled(Box)(({ theme }) => ({
 
   "&: hover": {
     opacity: "1",
-    animation: "fadeIn 1s",
+    animation: "fadeIn 2s",
 
     "@keyframes fadeIn": {
       "0%": { opacity: 0 },
-      "100%": { opacity: 1 }
-    }
-    
+      "100%": { opacity: 1 },
+    },
   },
 }));
 
@@ -152,89 +152,91 @@ export const ProductCard = ({ product }) => {
           </CardContentStyling>
         </ComingSoon>
       ) : (
-        <ProductCardActionArea>
-          {/*this component is responsible for the touch effect when clicking it */}
-          <CardMedia
-            component="img"
-            height="200"
-            image={product.product_image}
-            alt={product.product_name}
-          />
-          <CardContentStyling>
-            <Typography
-              gutterBottom
-              variant="h5"
-              component="div"
-              className="card-title"
-            >
-              <span>{product.product_name}</span>{" "}
-              {product.is_new && (
-                <span style={{ color: "red" }}>({product.is_new})</span>
+        <Link href={`/products/${product.id}`}>
+          <ProductCardActionArea>
+            {/*this component is responsible for the touch effect when clicking it */}
+            <CardMedia
+              component="img"
+              height="200"
+              image={product.product_image}
+              alt={product.product_name}
+            />
+            <CardContentStyling>
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="div"
+                className="card-title"
+              >
+                <span>{product.product_name}</span>{" "}
+                {product.is_new && (
+                  <span style={{ color: "red" }}>({product.is_new})</span>
+                )}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {product.product_description
+                  .replace(/(<([^>]+)>)/gi, "")
+                  .replace(/\&nbsp;/g, "")}
+              </Typography>
+              {product.shop_name && (
+                <span className="shop-name">المتجر: {product.shop_name}</span>
               )}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {product.product_description
-                .replace(/(<([^>]+)>)/gi, "")
-                .replace(/\&nbsp;/g, "")}
-            </Typography>
-            {product.shop_name && (
-              <span className="shop-name">المتجر: {product.shop_name}</span>
-            )}
-            {product.is_external && <Original>أصلي</Original>}
-            <PricesSection>
-              {product.display_price ? (
-                product.has_offer ? (
-                  <SaleAndPrices>
-                    <div className="price-count">
-                      <Typography
-                        variant="h6"
-                        color={theme.palette.primary.main}
-                        sx={{ width: "65px" }}
-                      >
-                        {product.product_price - product.sale_price}
-                        {/* {product.sale_price} */}
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        color={theme.palette.grey[500]}
-                        sx={{
-                          textDecoration: "line-through",
-                          width: "65px",
-                        }}
-                      >
-                        {product.product_price}
-                      </Typography>
-                    </div>
-                    <div className="sale-rate">
-                      {calculateSalePercentage(
-                        product.product_price,
-                        product.sale_price
-                      )}
-                      %
-                    </div>
-                  </SaleAndPrices>
+              {product.is_external && <Original>أصلي</Original>}
+              <PricesSection>
+                {product.display_price ? (
+                  product.has_offer ? (
+                    <SaleAndPrices>
+                      <div className="price-count">
+                        <Typography
+                          variant="h6"
+                          color={theme.palette.primary.main}
+                          sx={{ width: "65px" }}
+                        >
+                          {product.product_price - product.sale_price}
+                          {/* {product.sale_price} */}
+                        </Typography>
+                        <Typography
+                          variant="h6"
+                          color={theme.palette.grey[500]}
+                          sx={{
+                            textDecoration: "line-through",
+                            width: "65px",
+                          }}
+                        >
+                          {product.product_price}
+                        </Typography>
+                      </div>
+                      <div className="sale-rate">
+                        {calculateSalePercentage(
+                          product.product_price,
+                          product.sale_price
+                        )}
+                        %
+                      </div>
+                    </SaleAndPrices>
+                  ) : (
+                    <Typography variant="h6" color={theme.palette.primary.main}>
+                      {" "}
+                      {product.product_price}{" "}
+                    </Typography>
+                  )
                 ) : (
                   <Typography variant="h6" color={theme.palette.primary.main}>
-                    {" "}
-                    {product.product_price}{" "}
+                    Contact Us
                   </Typography>
-                )
-              ) : (
-                <Typography variant="h6" color={theme.palette.primary.main}>
-                  Contact Us
-                </Typography>
-              )}
-            </PricesSection>
-          </CardContentStyling>
-          <Overlay>
-            <button>
-              <i className="fa-solid fa-heart"></i>
-            </button>
-            <button>
-              <i className="fa-sharp fa-solid fa-less-than-equal"></i>
-            </button>
-          </Overlay>
-        </ProductCardActionArea>
+                )}
+              </PricesSection>
+            </CardContentStyling>
+            <Overlay>
+              <button>
+                <i className="fa-solid fa-heart"></i>
+              </button>
+              <button>
+                <i className="fa-sharp fa-solid fa-less-than-equal"></i>
+              </button>
+            </Overlay>
+          </ProductCardActionArea>
+        </Link>
       )}
     </Card>
   );
