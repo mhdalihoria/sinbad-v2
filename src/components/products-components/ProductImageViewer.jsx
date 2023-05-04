@@ -18,7 +18,7 @@ const ImageSliderTop = styled(Box)(({ theme }) => ({
   maxWidth: "250px",
 
   "@media (min-width:800px)": {
-    maxWidth: "400px",
+    maxWidth: "300px",
   },
 }));
 
@@ -30,7 +30,7 @@ const ImageSliderBottom = styled(Box)(({ theme }) => ({
   overflow: "scroll",
   maxWidth: "250px",
   "@media (min-width:800px)": {
-    maxWidth: "400px",
+    maxWidth: "300px",
   },
 
   "& .img_wrap": {
