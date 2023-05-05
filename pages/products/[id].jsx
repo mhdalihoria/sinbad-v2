@@ -8,7 +8,7 @@ import ProductPageAvailableAndRating from "../../src/components/products-compone
 import ProductPageProductDesc from "../../src/components/products-components/ProductPageProductDesc";
 import ProductPageImportedProduct from "../../src/components/products-components/ProductPageImportedProduct";
 import ProductPageAttributes from "../../src/components/products-components/ProductPageAttributes";
-import Loader from "../../src/components/loader-spinner/Loader"
+import Loader from "../../src/components/loader-spinner/Loader";
 
 const Container = styled(Box)(({ theme }) => ({
   border: "1px solid #e8e8e8",
@@ -20,9 +20,20 @@ const ProductPage = ({ id, productRequest }) => {
   const router = useRouter();
 
   if (router.isFallback) {
-    return (<div style={{width: "100vw", height: "60vh", display: "flex", justifyContent: "center", alignContent: "center"}}><Loader size={15} loading={router.isFallback}/></div>)
+    return (
+      <div
+        style={{
+          width: "100vw",
+          height: "600px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader size={20} loading={router.isFallback} />
+      </div>
+    );
   }
-
 
   const [productData, setProductData] = useState();
   const { product, attributes } = productData || {};
@@ -34,31 +45,28 @@ const ProductPage = ({ id, productRequest }) => {
     // setLoading(true)
 
     const doFetch = async () => {
-      console.log("hello from doFetch")
-      const response =  await useGetFetch(
+      console.log("hello from doFetch");
+      const response = await useGetFetch(
         `https://sinbad-store.com/api/v2/product/${id}`,
         {
           method: "GET",
           headers: { "X-localization": "ar" },
         }
       );
-      console.log(response)
-      const data = await response
-      setProductData(data)
-    }
-
-    
+      console.log(response);
+      const data = await response;
+      setProductData(data);
+    };
 
     if (typeof productRequest !== "undefined") {
       // setLoading(false)
       setProductData(productRequest.data);
       setPrice(productRequest.data.product.product_price);
-    } 
+    }
     // else {
     //   doFetch()
     // }
-  }, [ productData]);
-
+  }, [productData]);
 
   // if(loading) {
   //   return <div>Loading...</div>
@@ -120,8 +128,7 @@ const ProductPage = ({ id, productRequest }) => {
             </div>
           </div>
         </>
-      ) }
-
+      )}
     </Container>
   );
 };
