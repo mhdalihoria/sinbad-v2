@@ -228,7 +228,7 @@ export const ProductCard = ({ product }) => {
               </PricesSection>
             </CardContentStyling>
             <Overlay>
-              <button>
+              <button disabled={product.is_future}>
                 <i className="fa-solid fa-heart"></i>
               </button>
               <button>
