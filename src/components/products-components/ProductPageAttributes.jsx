@@ -11,10 +11,19 @@ const ProductPageAttributes = ({ attributes, price, setPrice }) => {
           width: "25px",
           cursor: "pointer"
         }}
+
+        onClick={()=>handleColorClick(attr.price)}
       > 
       </div> 
     );
   });
+
+  const handleColorClick = (price)=> {
+    console.log("color variant Clicked!")
+    if(price === null) return
+    if(price) setPrice(price)
+  }
+
   return (
     <div>
       <h6>{attrs.attribute_name}</h6>
