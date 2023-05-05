@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { Box, styled } from "@mui/material";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import ProductImageViewer from "../../src/components/products-components/ProductImageViewer";
 import ProductPagePrice from "../../src/components/products-components/ProductPagePrice";
@@ -6,8 +8,7 @@ import ProductPageAvailableAndRating from "../../src/components/products-compone
 import ProductPageProductDesc from "../../src/components/products-components/ProductPageProductDesc";
 import ProductPageImportedProduct from "../../src/components/products-components/ProductPageImportedProduct";
 import ProductPageAttributes from "../../src/components/products-components/ProductPageAttributes";
-import { Box, styled } from "@mui/material";
-import Image from "next/image";
+import Loader from "../../src/components/loader-spinner/Loader"
 
 const Container = styled(Box)(({ theme }) => ({
   border: "1px solid #e8e8e8",
@@ -16,14 +17,21 @@ const Container = styled(Box)(({ theme }) => ({
 }));
 
 const ProductPage = ({ id, productRequest }) => {
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return (<div style={{width: "100vw", height: "60vh", display: "flex", justifyContent: "center", alignContent: "center"}}><Loader size={15} loading={router.isFallback}/></div>)
+  }
+
+
   const [productData, setProductData] = useState();
   const { product, attributes } = productData || {};
   const [price, setPrice] = useState(0);
-  const [loading, setLoading] = useState(false)
+  // const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     console.log(productRequest, id);
-    setLoading(true)
+    // setLoading(true)
 
     const doFetch = async () => {
       console.log("hello from doFetch")
@@ -42,18 +50,19 @@ const ProductPage = ({ id, productRequest }) => {
     
 
     if (typeof productRequest !== "undefined") {
-      setLoading(false)
+      // setLoading(false)
       setProductData(productRequest.data);
       setPrice(productRequest.data.product.product_price);
-    } else {
-      doFetch()
-    }
-  }, [loading, productData]);
+    } 
+    // else {
+    //   doFetch()
+    // }
+  }, [ productData]);
 
 
-  if(loading) {
-    return <div>Loading...</div>
-  }
+  // if(loading) {
+  //   return <div>Loading...</div>
+  // }
 
   return (
     <Container>
@@ -144,7 +153,6 @@ export const getStaticProps = async (ctx) => {
       headers: { "X-localization": "ar" },
     }
   );
-
   return {
     props: {
       id: ctx.params.id,
