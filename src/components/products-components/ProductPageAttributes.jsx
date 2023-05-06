@@ -11,7 +11,7 @@ const ProductPageAttributes = ({ attributes, price, setPrice }) => {
           width: "25px",
           cursor: "pointer"
         }}
-
+        key={attr.code}
         onClick={()=>handleColorClick(attr.price)}
       > 
       </div> 
