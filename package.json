@@ -49,6 +49,7 @@
     "react-apexcharts": "^1.4.0",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-grid-carousel": "^1.0.1",
     "react-i18next": "^12.0.0",
     "react-inner-image-zoom": "^3.0.2",
     "react-scroll": "^1.8.8",
