@@ -8,6 +8,9 @@ import ProductPageAvailableAndRating from "../../src/components/products-compone
 import ProductPageProductDesc from "../../src/components/products-components/ProductPageProductDesc";
 import ProductPageImportedProduct from "../../src/components/products-components/ProductPageImportedProduct";
 import ProductPageAttributes from "../../src/components/products-components/ProductPageAttributes";
+import ProductPageQuantityAndCart from "../../src/components/products-components/ProductPageQuantityAndCart";
+import ProductPageDescAndRating from "../../src/components/products-components/ProductPageDescAndRating";
+import ProductPageRelatedProducts from "../../src/components/products-components/ProductPageRelatedProducts";
 import Loader from "../../src/components/loader-spinner/Loader";
 
 const Container = styled(Box)(({ theme }) => ({
@@ -20,8 +23,9 @@ const ProductPage = ({ id, productRequest }) => {
   const router = useRouter();
 
   const [productData, setProductData] = useState();
-  const { product, attributes } = productData || {};
+  const { product, attributes, relatedProducts } = productData || {};
   const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(0)
 
   useEffect(() => {
     console.log(productRequest, id);
@@ -104,10 +108,23 @@ const ProductPage = ({ id, productRequest }) => {
               )}
               {/* -----------------ATTRIBUTES----------------- */}
             </div>
+            
+             {/* -----------------QUANTITY AND ADD TO CART----------------- */}
+            <ProductPageQuantityAndCart
+              product={product}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              />
+              {/* -----------------QUANTITY AND ADD TO CART----------------- */}
 
-            <div>
-              <button disabled={product.is_future}>add To Card</button>
-            </div>
+              {/* -----------------DESCRIPTION AND RATING----------------- */}
+              <ProductPageDescAndRating desc={product.product_description}/>
+              {/* -----------------DESCRIPTION AND RATING----------------- */}
+
+              {/* -----------------RELATED PRODUCTS----------------- */}
+              <ProductPageRelatedProducts relatedProducts={relatedProducts}/>
+              {/* -----------------RELATED PRODUCTS----------------- */}
+
           </div>
         </>
       )}
