@@ -1,23 +1,32 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
 import ProductCard from "./ProductCard";
-import Carousel from "react-grid-carousel";
+import React from "react";
+import Carousel from "react-material-ui-carousel";
+import { Paper, Button } from "@mui/material";
 
-const ProductPageRelatedProducts = ({ relatedProducts }) => {
-  const carourselItems = relatedProducts.map((product, idx) => {
-    console.log(idx)
-    return (
-      <Carousel.Item>
-        <ProductCard product={product} />
-        <h1>{idx}</h1>
-      </Carousel.Item>
-    );
-  });
+function ProductPageRelatedProducts({ relatedProducts }) {
+  console.log(chunkArray(relatedProducts, 3));
+
   return (
-    <Carousel cols={3} rows={1} gap={10} loop scroll-snap={true} showDots={true} autoplay={1250}>
-      {carourselItems}
+    <Carousel navButtonsAlwaysVisible={true}>
+      {chunkArray(relatedProducts, 3).map((productChunk, idx) => {
+        return (
+          <div style={{ display: "flex" }} key={idx}>
+            {productChunk.map((product, i) => {
+              return <ProductCard product={product} key={i} />;
+            })}
+          </div>
+        );
+      })}
     </Carousel>
   );
-};
+}
+
 export default ProductPageRelatedProducts;
+
+const chunkArray = (array, chunkSize) => {
+  const numberOfChunks = Math.ceil(array.length / chunkSize);
+
+  return [...Array(numberOfChunks)].map((value, index) => {
+    return array.slice(index * chunkSize, (index + 1) * chunkSize);
+  });
+};
