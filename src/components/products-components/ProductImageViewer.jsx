@@ -53,11 +53,16 @@ const ProductImageViewer = ({ productData }) => {
 
   const handleClick = (image, idx) => {
     setMainImg(image);
-    refs.current[idx].classList.add("active");
+    if (typeof refs.current[idx] !== "undefined") {
+      console.log(refs.current, refs.current[idx].classList);
+      refs.current[idx].classList.add("active");
+    }
 
     for (let j = 0; j < productData.product_images.length; j++) {
       if (idx !== j) {
-        refs.current[j].classList.remove("active");
+        if(typeof refs.current[j] !== "undefined"){
+          refs.current[j].classList.remove("active");
+        }
       }
     }
   };
