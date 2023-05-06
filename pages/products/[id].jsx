@@ -19,6 +19,23 @@ const Container = styled(Box)(({ theme }) => ({
 const ProductPage = ({ id, productRequest }) => {
   const router = useRouter();
 
+  const [productData, setProductData] = useState();
+  const { product, attributes } = productData || {};
+  const [price, setPrice] = useState(0);
+
+  useEffect(() => {
+    console.log(productRequest, id);
+    if (typeof productRequest !== "undefined") {
+      setProductData(productRequest.data);
+      setPrice(productRequest.data.product.product_price);
+    }
+  }, [productRequest]);
+
+  // The following line (if statment) fixes two bugs:
+  // 1- when the requestData is unefined because the getStaticPaths's fallback = true... making the API call in getStaticProps return undeifned during **build time**.. using this runs getStaticProps API call again to provide the apropriate data, once router.fallback is true
+  // LINK To Solution (1): https://github.com/vercel/next.js/discussions/15944
+  // 2- when the following line was on the top of the component, it would cause an early return to show the loading spinner (cuz of undefined getStaticProps), but that would cause the previously rendered useState hooks to not be rendered the second time, and cause a warning (that could potentially cause more problems later on), so it had to be moved to the bottom of the component (before return) to make sure that all of the useStates and useEffects are rendered with each render
+  // Link To Solution (2): https://www.adrian-nowicki.com/blog/how-to-overcome-react-detected-change-in-order-hooks
   if (router.isFallback) {
     return (
       <div
@@ -34,43 +51,6 @@ const ProductPage = ({ id, productRequest }) => {
       </div>
     );
   }
-
-  const [productData, setProductData] = useState();
-  const { product, attributes } = productData || {};
-  const [price, setPrice] = useState(0);
-  // const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    console.log(productRequest, id);
-    // setLoading(true)
-
-    const doFetch = async () => {
-      console.log("hello from doFetch");
-      const response = await useGetFetch(
-        `https://sinbad-store.com/api/v2/product/${id}`,
-        {
-          method: "GET",
-          headers: { "X-localization": "ar" },
-        }
-      );
-      console.log(response);
-      const data = await response;
-      setProductData(data);
-    };
-
-    if (typeof productRequest !== "undefined") {
-      // setLoading(false)
-      setProductData(productRequest.data);
-      setPrice(productRequest.data.product.product_price);
-    }
-    // else {
-    //   doFetch()
-    // }
-  }, [productData]);
-
-  // if(loading) {
-  //   return <div>Loading...</div>
-  // }
 
   return (
     <Container>
@@ -115,11 +95,13 @@ const ProductPage = ({ id, productRequest }) => {
               {/* -----------------IMPORTED PRODUCT----------------- */}
 
               {/* -----------------ATTRIBUTES----------------- */}
-              <ProductPageAttributes
-                attributes={attributes}
-                price={price}
-                setPrice={setPrice}
-              />
+              {typeof attributes[0] !== "undefined" && (
+                <ProductPageAttributes
+                  attributes={attributes}
+                  price={price}
+                  setPrice={setPrice}
+                />
+              )}
               {/* -----------------ATTRIBUTES----------------- */}
             </div>
 
