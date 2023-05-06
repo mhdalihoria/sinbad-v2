@@ -173,11 +173,13 @@ export const ProductCard = ({ product }) => {
                   <span style={{ color: "red" }}>({product.is_new})</span>
                 )}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {product.product_description
-                  .replace(/(<([^>]+)>)/gi, "")
-                  .replace(/\&nbsp;/g, "")}
-              </Typography>
+              {typeof product.product_description !== "undefined" && (
+                <Typography variant="body2" color="text.secondary">
+                  {product.product_description
+                    .replace(/(<([^>]+)>)/gi, "")
+                    .replace(/\&nbsp;/g, " - ")}
+                </Typography>
+              )}
               {product.shop_name && (
                 <span className="shop-name">المتجر: {product.shop_name}</span>
               )}
