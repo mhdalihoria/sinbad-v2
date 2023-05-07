@@ -24,7 +24,8 @@ const ProductPageAvailableAndRating = ({ product }) => {
   };
 
   return (
-    <div style={{ color: "white", fontWeight: "600" }}>
+    <div style={{ color: "white", fontWeight: "600", display: "flex", justifyContent: "space-between", width: "80%", margin: "0 auto" }}>
+      <div><span style={{background: "red"}}>rating</span></div>
       <Chip
         label={`${displayAvailable(
           product.product_quantity,

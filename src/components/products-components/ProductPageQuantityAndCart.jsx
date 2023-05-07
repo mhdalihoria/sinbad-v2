@@ -21,7 +21,6 @@ const AddToCart = styled(Button)(({ theme }) => ({
 }));
 
 const ProductPageQuantityAndCart = ({ product, quantity, setQuantity }) => {
-  const theme = useTheme();
   const addQuantity = () => {
     setQuantity((quantity) => {
       return quantity + 1;
@@ -42,13 +41,15 @@ const ProductPageQuantityAndCart = ({ product, quantity, setQuantity }) => {
       style={{
         display: "flex",
         justifyContent: "space-between",
+        alignItems: "center",
         flexWrap: "wrap",
-        padding: "5px",
+        width: "80%",
+        margin: "0 auto"
       }}
     >
-      <div>
+      <div style={{display: "flex", flexDirection: "column", gap: "10"}}>
         <span
-          style={{ fontSize: "1rem", fontWeight: "700", paddingLeft: " .5em" }}
+          style={{ fontSize: "1rem", fontWeight: "700", paddingBottom: " .5em" }}
         >
           الكمية:{" "}
         </span>
