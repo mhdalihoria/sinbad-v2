@@ -32,7 +32,11 @@ const ProductPageRelatedProducts = ({ relatedProducts }) => {
     };
   }, [windowSize]);
   return (
-    <Carousel navButtonsAlwaysVisible={true} indicators={false}>
+    <Carousel
+      navButtonsAlwaysVisible={true}
+      indicators={false}
+      animation="slide"
+    >
       {chunkArray(relatedProducts, cardsPerPage).map((productChunk, idx) => {
         return (
           <div style={{ display: "flex" }} key={idx}>
