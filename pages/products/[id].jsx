@@ -28,7 +28,6 @@ const ProductPage = ({ id, productRequest }) => {
   const [quantity, setQuantity] = useState(0)
 
   useEffect(() => {
-    console.log(productRequest, id);
     if (typeof productRequest !== "undefined") {
       setProductData(productRequest.data);
       setPrice(productRequest.data.product.product_price);

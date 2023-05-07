@@ -8,7 +8,6 @@ const ProductPageRelatedProducts = ({ relatedProducts }) => {
   const [cardsPerPage, setCardsPerPage] = useState(2);
   const theme = useTheme();
 
-  console.log(windowSize);
   useEffect(() => {
     const handleResizeWindow = () => {
       setWindowSize(window.innerWidth);
