@@ -1,13 +1,17 @@
+import { useTheme } from "@mui/material";
 
 const ProductPageImportedProduct = ({ product }) => {
+  const theme = useTheme()
   return (
     <>
       {product.is_global && (
-        <div>
-          <h5>منتج مستورد</h5>
-          <p>
+        <div style = {{
+          border: `1px solid ${theme.palette.primary.main}`
+        }}>
+          <h5 style={{fontSize: "1.3rem", margin: ".5rem", color: theme.palette.primary.main}}>منتج مستورد</h5>
+          <p style={{ margin: ".5rem"}}>
             لن يتم البدء بالاستيراد قبل دفع نسبة مقدمة من ثمن المنتج:{" "}
-            {product.global_payment}
+            <span style={{color: theme.palette.primary.main}}>{product.global_payment}</span>
           </p>
         </div>
       )}
