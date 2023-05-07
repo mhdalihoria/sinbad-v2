@@ -170,7 +170,7 @@ export const ProductCard = ({ product }) => {
               >
                 <span>{product.product_name}</span>{" "}
                 {product.is_new && (
-                  <span style={{ color: "red" }}>({product.is_new})</span>
+                  <span style={{ color: "red" }}>({product.is_new && "new"})</span>
                 )}
               </Typography>
               {typeof product.product_description !== "undefined" && (
