@@ -48,7 +48,8 @@ const ProductPageDescAndRating = ({ desc }) => {
       style={{
         border: `1px solid ${theme.palette.grey[500]}`,
         borderRadius: "5px",
-        marginTop: "2rem",
+        marginTop: "3rem",
+        marginBottom: "2rem",
         paddingTop: "1rem",
       }}
     >

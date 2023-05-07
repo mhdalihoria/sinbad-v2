@@ -4,7 +4,7 @@ const container ={
   display: "flex",
   flexDirection: "column",
 
-  margin: "2rem 0"
+  margin: "2rem 0 1rem"
 }
 
 const ProductPageProductDesc = ({ product }) => {
