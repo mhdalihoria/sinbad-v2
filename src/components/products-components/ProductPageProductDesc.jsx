@@ -1,8 +1,15 @@
 import React from "react";
 
+const container ={
+  display: "flex",
+  flexDirection: "column",
+
+  margin: "2rem 0"
+}
+
 const ProductPageProductDesc = ({ product }) => {
   return (
-    <div>
+    <div style={container}>
       {product.shop_name.length > 1 && ( //display shop name if the name isn't an empty string
         <span>
           المتجر: {product.shop_name && product.shop_name}

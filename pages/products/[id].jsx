@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Box, styled } from "@mui/material";
+import { Box, Grid, styled } from "@mui/material";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import ProductImageViewer from "../../src/components/products-components/ProductImageViewer";
 import ProductPagePrice from "../../src/components/products-components/ProductPagePrice";
@@ -25,7 +25,7 @@ const ProductPage = ({ id, productRequest }) => {
   const [productData, setProductData] = useState();
   const { product, attributes, relatedProducts } = productData || {};
   const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0)
+  const [quantity, setQuantity] = useState(0);
 
   useEffect(() => {
     if (typeof productRequest !== "undefined") {
@@ -59,72 +59,93 @@ const ProductPage = ({ id, productRequest }) => {
     <Container>
       {productData && (
         <>
-          {/* -----------------IMAGE VIEWER----------------- */}
-          <div
-            style={product.is_future ? { opacity: "0.5" } : { opacity: "1" }}
-          >
-            {<ProductImageViewer productData={productData} />}
-          </div>
-          {/* -----------------IMAGE VIEWER----------------- */}
-          <div>
-            <h1
-              style={product.is_future ? { opacity: "0.5" } : { opacity: "1" }}
-            >
-              {product.product_name}
-            </h1>
-            {/* <h6>{product.product_short_description}</h6> */}
-            <h4>short description</h4>
-            <div>
-              <h5>{product.with_delivery_fee && "بدون توصيل"}</h5>
+          <Grid container>
+            {/* -----------------IMAGE VIEWER----------------- */}
+            <Grid item xs={12} sm={12} md={6} lg={4}>
+              <div
+                style={
+                  product.is_future ? { opacity: "0.5" } : { opacity: "1" }
+                }
+              >
+                {<ProductImageViewer productData={productData} />}
+              </div>
+            </Grid>
+            {/* -----------------IMAGE VIEWER----------------- */}
 
-              {/* -----------------PRICE SECTION----------------- */}
-              <ProductPagePrice
-                product={product}
-                price={price}
-                setPrice={setPrice}
-              />
-              {/* -----------------PRICE SECTION----------------- */}
+            {/* -----------------PRODUCT INFO----------------- */}
+            <Grid item xs={12} sm={12} md={6} lg={8}>
+              <div>
+                <h1
+                  style={
+                    product.is_future
+                      ? { opacity: "0.5" }
+                      : { opacity: "1", marginBottom: "0" }
+                  }
+                >
+                  {product.product_name}
+                </h1>
+                <span>{product.product_short_description}</span>
+                {/* <span>short description</span> */}
+                <div>
+                  <h5
+                    style={{
+                      marginBottom: "0",
+                      marginTop: "1.5em",
+                      fontSize: ".9rem",
+                    }}
+                  >
+                    {product.with_delivery_fee && "بدون توصيل"}
+                  </h5>
 
-              {/* -----------------IN STOCK SECTION + RATING----------------- */}
-              <ProductPageAvailableAndRating product={product} />
-              {/* -----------------IN STOCK SECTION + RATING----------------- */}
+                  {/* -----------------PRICE SECTION----------------- */}
+                  <ProductPagePrice
+                    product={product}
+                    price={price}
+                    setPrice={setPrice}
+                  />
+                  {/* -----------------PRICE SECTION----------------- */}
 
-              {/* -----------------SHOP INFO/DESC----------------- */}
-              <ProductPageProductDesc product={product} />
-              {/* -----------------SHOP INFO/DESC----------------- */}
+                  {/* -----------------IN STOCK SECTION + RATING----------------- */}
+                  <ProductPageAvailableAndRating product={product} />
+                  {/* -----------------IN STOCK SECTION + RATING----------------- */}
 
-              {/* -----------------IMPORTED PRODUCT----------------- */}
-              <ProductPageImportedProduct product={product} />
-              {/* -----------------IMPORTED PRODUCT----------------- */}
+                  {/* -----------------SHOP INFO/DESC----------------- */}
+                  <ProductPageProductDesc product={product} />
+                  {/* -----------------SHOP INFO/DESC----------------- */}
 
-              {/* -----------------ATTRIBUTES----------------- */}
-              {typeof attributes[0] !== "undefined" && (
-                <ProductPageAttributes
-                  attributes={attributes}
-                  price={price}
-                  setPrice={setPrice}
+                  {/* -----------------IMPORTED PRODUCT----------------- */}
+                  <ProductPageImportedProduct product={product} />
+                  {/* -----------------IMPORTED PRODUCT----------------- */}
+
+                  {/* -----------------ATTRIBUTES----------------- */}
+                  {typeof attributes[0] !== "undefined" && (
+                    <ProductPageAttributes
+                      attributes={attributes}
+                      price={price}
+                      setPrice={setPrice}
+                    />
+                  )}
+                  {/* -----------------ATTRIBUTES----------------- */}
+                </div>
+
+                {/* -----------------QUANTITY AND ADD TO CART----------------- */}
+                <ProductPageQuantityAndCart
+                  product={product}
+                  quantity={quantity}
+                  setQuantity={setQuantity}
                 />
-              )}
-              {/* -----------------ATTRIBUTES----------------- */}
-            </div>
-            
-             {/* -----------------QUANTITY AND ADD TO CART----------------- */}
-            <ProductPageQuantityAndCart
-              product={product}
-              quantity={quantity}
-              setQuantity={setQuantity}
-              />
-              {/* -----------------QUANTITY AND ADD TO CART----------------- */}
+                {/* -----------------QUANTITY AND ADD TO CART----------------- */}
+              </div>
+            </Grid>
+            {/* -----------------PRODUCT INFO----------------- */}
+          </Grid>
 
-              {/* -----------------DESCRIPTION AND RATING----------------- */}
-              <ProductPageDescAndRating desc={product.product_description}/>
-              {/* -----------------DESCRIPTION AND RATING----------------- */}
-
-              {/* -----------------RELATED PRODUCTS----------------- */}
-              <ProductPageRelatedProducts relatedProducts={relatedProducts}/>
-              {/* -----------------RELATED PRODUCTS----------------- */}
-
-          </div>
+          {/* -----------------DESCRIPTION AND RATING----------------- */}
+          <ProductPageDescAndRating desc={product.product_description} />
+          {/* -----------------DESCRIPTION AND RATING----------------- */}
+          {/* -----------------RELATED PRODUCTS----------------- */}
+          <ProductPageRelatedProducts relatedProducts={relatedProducts} />
+          {/* -----------------RELATED PRODUCTS----------------- */}
         </>
       )}
     </Container>

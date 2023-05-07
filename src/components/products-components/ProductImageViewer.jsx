@@ -5,10 +5,10 @@ import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.min.css";
 
 const ImageSliderContainer = styled(Box)({
-  maxWidth: "1200px",
+  maxWidth: "300px",
   margin: "0 auto",
   display: "grid",
-  gridTemplateColumns: "repeat(2, 1fr)",
+  justifyItems: "center",
 });
 const ImageSliderLeft = styled(Box)({
   display: "flex",
@@ -16,7 +16,6 @@ const ImageSliderLeft = styled(Box)({
 });
 const ImageSliderTop = styled(Box)(({ theme }) => ({
   maxWidth: "250px",
-
   "@media (min-width:800px)": {
     maxWidth: "300px",
   },
@@ -43,7 +42,6 @@ const ImageSliderBottom = styled(Box)(({ theme }) => ({
     border: `2px solid ${theme.palette.primary.main}`,
   },
 }));
-const ImageSliderRight = styled(Box)({});
 
 const ProductImageViewer = ({ productData }) => {
   const [mainImg, setMainImg] = useState(productData.product_images[0]);
@@ -98,7 +96,6 @@ const ProductImageViewer = ({ productData }) => {
           ))}
         </ImageSliderBottom>
       </ImageSliderLeft>
-      <ImageSliderRight></ImageSliderRight>
     </ImageSliderContainer>
   );
 };
