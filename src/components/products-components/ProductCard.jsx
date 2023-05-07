@@ -128,7 +128,7 @@ export const ProductCard = ({ product }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: 345, margin: "1rem auto", position: "relative" }}>
+    <Card sx={{ maxWidth: 345, margin: "1rem auto", position: "relative", cursor: "pointer"}}>
       {product.is_future ? (
         <ComingSoon>
           {/*this component is responsible for the touch effect when clicking it */}
@@ -153,7 +153,7 @@ export const ProductCard = ({ product }) => {
         </ComingSoon>
       ) : (
         <Link href={`/products/${product.id}`}>
-          <ProductCardActionArea>
+          <div>
             {/*this component is responsible for the touch effect when clicking it */}
             <CardMedia
               component="img"
@@ -237,7 +237,7 @@ export const ProductCard = ({ product }) => {
                 <i className="fa-sharp fa-solid fa-less-than-equal"></i>
               </button>
             </Overlay>
-          </ProductCardActionArea>
+          </div>
         </Link>
       )}
     </Card>
