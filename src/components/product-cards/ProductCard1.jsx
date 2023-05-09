@@ -128,7 +128,7 @@ const ProductCard1 = ({
           </IconButton>
         </HoverIconWrapper>
 
-        <Link href={`/product/${slug}`}>
+        <Link href={`/products/${slug}`}>
           <a>
             <LazyImage src={imgUrl} width={0} height={0} layout="responsive" alt={title} />
           </a>
@@ -146,7 +146,7 @@ const ProductCard1 = ({
       <ContentWrapper>
         <FlexBox>
           <Box flex="1 1 0" minWidth="0px" mr={1}>
-            <Link href={`/product/${slug}`}>
+            <Link href={`/products/${slug}`}>
               <a>
                 <H3 mb={1} title={title} fontSize="14px" fontWeight="600" className="title" color="text.secondary">
                   {title}
