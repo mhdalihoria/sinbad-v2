@@ -6,7 +6,8 @@ const ProductPageImportedProduct = ({ product }) => {
     <>
       {product.is_global && (
         <div style = {{
-          border: `1px solid ${theme.palette.primary.main}`
+          border: `1px solid ${theme.palette.primary.main}`,
+          background: "rgba(255, 25, 0, 0.03",
         }}>
           <h5 style={{fontSize: "1.3rem", margin: ".5rem", color: theme.palette.primary.main}}>منتج مستورد</h5>
           <p style={{ margin: ".5rem"}}>
