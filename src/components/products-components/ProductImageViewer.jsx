@@ -1,102 +1,67 @@
-import { useRef, useState } from "react";
-import { Box, styled } from "@mui/material";
-import Image from "next/image";
+import { useState } from "react";
+import { Avatar, Grid } from "@mui/material";
 import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.min.css";
+import LazyImage from "components/LazyImage";
+import { FlexBox, FlexRowCenter } from "components/flex-box";
 
-const ImageSliderContainer = styled(Box)({
-  maxWidth: "300px",
-  margin: "0 auto",
-  display: "grid",
-  justifyItems: "center",
-});
-const ImageSliderLeft = styled(Box)({
-  display: "flex",
-  flexDirection: "column",
-});
-const ImageSliderTop = styled(Box)(({ theme }) => ({
-  maxWidth: "250px",
-  "@media (min-width:800px)": {
-    maxWidth: "300px",
-  },
-}));
+const ProductImageViewer = ({ productImages, product }) => {
+  const {
+    id,
+    product_price,
+    product_name,
+    product_short_description,
+    shop_name,
+    slug,
+    thumbnail,
+  } = product;
+  const [selectedImage, setSelectedImage] = useState(0);
 
-const ImageSliderBottom = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "row",
-  justifyContent: "center",
-  gap: "10px",
-  overflow: "scroll",
-  maxWidth: "250px",
-  "@media (min-width:800px)": {
-    maxWidth: "300px",
-  },
+  const handleImageClick = (ind) => () => setSelectedImage(ind);
 
-  "& .img_wrap": {
-    border: "1px solid #eee",
-    cursor: "pointer",
-    width: "80px",
-    height: "80px",
-  },
-  "& .active": {
-    border: `2px solid ${theme.palette.primary.main}`,
-  },
-}));
-
-const ProductImageViewer = ({ productData }) => {
-  const [mainImg, setMainImg] = useState(productData.product_images[0]);
-
-  const refs = useRef([]);
-  refs.current = [];
-
-  const handleClick = (image, idx) => {
-    setMainImg(image);
-    if (typeof refs.current[idx] !== "undefined") {
-      console.log(refs.current, refs.current[idx].classList);
-      refs.current[idx].classList.add("active");
-    }
-
-    for (let j = 0; j < productData.product_images.length; j++) {
-      if (idx !== j) {
-        if(typeof refs.current[j] !== "undefined"){
-          refs.current[j].classList.remove("active");
-        }
-      }
-    }
-  };
-
-  const addRefs = (element) => {
-    if (element && !refs.current.includes(element)) {
-      refs.current.push(element);
-    }
-  };
 
   return (
-    <ImageSliderContainer>
-      <ImageSliderLeft>
-        <ImageSliderTop>
-          <InnerImageZoom
-            src={mainImg}
-            zoomSrc={mainImg}
-            hasSpacer={true}
-            width={400}
-            height={400}
-          />
-        </ImageSliderTop>
-        <ImageSliderBottom>
-          {productData.product_images.map((image, idx) => (
-            <div
-              className={idx == 0 ? "img_wrap active" : "img_wrap"}
-              key={idx}
-              onClick={() => handleClick(image, idx)}
-              ref={addRefs}
-            >
-              <Image src={image} width={70} height={70} objectFit="contain" />
-            </div>
-          ))}
-        </ImageSliderBottom>
-      </ImageSliderLeft>
-    </ImageSliderContainer>
+    <Grid item md={6} xs={12} alignItems="center">
+      <FlexBox justifyContent="center" mb={6}>
+        <InnerImageZoom
+          src={productImages[selectedImage]}
+          zoomSrc={productImages[selectedImage]}
+          hasSpacer={true}
+          width={300}
+          height={300}
+        />
+
+      </FlexBox>
+
+      <FlexBox overflow="auto">
+        {productImages.map((url, ind) => (
+          <FlexRowCenter
+            key={ind}
+            width={64}
+            height={64}
+            minWidth={64}
+            bgcolor="white"
+            border="1px solid"
+            borderRadius="10px"
+            ml={ind === 0 ? "auto" : 0}
+            style={{
+              cursor: "pointer",
+            }}
+            onClick={handleImageClick(ind)}
+            mr={ind === productImages.length - 1 ? "auto" : "10px"}
+            borderColor={selectedImage === ind ? "primary.main" : "grey.400"}
+          >
+            <Avatar
+              src={url}
+              variant="square"
+              sx={{
+                height: 40,
+              }}
+            />
+          </FlexRowCenter>
+        ))}
+      </FlexBox>
+    </Grid>
   );
 };
 
