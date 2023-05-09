@@ -12,9 +12,7 @@ import useGetFetch from "../../src/components/fetch/useGetFetch";
 import api from "utils/__api__/products";
 
 // styled component
-const StyledTabs = styled(Tabs)(({
-  theme
-}) => ({
+const StyledTabs = styled(Tabs)(({ theme }) => ({
   minHeight: 0,
   marginTop: 80,
   marginBottom: 24,
@@ -22,38 +20,55 @@ const StyledTabs = styled(Tabs)(({
   "& .inner-tab": {
     minHeight: 40,
     fontWeight: 600,
-    textTransform: "capitalize"
-  }
+    textTransform: "capitalize",
+  },
 }));
 
 // ===============================================================
 
 // ===============================================================
 
-const ProductDetails = props => {
-  const {
-    relatedProducts,
-    product,
-    productRequest
-  } = props;
+const ProductDetails = (props) => {
+  const { productRequest } = props;
   const router = useRouter();
+  const [productData, setProductData] = useState();
+  const {
+    product,
+    attributes,
+    relatedProducts,
+    product_images: productImages,
+  } = productData || {};
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
 
+  console.log(productRequest.data.product);
 
+  useEffect(() => {
+    if (typeof productRequest !== "undefined") {
+      setProductData(productRequest.data);
+      // setPrice(productRequest.data.product.product_price);
+    }
+  }, [productRequest]);
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
     return <h1>Loading...</h1>;
   }
-  return <ShopLayout1>
-      <Container sx={{
-      my: 4
-    }}>
+  return (
+    <ShopLayout1>
+      <Container
+        sx={{
+          my: 4,
+        }}
+      >
         {/* PRODUCT DETAILS INFO AREA */}
-        {product ? <ProductIntro product={product} /> : <H2>Loading...</H2>}
+        {product ? (
+          <ProductIntro product={product} productImages={productImages} />
+        ) : (
+          <H2>Loading...</H2>
+        )}
 
         {/* PRODUCT DESCRIPTION AND REVIEW */}
-        <StyledTabs textColor="primary" value={selectedOption} indicatorColor="primary" onChange={handleOptionClick}>
+        {/* <StyledTabs textColor="primary" value={selectedOption} indicatorColor="primary" onChange={handleOptionClick}>
           <Tab className="inner-tab" label="Description" />
           <Tab className="inner-tab" label="Review (3)" />
         </StyledTabs>
@@ -63,25 +78,32 @@ const ProductDetails = props => {
           {selectedOption === 1 && <ProductReview />}
         </Box>
 
-        {relatedProducts && <RelatedProducts productsData={relatedProducts} />}
+        {relatedProducts && <RelatedProducts productsData={relatedProducts} />} */}
       </Container>
-    </ShopLayout1>;
+    </ShopLayout1>
+  );
 };
 export const getStaticPaths = async () => {
-  const paths = await api.getSlugs();
-  
+  const allProducts = await useGetFetch(
+    "https://sinbad-store.com/api/v2/products",
+    {
+      method: "GET",
+      headers: { "X-localization": "ar" },
+    }
+  );
+
+  const productsParams = allProducts.data.products.map((product) => {
+    return { params: { id: product.id.toString() } };
+  });
   return {
-    paths: paths,
-    //indicates that no page needs be created at build time
-    fallback: true //indicates the type of fallback
+    paths: productsParams,
+    fallback: true,
   };
 };
 
-export const getStaticProps = async ({
-  params
-}) => {
-  const relatedProducts = await getRelatedProducts();
-  const product = await api.getProduct(params.slug);
+export const getStaticProps = async ({ params }) => {
+  // const relatedProducts = await getRelatedProducts();
+  // const product = await api.getProduct(params.slug);
 
   const productId = params.id;
   const productRequest = await useGetFetch(
@@ -93,10 +115,8 @@ export const getStaticProps = async ({
   );
   return {
     props: {
-      relatedProducts,
-      product,
       productRequest,
-    }
+    },
   };
 };
 export default ProductDetails;
