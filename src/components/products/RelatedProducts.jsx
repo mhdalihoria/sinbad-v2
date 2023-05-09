@@ -28,7 +28,11 @@ const RelatedProducts = ({ productsData }) => {
               price={item.product_price}
               // rating={item.rating}
               imgUrl={`https://sinbad-store.com${item.thumb}`}
-              discount={item.discount}
+              salePrice = {item.sale_price}
+              description ={item.product_description?.replace(/(<([^>]+)>)/gi, "")}
+              categoryName={item.category_name}
+              isNew={item.is_new}
+              isExternal={item.is_external}
               hoverEffect
             />
           </Grid>
