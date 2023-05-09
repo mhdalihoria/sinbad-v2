@@ -51,7 +51,7 @@ const ShopLayout1 = ({
       <MobileNavigationBar />
 
       {/* FOOTER */}
-      <Footer1 />
+      {/* <Footer1 /> */}
     </Fragment>;
 };
 export default ShopLayout1;
