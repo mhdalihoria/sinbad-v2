@@ -1,24 +1,55 @@
 import { useEffect, useState } from "react";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
-import ProductCard from "../../src/components/products-components/ProductCard";
+import ProductCard1 from "../../src/components/product-cards/ProductCard1";
+import { Grid } from "@mui/material";
 
 const Products = ({ allProducts }) => {
-    const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
-const ProductCardElements = products.map((product, idx)=> {
-    return <ProductCard key={idx} product={product} />
-})
+  const ProductCardElements = products.map((product, idx) => {
+    return (
+      <div style={{ width: "300px", margin: "1rem" }}>
+        <ProductCard1
+          key={idx}
+          id={product.id}
+          slug={product.id}
+          title={product.product_name}
+          price={product.product_price}
+          // rating={product.rating}
+          imgUrl={`${product.thumb}`}
+          salePrice={product.sale_price}
+          description={product.product_description?.replace(
+            /(<([^>]+)>)/gi,
+            ""
+          )}
+          categoryName={product.category_name}
+          isNew={product.is_new}
+          isExternal={product.is_external}
+          shopName={product.shop_name}
+          hoverEffect
+        />
+      </div>
+    );
+  });
 
-  useEffect(()=> {
-    if(typeof allProducts.data.products !== "undefined") {
-        setProducts(allProducts.data.products)
+  useEffect(() => {
+    if (typeof allProducts.data.products !== "undefined") {
+      setProducts(allProducts.data.products);
     }
-  }, [products])
+  }, [products]);
 
   return (
     <div>
       <h1>Products</h1>
-      {ProductCardElements}
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+        }}
+      >
+        {ProductCardElements}
+      </div>
     </div>
   );
 };
