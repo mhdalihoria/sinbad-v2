@@ -81,9 +81,9 @@ const ProductDetails = (props) => {
           {selectedOption === 0 && <ProductDescription product={product} />}
           {selectedOption === 1 && <ProductReview />}
         </Box>
-        {/* 
+        
       {relatedProducts && <RelatedProducts productsData={relatedProducts} />} 
-      */}
+     
       </Container>
     </ShopLayout1>
   );
