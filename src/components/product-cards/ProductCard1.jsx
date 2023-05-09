@@ -44,7 +44,8 @@ const StyledChip = styled(Chip)({
   fontSize: "13px",
   width: "fit-content",
 
-  top: "auto",
+  marginTop: "5px",
+  padding: "2px 0",
   left: "10px",
 });
 const HoverIconWrapper = styled(Box)({
@@ -86,6 +87,7 @@ const ProductCard1 = ({
   description,
   isNew,
   isExternal,
+  shopName,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch } = useAppContext();
@@ -119,7 +121,7 @@ const ProductCard1 = ({
             height: "50px",
             display: "flex",
             flexDirection: "column",
-            position: "absolute"
+            position: "absolute",
           }}
         >
           {!!salePrice && (
@@ -130,7 +132,9 @@ const ProductCard1 = ({
             />
           )}
           {!!isNew && <StyledChip color="warning" size="small" label={`new`} />}
-          {!!isExternal && <StyledChip color="secondary" size="small" label={`أصلي`} />}
+          {!!isExternal && (
+            <StyledChip color="secondary" size="small" label={`أصلي`} />
+          )}
         </div>
 
         <HoverIconWrapper
@@ -169,6 +173,10 @@ const ProductCard1 = ({
         product={{
           title,
           price,
+          categoryName,
+          salePrice,
+          description,
+          shopName,
           id,
           slug,
           imgGroup: [imgUrl, imgUrl],
@@ -193,6 +201,12 @@ const ProductCard1 = ({
               </a>
             </Link>
 
+            {!!shopName && (
+              <>
+                <Span>المتجر: {shopName} </Span> <br />
+                <br />
+              </>
+            )}
             {!hideRating && (
               <BazaarRating value={rating || 0} color="warn" readOnly />
             )}
