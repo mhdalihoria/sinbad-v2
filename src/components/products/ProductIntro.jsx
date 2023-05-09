@@ -10,6 +10,7 @@ import { FlexBox, FlexRowCenter } from "../flex-box";
 import { currency } from "lib";
 import productVariants from "data/product-variants";
 import ProductImageViewer from "components/products-components/ProductImageViewer";
+import ProductPageImportedProduct from "components/products-components/ProductPageImportedProduct";
 
 // ================================================================
 
@@ -117,6 +118,8 @@ const ProductIntro = ({ product, productImages }) => {
             <Box color="inherit">Stock Available</Box>
           </Box>
 
+         {product.is_global == 1 && <ProductPageImportedProduct product={product} />}
+
           {!cartItem?.qty ? (
             <Button
               color="primary"
@@ -124,6 +127,7 @@ const ProductIntro = ({ product, productImages }) => {
               onClick={handleCartAmountChange(1)}
               sx={{
                 mb: 4.5,
+                mt: 2.5,
                 px: "1.75rem",
                 height: 40,
               }}
@@ -131,7 +135,7 @@ const ProductIntro = ({ product, productImages }) => {
               Add to Cart
             </Button>
           ) : (
-            <FlexBox alignItems="center" mb={4.5}>
+                <FlexBox alignItems="center" mb={4.5} mt={2.5}>
               <Button
                 size="small"
                 sx={{
