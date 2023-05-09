@@ -33,6 +33,7 @@ const RelatedProducts = ({ productsData }) => {
               categoryName={item.category_name}
               isNew={item.is_new}
               isExternal={item.is_external}
+              shopName={item.shop_name}
               hoverEffect
             />
           </Grid>
