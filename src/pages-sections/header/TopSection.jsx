@@ -61,7 +61,6 @@ const TopSection = ({ isFixed, className, searchInput }) => {
   const [settingsData, setSettingsData] = useState();
   const [categories, setCategories] = useState();
 
-  console.log(settingsData);
   useEffect(() => {
     if (siteSettingsData !== {}) {
       setSettingsData(siteSettingsData.settings);
