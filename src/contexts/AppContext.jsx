@@ -92,10 +92,13 @@ export const AppProvider = ({ children }) => {
       // itemsFromLocalStorage.cart => array of objects => [{}]
       // state is also => array of objects => [{}]
       //so if we want to put itemsFromLocalStorage.cart => we need to make it so it's only storing the objects inside the array of objects
-      dispatch({
-        type: "CHANGE_CART_AMOUNT",
-        payload: itemsFromLocalStorage.cart
-      })
+      itemsFromLocalStorage.cart.map(cartItem =>(
+
+        dispatch({
+          type: "CHANGE_CART_AMOUNT",
+          payload: cartItem
+        })
+      ))
     }
   }, []);
 
