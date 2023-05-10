@@ -57,33 +57,34 @@ const TopSection = ({ isFixed, className, searchInput }) => {
   const toggleDialog = () => setDialogOpen(!dialogOpen);
   const toggleSidenav = () => setSidenavOpen(!sidenavOpen);
   const toggleSearchBar = () => setSearchBarOpen(!searchBarOpen);
-//   const { siteSettingsData } = useContext(SettingsContext);
-//   const [settingsData, setSettingsData] = useState();
-//   const [categories, setCategories] = useState();
+  const { siteSettingsData } = useContext(SettingsContext);
+  const [settingsData, setSettingsData] = useState();
+  const [categories, setCategories] = useState();
 
-//   useEffect(() => {
-//     if (siteSettingsData !== {}) {
-//       setSettingsData(siteSettingsData.settings);
-//     }
-//   }, [siteSettingsData]);
+  console.log(settingsData);
+  useEffect(() => {
+    if (siteSettingsData !== {}) {
+      setSettingsData(siteSettingsData.settings);
+    }
+  }, [siteSettingsData]);
 
-//   useEffect(() => {
-//     const fetchCates = async () => {
-//       try {
-//         const requestOptions = {
-//           method: "GET",
-//           headers: { "X-localization": "ar" },
-//         };
-//         const url = "https://sinbad-store.com/api/v2/categories";
-//         const categoryResponse = await useGetFetch(url, requestOptions);
+  useEffect(() => {
+    const fetchCates = async () => {
+      try {
+        const requestOptions = {
+          method: "GET",
+          headers: { "X-localization": "ar" },
+        };
+        const url = "https://sinbad-store.com/api/v2/categories";
+        const categoryResponse = await useGetFetch(url, requestOptions);
 
-//         setCategories(categoryResponse.data);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     };
-//     fetchCates();
-//   }, []);
+        setCategories(categoryResponse.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchCates();
+  }, []);
   // LOGIN AND MINICART DRAWER
   const DIALOG_DRAWER = (
     <Fragment>
@@ -137,18 +138,24 @@ const TopSection = ({ isFixed, className, searchInput }) => {
                 />
               </a>
             </Link> */}
-            {/* <div>
-              <span
-                style={{
-                  paddingLeft: "1em",
-                  marginLeft: "1em",
-                  borderLeft: "1px solid black",
-                }}
-              >
-                {settingsData.WebsiteTitle}
-              </span>
-              <span>اتصل بنا: {settingsData.SupportNumber}</span>
-            </div> */}
+            {typeof settingsData !== "undefined" && (
+              <div>
+                <Link href="/">
+                  <span
+                    style={{
+                      paddingLeft: "1em",
+                      marginLeft: "1em",
+                      borderLeft: "1px solid black",
+                      cursor: "pointer",
+                      
+                    }}
+                  >
+                    {settingsData.WebsiteTitle}
+                  </span>
+                </Link>
+                <span>اتصل بنا: {settingsData.SupportNumber}</span>
+              </div>
+            )}
 
             {/* RIGHT CONTENT - LOGIN, CART, SEARCH BUTTON */}
             <FlexBox justifyContent="end" flex={1}>
@@ -207,7 +214,24 @@ const TopSection = ({ isFixed, className, searchInput }) => {
       <StyledContainer>
         {/* LEFT CONTENT - LOGO AND CATEGORY */}
         <FlexBox mr={2} minWidth="170px" alignItems="center">
-          <Link href="/">sinbad</Link>
+        {typeof settingsData !== "undefined" && (
+              <div>
+                <Link href="/">
+                  <span
+                    style={{
+                      paddingLeft: "1em",
+                      marginLeft: "1em",
+                      borderLeft: "1px solid black",
+                      cursor: "pointer",
+                      
+                    }}
+                  >
+                    {settingsData.WebsiteTitle}
+                  </span>
+                </Link>
+                <span>اتصل بنا: {settingsData.SupportNumber}</span>
+              </div>
+            )}
 
           {/* SHOW DROP DOWN CATEGORY BUTTON WHEN HEADER FIXED */}
           {/* {isFixed && (
