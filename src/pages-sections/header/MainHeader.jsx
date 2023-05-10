@@ -65,8 +65,8 @@ const Header = () => {
 
   return (
     <>
-    <TopSection />
-      <PageHeaderUpper />
+      <TopSection />
+      {/* <PageHeaderUpper /> */}
       <div
         style={{
           boxShadow: "0px 3px 7px -1px rgba(0,0,0,0.25)",
