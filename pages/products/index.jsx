@@ -8,9 +8,8 @@ const Products = ({ allProducts }) => {
 
   const ProductCardElements = products.map((product, idx) => {
     return (
-      <div style={{ width: "300px", margin: "1rem" }}>
+      <div style={{ width: "300px", margin: "1rem" }} key={idx}>
         <ProductCard1
-          key={idx}
           id={product.id}
           slug={product.id}
           title={product.product_name}
