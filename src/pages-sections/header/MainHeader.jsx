@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import NewsTicker from "./NewsTicker";
 import PageHeaderUpper from "./PageHeaderUpper";
 import Navbar from "components/navbar/Navbar";
+import TopSection from "./TopSection";
 const AppStoreSection = styled(Box)({
   width: "145px",
   display: "flex",
@@ -64,6 +65,7 @@ const Header = () => {
 
   return (
     <>
+    <TopSection />
       <PageHeaderUpper />
       <div
         style={{
