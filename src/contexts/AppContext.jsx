@@ -76,7 +76,7 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const [favItems, setFavItems] = useState([]);
+  const [favItems, setFavItems] = useState();
   const contextValue = useMemo(
     () => ({
       state,
@@ -110,6 +110,17 @@ export const AppProvider = ({ children }) => {
       window.localStorage.setItem("cart", JSON.stringify(state));
     }
   }, [state]);
+
+  useEffect(() => {
+    const getFavItems = window.localStorage.getItem('favItems');
+    if ( getFavItems === null ) setFavItems([]);
+    if ( getFavItems !== null ) setFavItems(JSON.parse(getFavItems));
+    
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem('favItems', JSON.stringify(favItems));
+  }, [favItems]);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
