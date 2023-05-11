@@ -9,7 +9,7 @@ import { H2, H5 } from "components/Typography";
 
 // ===================================================
 
-const ProductReview = () => {
+const ProductReview = ({reviews}) => {
   const handleFormSubmit = async (values, {
     resetForm
   }) => {
@@ -31,7 +31,7 @@ const ProductReview = () => {
     validationSchema: reviewSchema
   });
   return <Box>
-      {commentList.map((item, ind) => <ProductComment {...item} key={ind} />)}
+      {reviews.map((item, ind) => <ProductComment {...item} key={ind} />)}
 
       <H2 fontWeight="600" mt={7} mb={2.5}>
         Write a Review for this product

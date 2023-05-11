@@ -36,6 +36,7 @@ const ProductDetails = (props) => {
     product,
     attributes,
     relatedProducts,
+    reviews,
     product_images: productImages,
   } = productData || {};
   const [selectedOption, setSelectedOption] = useState(0);
@@ -75,7 +76,7 @@ const ProductDetails = (props) => {
 
             <Box mb={6}>
               {selectedOption === 0 && <ProductDescription product={product} />}
-              {selectedOption === 1 && <ProductReview />}
+              {selectedOption === 1 && <ProductReview reviews={reviews}/>}
             </Box>
 
             {relatedProducts && (
