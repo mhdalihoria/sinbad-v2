@@ -33,7 +33,7 @@ const ProductImageViewer = ({ productImages, product }) => {
 
       </FlexBox>
 
-      <FlexBox overflow="auto">
+      <FlexBox overflow="auto" style={{maxWidth: "300px", margin: "0 auto"}}>
         {productImages.map((url, ind) => (
           <FlexRowCenter
             key={ind}
