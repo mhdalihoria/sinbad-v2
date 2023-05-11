@@ -88,11 +88,11 @@ const ProductCard1 = ({
   isNew,
   isExternal,
   shopName,
-  isFavorite = false
+  isFavorited = false
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
-  const [openModal, setOpenModal] = useState(isFavorite);
+  const [openModal, setOpenModal] = useState(isFavorited);
   const [isFavorite, setIsFavorite] = useState(false);
   const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
   const toggleDialog = useCallback(() => setOpenModal((open) => !open), []);
@@ -135,7 +135,7 @@ const ProductCard1 = ({
             isNew,
             isExternal,
             shopName,
-            isFavorite
+            isFavorited
           },
         ];
       });
