@@ -13,13 +13,13 @@ const ProductComment = (props) => {
   return (
     <Box mb={4} maxWidth="600px">
       <FlexBox alignItems="center" mb={2}>
-        <Avatar
+        {/* <Avatar
           src={imgUrl}
           sx={{
             width: 48,
             height: 48,
           }}
-        />
+        /> */}
         <Box ml={2}>
           <H4 mb={0.5}>{full_name}</H4>
           <FlexBox alignItems="center">
@@ -29,8 +29,10 @@ const ProductComment = (props) => {
           </FlexBox>
         </Box>
       </FlexBox>
-      <H6 mb={0.5}>{title}</H6>
-      <Paragraph color="grey.700">{message}</Paragraph>
+      <Box ml={2}>
+        <H6 mb={0.5}>{title}</H6>
+        <Paragraph color="grey.700">{message}</Paragraph>
+      </Box>
     </Box>
   );
 };
