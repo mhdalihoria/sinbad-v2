@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { Add, Favorite, Remove, RemoveRedEye } from "@mui/icons-material";
 import { Box, Button, Chip, IconButton, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -90,7 +90,7 @@ const ProductCard1 = ({
   shopName,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
-  const { state, dispatch } = useAppContext();
+  const { state, dispatch, favItems, setFavItems } = useAppContext();
   const [openModal, setOpenModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
@@ -112,6 +112,39 @@ const ProductCard1 = ({
       });
     }
   };
+
+  useEffect(() => {
+    if (isFavorite) {
+      setFavItems((prevFavItems) => {
+        return [
+          ...prevFavItems,
+          {
+            id,
+            slug,
+            title,
+            price,
+            imgUrl,
+            rating,
+            hideRating,
+            hoverEffect,
+            showProductSize,
+            categoryName,
+            salePrice,
+            description,
+            isNew,
+            isExternal,
+            shopName,
+          },
+        ];
+      });
+    }
+
+    if (!isFavorite) {
+      setFavItems((prevFavItems) => {
+        return prevFavItems.filter(favItem => favItem.id !== id)
+      });
+    }
+  }, [isFavorite]);
   return (
     <StyledBazaarCard hoverEffect={hoverEffect}>
       <ImageWrapper>

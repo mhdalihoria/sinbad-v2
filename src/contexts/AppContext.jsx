@@ -4,13 +4,14 @@ import {
   useEffect,
   useMemo,
   useReducer,
+  useState,
 } from "react";
 
 // =================================================================================
 
 // =================================================================================
 
-const INITIAL_CART = [ ];
+const INITIAL_CART = [];
 const INITIAL_STATE = {
   cart: INITIAL_CART,
 };
@@ -21,7 +22,7 @@ const AppContext = createContext({
 const reducer = (state, action) => {
   switch (action.type) {
     case "INITIAL_STORAGE":
-      return {...state};
+      return { ...state };
     case "CHANGE_CART_AMOUNT":
       let cartList = state.cart;
       let cartItem = action.payload;
@@ -75,39 +76,38 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [favItems, setFavItems] = useState([]);
   const contextValue = useMemo(
     () => ({
       state,
       dispatch,
+      favItems,
+      setFavItems,
     }),
     [state, dispatch]
   );
+  console.log(favItems);
 
   useEffect(() => {
-    const itemsFromLocalStorage = JSON.parse(localStorage.getItem("cart"))
+    const itemsFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
     if (itemsFromLocalStorage) {
       //checking if there already is a state in localstorage
-      console.log("it does exist in localStorage");
-      console.log(itemsFromLocalStorage.cart, state)
       // itemsFromLocalStorage.cart => array of objects => [{}]
       // state is also => array of objects => [{}]
       //so if we want to put itemsFromLocalStorage.cart => we need to make it so it's only storing the objects inside the array of objects
-      itemsFromLocalStorage.cart.map(cartItem =>(
-
+      itemsFromLocalStorage.cart.map((cartItem) =>
         dispatch({
           type: "CHANGE_CART_AMOUNT",
-          payload: cartItem
+          payload: cartItem,
         })
-      ))
+      );
     }
   }, []);
 
   useEffect(() => {
     if (state !== INITIAL_STATE) {
-      console.log("they ain't equqal");
-      window.localStorage.setItem("cart", JSON.stringify(state));
       //create and/or set a new localstorage variable called "state"
-      console.log(state)
+      window.localStorage.setItem("cart", JSON.stringify(state));
     }
   }, [state]);
 
