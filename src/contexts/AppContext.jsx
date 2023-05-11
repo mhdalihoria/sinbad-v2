@@ -4,7 +4,6 @@ import {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState,
 } from "react";
 
@@ -78,7 +77,6 @@ const reducer = (state, action) => {
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [favItems, setFavItems] = useState([]);
-  const initialRender = useRef(true);
   const contextValue = useMemo(
     () => ({
       state,
@@ -88,7 +86,6 @@ export const AppProvider = ({ children }) => {
     }),
     [state, dispatch]
   );
-  console.log("I'm at top of the document",favItems);
 
   useEffect(() => {
     const itemsFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
@@ -113,22 +110,6 @@ export const AppProvider = ({ children }) => {
     }
   }, [state]);
 
-  useEffect(() => {
-    const getFavItems = window.localStorage.getItem("favItems");
-    if (getFavItems){
-      const storedFavItems = JSON.parse(getFavItems) 
-      setFavItems([...storedFavItems])
-      }
-  }, []);
-
-  useEffect(() => {
-    if (initialRender.current) {
-      initialRender.current = false;
-      return;
-  }
-    console.log("i'm from useEffect", favItems)
-    window.localStorage.setItem("favItems", JSON.stringify(favItems));
-  }, [favItems]);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
