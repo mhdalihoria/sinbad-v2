@@ -62,7 +62,7 @@ const ProductDetails = (props) => {
         {/* PRODUCT DETAILS INFO AREA */}
         {product ? (
           <>
-            <ProductIntro product={product} productImages={productImages} />
+            <ProductIntro product={product} productImages={productImages} attributes={attributes}/>
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs
               textColor="primary"

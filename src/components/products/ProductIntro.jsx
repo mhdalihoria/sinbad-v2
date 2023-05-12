@@ -16,7 +16,7 @@ import ProductPageImportedProduct from "components/products-components/ProductPa
 
 // ================================================================
 
-const ProductIntro = ({ product, productImages }) => {
+const ProductIntro = ({ product, productImages, attributes }) => {
   const {
     id,
     product_price,
@@ -103,29 +103,30 @@ const ProductIntro = ({ product, productImages }) => {
             <H6 lineHeight="1">(50)</H6>
           </FlexBox>
 
-          {/* {productVariants.map((variant) => (
-            <Box key={variant.id} mb={2}>
-              <H6 mb={1}>{variant.product_name}</H6>
+          {attributes.map((attr) => (
+            <Box key={attr.attribute_name} mb={2}>
+              <H6 mb={1}>{attr.attribute_name}:</H6>
 
-              {variant.values.map(({ id, value }) => (
+              {attr.attributes_values.map(({product_attribute_id, name }) => (
                 <Chip
-                  key={id}
-                  label={value}
-                  onClick={handleChangeVariant(variant.title, value)}
+                  key={product_attribute_id}
+                  label={name}
+                  // onClick={handleChangeVariant(variant.title, value)}
                   sx={{
                     borderRadius: "4px",
                     mr: 1,
                     cursor: "pointer",
                   }}
-                  color={
-                    selectVariants[variant.title.toLowerCase()] === value
-                      ? "primary"
-                      : "default"
-                  }
+                  color="primary"
+                  // color={
+                  //   selectVariants[name.toLowerCase()] === value
+                  //     ? "primary"
+                  //     : "default"
+                  // }
                 />
               ))}
             </Box>
-          ))} */}
+          ))}
 
           {with_delivery_fee !== false && (
             <Box mb={1}>
