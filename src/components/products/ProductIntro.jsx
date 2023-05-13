@@ -103,30 +103,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
             <H6 lineHeight="1">(50)</H6>
           </FlexBox>
 
-          {attributes.map((attr) => (
-            <Box key={attr.attribute_name} mb={2}>
-              <H6 mb={1}>{attr.attribute_name}:</H6>
 
-              {attr.attributes_values.map(({product_attribute_id, name }) => (
-                <Chip
-                  key={product_attribute_id}
-                  label={name}
-                  // onClick={handleChangeVariant(variant.title, value)}
-                  sx={{
-                    borderRadius: "4px",
-                    mr: 1,
-                    cursor: "pointer",
-                  }}
-                  color="primary"
-                  // color={
-                  //   selectVariants[name.toLowerCase()] === value
-                  //     ? "primary"
-                  //     : "default"
-                  // }
-                />
-              ))}
-            </Box>
-          ))}
 
           {with_delivery_fee !== false && (
             <Box mb={1}>
@@ -153,8 +130,34 @@ const ProductIntro = ({ product, productImages, attributes }) => {
               {displayAvailable(product_quantity, display_quantity)}
             </Box>
           </Box>
+
+          {attributes.map((attr) => (
+            <Box key={attr.attribute_name} mb={2}>
+              <H6 mb={1}>{attr.attribute_name}:</H6>
+
+              {attr.attributes_values.map(({product_attribute_id, name }) => (
+                <Chip
+                  key={product_attribute_id}
+                  label={name}
+                  // onClick={handleChangeVariant(variant.title, value)}
+                  sx={{
+                    borderRadius: "4px",
+                    mr: 1,
+                    cursor: "pointer",
+                  }}
+                  color="primary"
+                  // color={
+                  //   selectVariants[name.toLowerCase()] === value
+                  //     ? "primary"
+                  //     : "default"
+                  // }
+                />
+              ))}
+            </Box>
+          ))}
+
           {view_count && (
-            <Box mb={1}>
+            <Box mb={2}>
               <Span>عدد المشاهدات: {view_count}</Span>
             </Box>
           )}
