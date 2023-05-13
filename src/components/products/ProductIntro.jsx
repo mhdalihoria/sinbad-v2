@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Add, Remove } from "@mui/icons-material";
 import { Avatar, Box, Button, Chip, Grid } from "@mui/material";
 import LazyImage from "components/LazyImage";
@@ -33,9 +33,14 @@ const ProductIntro = ({ product, productImages, attributes }) => {
     view_count,
     brand_name,
     brand_logo,
+    category_name,
+    is_new,
+    is_external
   } = product;
-  const { state, dispatch } = useAppContext();
+  const { state, dispatch, favItems, setFavItems } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isFavorite, setIsFavorite] = useState(false);
+
   const [selectVariants, setSelectVariants] = useState({
     option: "option 1",
     type: "type 1",
@@ -69,6 +74,37 @@ const ProductIntro = ({ product, productImages, attributes }) => {
       },
     });
   };
+
+  useEffect(() => {
+    if (isFavorite) {
+      setFavItems((prevFavItems) => {
+        return [
+          ...prevFavItems,
+          {
+            id,
+            slug,
+            title: product_name,
+            price: product_price,
+            imgUrl: thumbnail,
+            rating: 4,
+            categoryName: category_name,
+            salePrice: sale_price,
+            description: product_short_description,
+            isNew: is_new,
+            isExternal: is_external,
+            shopName: shop_name,
+            isFavorited: isFavorite,
+          },
+        ];
+      });
+    }
+
+    if (!isFavorite) {
+      setFavItems((prevFavItems) => {
+        return prevFavItems.filter((favItem) => favItem.id !== id);
+      });
+    }
+  }, [isFavorite]);
 
   const displayAvailable = (productQuantity, displayQuantity) => {
     if (!productQuantity || productQuantity === 0) {
@@ -155,6 +191,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
                           minHeight: "30px",
                           background: code,
                         }}
+                        key={name}
                       ></div>
                     ) : (
                       <Chip
@@ -186,12 +223,18 @@ const ProductIntro = ({ product, productImages, attributes }) => {
             </Box>
           )}
           {(brand_name.length > 1 || brand_logo.length > 1) && (
-            <Box mb={1}>
-              <Span>
-                الماركة: {brand_name} {brand_logo}
-              </Span>
-            </Box>
+            <FlexBox alignItems="center" mb={2}>
+              <Box>الماركة:</Box>
+              <Link href="/" passHref>
+                <a>
+                  <H6 ml={1}>
+                    {brand_name} {brand_logo}
+                  </H6>
+                </a>
+              </Link>
+            </FlexBox>
           )}
+
           {shop_name.length > 1 && (
             <FlexBox alignItems="center" mb={2}>
               <Box>المتجر:</Box>
@@ -200,6 +243,12 @@ const ProductIntro = ({ product, productImages, attributes }) => {
                   <H6 ml={1}>{shop_name}</H6>
                 </a>
               </Link>
+            </FlexBox>
+          )}
+          {category_name && (
+            <FlexBox alignItems="center" mb={2}>
+              <Box>التصنيف:</Box>
+              <H6 ml={1}>{category_name}</H6>
             </FlexBox>
           )}
 
@@ -252,6 +301,37 @@ const ProductIntro = ({ product, productImages, attributes }) => {
               </Button>
             </FlexBox>
           )}
+
+          <div>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <span>
+                <i className="fa-solid fa-code-compare"></i> اضافة للمقارنة
+              </span>
+              <span style={{cursor: "pointer", color: isFavorite ? "red": "black"}} onClick={()=> setIsFavorite(prevFav=> !prevFav)}>
+                <i className="fa-solid fa-heart"></i> اضافة للمفضلة
+              </span>
+              <i
+                className="fa-brands fa-whatsapp"
+                style={{
+                  color: "white",
+                  background: "green",
+                  padding: "7px 20px",
+                  fontSize: "1rem",
+                  borderRadius: "6px",
+                }}
+              ></i>
+              <i
+                className="fa-brands fa-facebook"
+                style={{
+                  color: "white",
+                  background: "#3b5998 ",
+                  padding: "7px 20px",
+                  fontSize: "1rem",
+                  borderRadius: "6px",
+                }}
+              ></i>
+            </div>
+          </div>
         </Grid>
       </Grid>
     </Box>
