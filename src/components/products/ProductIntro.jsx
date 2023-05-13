@@ -103,14 +103,16 @@ const ProductIntro = ({ product, productImages, attributes }) => {
             <H6 lineHeight="1">(50)</H6>
           </FlexBox>
 
-
-
           {with_delivery_fee !== false && (
             <Box mb={1}>
               <H5>بدون توصيل</H5>
             </Box>
           )}
-          <Box pt={1} mb={2}>
+          <Box
+            pt={1}
+            mb={2}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
             <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
               {has_offer ? (
                 <>
@@ -126,7 +128,15 @@ const ProductIntro = ({ product, productImages, attributes }) => {
                 </H2>
               )}
             </div>
-            <Box color="inherit">
+            <Box
+              color="inherit"
+              style={{
+                background: "green",
+                color: "white",
+                borderRadius: "5px",
+                padding: "5px",
+              }}
+            >
               {displayAvailable(product_quantity, display_quantity)}
             </Box>
           </Box>
@@ -135,24 +145,38 @@ const ProductIntro = ({ product, productImages, attributes }) => {
             <Box key={attr.attribute_name} mb={2}>
               <H6 mb={1}>{attr.attribute_name}:</H6>
 
-              {attr.attributes_values.map(({product_attribute_id, name }) => (
-                <Chip
-                  key={product_attribute_id}
-                  label={name}
-                  // onClick={handleChangeVariant(variant.title, value)}
-                  sx={{
-                    borderRadius: "4px",
-                    mr: 1,
-                    cursor: "pointer",
-                  }}
-                  color="primary"
-                  // color={
-                  //   selectVariants[name.toLowerCase()] === value
-                  //     ? "primary"
-                  //     : "default"
-                  // }
-                />
-              ))}
+              <div style={{ display: "flex", gap: "5px" }}>
+                {attr.attributes_values.map(
+                  ({ product_attribute_id, name, code }) => {
+                    return code.length > 1 ? (
+                      <div
+                        style={{
+                          width: "30px",
+                          minHeight: "30px",
+                          background: code,
+                        }}
+                      ></div>
+                    ) : (
+                      <Chip
+                        key={product_attribute_id}
+                        label={name}
+                        // onClick={handleChangeVariant(variant.title, value)}
+                        sx={{
+                          borderRadius: "4px",
+                          mr: 1,
+                          cursor: "pointer",
+                        }}
+                        color="primary"
+                        // color={
+                        //   selectVariants[name.toLowerCase()] === value
+                        //     ? "primary"
+                        //     : "default"
+                        // }
+                      />
+                    );
+                  }
+                )}
+              </div>
             </Box>
           ))}
 
