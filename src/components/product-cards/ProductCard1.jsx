@@ -126,16 +126,13 @@ const ProductCard1 = ({
             price,
             imgUrl,
             rating,
-            hideRating,
-            hoverEffect,
-            showProductSize,
             categoryName,
             salePrice,
             description,
             isNew,
             isExternal,
             shopName,
-            isFavorited
+            isFavorited,
           },
         ];
       });
