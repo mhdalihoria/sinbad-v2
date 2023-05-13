@@ -76,7 +76,24 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const [favItems, setFavItems] = useState([]);
+  const [favItems, setFavItems] = useState([
+    {
+      "id": 20,
+      "slug": 20,
+      "title": "مكعب روبيك",
+      "price": 63300,
+      "imgUrl": "https://sinbad-store.com/images/products/thumbnail/p_7278_1601895737_300.jpeg",
+      "rating": 5,
+      "categoryName": "العاب ذكاء",
+      "salePrice": false,
+      "description": "مكعب روبيك ثنائي\r\n\r\n&nbsp;\r\n\r\nاجعلي من طفلك مفكرا ومبدعا\r\n\r\n&nbsp;\r\n\r\nلعبة الذكاء والتميز\r\n",
+      "isNew": false,
+      "isExternal": false,
+      "shopName": "",
+      "isFavorited": false
+    }
+  ]);
+  // const [favItems, setFavItems] = useState([]);
   const contextValue = useMemo(
     () => ({
       state,
@@ -110,6 +127,7 @@ export const AppProvider = ({ children }) => {
     }
   }, [state]);
 
+  console.log(favItems)
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
