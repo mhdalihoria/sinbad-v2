@@ -43,10 +43,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [userToken, setUserToken] = useState(null);
 
-  const [selectVariants, setSelectVariants] = useState({
-    option: "option 1",
-    type: "type 1",
-  });
+  const [selectAttributes, setSelectAttributes] = useState([]);
 
   // HANDLE CHAMGE TYPE AND OPTIONS
   // const handleChangeVariant = (variantName, value) => () => {
@@ -62,8 +59,19 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   // HANDLE SELECT IMAGE
   const handleImageClick = (ind) => () => setSelectedImage(ind);
 
+  const selectAttr = (name, value) => {
+    const existingItem = selectAttributes?.find((item) => item.name === name);
+    setSelectAttributes((prevSelectAttributes) => {
+      if(existingItem) {
+        existingItem.value = value
+        return [existingItem]
+      } else {
+        return [...prevSelectAttributes, {name, value}]
+      }
+    });
+  };
+
   const addToWishList = async () => {
-    console.log("Added to watshlist cuz of user login");
     const body = JSON.stringify({
       product: id,
     });
@@ -77,8 +85,8 @@ const ProductIntro = ({ product, productImages, attributes }) => {
       headers,
       body
     );
-    const data = await response.data
-    console.log(data)
+    const data = await response.data;
+    console.log(data);
   };
 
   // HANDLE CHANGE CART
@@ -219,6 +227,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
                           background: code,
                         }}
                         key={name}
+                        onClick={()=>selectAttr(attr.attribute_name, name)}
                       ></div>
                     ) : (
                       <Chip
