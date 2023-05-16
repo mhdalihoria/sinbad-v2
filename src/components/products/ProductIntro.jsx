@@ -11,6 +11,7 @@ import { currency } from "lib";
 import productVariants from "data/product-variants";
 import ProductImageViewer from "components/products-components/ProductImageViewer";
 import ProductPageImportedProduct from "components/products-components/ProductPageImportedProduct";
+import usePostFetch from "components/fetch/usePostFetch";
 
 // ================================================================
 
@@ -35,11 +36,12 @@ const ProductIntro = ({ product, productImages, attributes }) => {
     brand_logo,
     category_name,
     is_new,
-    is_external
+    is_external,
   } = product;
   const { state, dispatch, favItems, setFavItems } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [userToken, setUserToken] = useState(null);
 
   const [selectVariants, setSelectVariants] = useState({
     option: "option 1",
@@ -59,6 +61,25 @@ const ProductIntro = ({ product, productImages, attributes }) => {
 
   // HANDLE SELECT IMAGE
   const handleImageClick = (ind) => () => setSelectedImage(ind);
+
+  const addToWishList = async () => {
+    console.log("Added to watshlist cuz of user login");
+    const body = JSON.stringify({
+      product: id,
+    });
+    const headers = {
+      "X-localization": "ar",
+      Authorization: `Bearer ${userToken}`,
+      "Content-Type": "application/json",
+    };
+    const response = await usePostFetch(
+      "https://sinbad-store.com/api/v2/add-to-wishlist",
+      headers,
+      body
+    );
+    const data = await response.data
+    console.log(data)
+  };
 
   // HANDLE CHANGE CART
   const handleCartAmountChange = (amount) => () => {
@@ -105,6 +126,12 @@ const ProductIntro = ({ product, productImages, attributes }) => {
       });
     }
   }, [isFavorite]);
+
+  useEffect(() => {
+    if (!window) return;
+    let token = JSON.parse(window.localStorage.getItem("user_token"));
+    if (token && token.length > 0) setUserToken(token);
+  }, []);
 
   const displayAvailable = (productQuantity, displayQuantity) => {
     if (!productQuantity || productQuantity === 0) {
@@ -303,33 +330,48 @@ const ProductIntro = ({ product, productImages, attributes }) => {
           )}
 
           <div>
-            <div style={{ display: "flex", gap: "10px" }}>
-              <span>
-                <i className="fa-solid fa-code-compare"></i> اضافة للمقارنة
-              </span>
-              <span style={{cursor: "pointer", color: isFavorite ? "red": "black"}} onClick={()=> setIsFavorite(prevFav=> !prevFav)}>
-                <i className="fa-solid fa-heart"></i> اضافة للمفضلة
-              </span>
-              <i
-                className="fa-brands fa-whatsapp"
-                style={{
-                  color: "white",
-                  background: "green",
-                  padding: "7px 20px",
-                  fontSize: "1rem",
-                  borderRadius: "6px",
-                }}
-              ></i>
-              <i
-                className="fa-brands fa-facebook"
-                style={{
-                  color: "white",
-                  background: "#3b5998 ",
-                  padding: "7px 20px",
-                  fontSize: "1rem",
-                  borderRadius: "6px",
-                }}
-              ></i>
+            <div>
+              <div
+                style={{ display: "flex", gap: "10px", marginBottom: "1rem" }}
+              >
+                <span>
+                  <i className="fa-solid fa-code-compare"></i> اضافة للمقارنة
+                </span>
+                <span
+                  style={{
+                    cursor: "pointer",
+                    color: isFavorite ? "red" : "black",
+                  }}
+                  onClick={() => {
+                    setIsFavorite((prevFav) => !prevFav);
+                    userToken && addToWishList();
+                  }}
+                >
+                  <i className="fa-solid fa-heart"></i> اضافة للمفضلة
+                </span>
+              </div>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <i
+                  className="fa-brands fa-whatsapp"
+                  style={{
+                    color: "white",
+                    background: "green",
+                    padding: "7px 20px",
+                    fontSize: "1rem",
+                    borderRadius: "6px",
+                  }}
+                ></i>
+                <i
+                  className="fa-brands fa-facebook"
+                  style={{
+                    color: "white",
+                    background: "#3b5998 ",
+                    padding: "7px 20px",
+                    fontSize: "1rem",
+                    borderRadius: "6px",
+                  }}
+                ></i>
+              </div>
             </div>
           </div>
         </Grid>
