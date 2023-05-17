@@ -18,6 +18,7 @@ import usePostFetch from "components/fetch/usePostFetch";
 // ================================================================
 
 const ProductIntro = ({ product, productImages, attributes }) => {
+  //TODO: thumnail comes undefined someteimes
   const {
     id,
     product_price,
@@ -120,7 +121,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
       slug,
       title: product_name,
       price: product_price,
-      imgUrl: thumbnail,
+      imgUrl: `${typeof thumbnail === "undefined" ? "https://placehold.jp/300x300.png": thumbnail}`,
       rating: 4,
       categoryName: category_name,
       salePrice: sale_price,
