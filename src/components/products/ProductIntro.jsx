@@ -43,7 +43,12 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [userToken, setUserToken] = useState(null);
 
-  const [selectAttributes, setSelectAttributes] = useState([]);
+  const [selectAttributes, setSelectAttributes] = useState([
+    {
+      name: attributes[0].attribute_name,
+      value: attributes[0].attributes_values[0].name,
+    },
+  ]);
 
   // HANDLE CHAMGE TYPE AND OPTIONS
   // const handleChangeVariant = (variantName, value) => () => {
@@ -62,11 +67,11 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   const selectAttr = (name, value) => {
     const existingItem = selectAttributes?.find((item) => item.name === name);
     setSelectAttributes((prevSelectAttributes) => {
-      if(existingItem) {
-        existingItem.value = value
-        return [existingItem]
+      if (existingItem) {
+        existingItem.value = value;
+        return [existingItem];
       } else {
-        return [...prevSelectAttributes, {name, value}]
+        return [...prevSelectAttributes, { name, value }];
       }
     });
   };
@@ -100,6 +105,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
         imgUrl: thumbnail,
         id,
         slug,
+        attributes: selectAttributes,
       },
     });
   };
@@ -227,7 +233,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
                           background: code,
                         }}
                         key={name}
-                        onClick={()=>selectAttr(attr.attribute_name, name)}
+                        onClick={() => selectAttr(attr.attribute_name, name)}
                       ></div>
                     ) : (
                       <Chip
