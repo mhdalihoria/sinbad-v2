@@ -132,9 +132,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
     };
     const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
     if (isFavorite) {
-      setFavItems((prevFavItems) => {
-        return [...prevFavItems, itemData];
-      });
+      
       if (favItemsLS && typeof favItemsLS !== "undefined") {
         const newFavItemsLS = [...favItemsLS, itemData];
         window.localStorage.setItem("favItems", JSON.stringify(newFavItemsLS));
@@ -144,9 +142,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
     }
 
     if (!isFavorite) {
-      setFavItems((prevFavItems) => {
-        return prevFavItems.filter((favItem) => favItem.id !== id);
-      });
+      
       if (favItemsLS && typeof favItemsLS !== "undefined") {
         window.localStorage.setItem("favItems", JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id)))
       } else {return}
