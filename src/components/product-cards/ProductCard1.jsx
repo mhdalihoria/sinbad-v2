@@ -92,8 +92,8 @@ const ProductCard1 = ({
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
-  const [openModal, setOpenModal] = useState(isFavorited);
-  const [isFavorite, setIsFavorite] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(isFavorited);
   const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
   const toggleDialog = useCallback(() => setOpenModal((open) => !open), []);
   const cartItem = state.cart.find((item) => item.slug === slug);
@@ -128,7 +128,7 @@ const ProductCard1 = ({
       isNew,
       isExternal,
       shopName,
-      isFavorited,
+      isFavorited: true,
     };
     const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
 
@@ -141,16 +141,16 @@ const ProductCard1 = ({
       }
     }
 
-    if (!isFavorite) {
-      if (favItemsLS && typeof favItemsLS !== "undefined") {
-        window.localStorage.setItem(
-          "favItems",
-          JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id))
-        );
-      } else {
-        return;
-      }
-    }
+    // if (!isFavorite) {
+    //   if (favItemsLS && typeof favItemsLS !== "undefined") {
+    //     window.localStorage.setItem(
+    //       "favItems",
+    //       JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id))
+    //     );
+    //   } else {
+    //     return;
+    //   }
+    // }
   }, [isFavorite]);
   return (
     <StyledBazaarCard hoverEffect={hoverEffect}>
