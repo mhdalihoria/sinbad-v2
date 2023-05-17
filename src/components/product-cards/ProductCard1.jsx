@@ -141,16 +141,14 @@ const ProductCard1 = ({
       }
     }
 
-    // if (!isFavorite) {
-    //   if (favItemsLS && typeof favItemsLS !== "undefined") {
-    //     window.localStorage.setItem(
-    //       "favItems",
-    //       JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id))
-    //     );
-    //   } else {
-    //     return;
-    //   }
-    // }
+    if (!isFavorite) {
+      if (favItemsLS && typeof favItemsLS !== "undefined") {
+        window.localStorage.setItem(
+          "favItems",
+          JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id))
+        );
+      }
+    }
   }, [isFavorite]);
   return (
     <StyledBazaarCard hoverEffect={hoverEffect}>
