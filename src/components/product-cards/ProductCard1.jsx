@@ -88,7 +88,7 @@ const ProductCard1 = ({
   isNew,
   isExternal,
   shopName,
-  isFavorited = false
+  isFavorited = false,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
@@ -115,33 +115,47 @@ const ProductCard1 = ({
   };
 
   useEffect(() => {
+    const itemData = {
+      id,
+      slug,
+      title,
+      price,
+      imgUrl,
+      rating,
+      categoryName,
+      salePrice,
+      description,
+      isNew,
+      isExternal,
+      shopName,
+      isFavorited,
+    };
+    const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
+
     if (isFavorite) {
       setFavItems((prevFavItems) => {
-        return [
-          ...prevFavItems,
-          {
-            id,
-            slug,
-            title,
-            price,
-            imgUrl,
-            rating,
-            categoryName,
-            salePrice,
-            description,
-            isNew,
-            isExternal,
-            shopName,
-            isFavorited,
-          },
-        ];
+        return [...prevFavItems, itemData];
       });
+      if (favItemsLS && typeof favItemsLS !== "undefined") {
+        const newFavItemsLS = [...favItemsLS, itemData];
+        window.localStorage.setItem("favItems", JSON.stringify(newFavItemsLS));
+      } else {
+        window.localStorage.setItem("favItems", JSON.stringify([itemData]));
+      }
     }
 
     if (!isFavorite) {
       setFavItems((prevFavItems) => {
-        return prevFavItems.filter(favItem => favItem.id !== id)
+        return prevFavItems.filter((favItem) => favItem.id !== id);
       });
+      if (favItemsLS && typeof favItemsLS !== "undefined") {
+        window.localStorage.setItem(
+          "favItems",
+          JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id))
+        );
+      } else {
+        return;
+      }
     }
   }, [isFavorite]);
   return (

@@ -43,14 +43,16 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [userToken, setUserToken] = useState(null);
 
-  const [selectAttributes, setSelectAttributes] = useState(attributes.length > 0
-    ? [
-        {
-          name: attributes[0].attribute_name,
-          value: attributes[0].attributes_values[0].name,
-        },
-      ]
-    : []);
+  const [selectAttributes, setSelectAttributes] = useState(
+    attributes.length > 0
+      ? [
+          {
+            name: attributes[0].attribute_name,
+            value: attributes[0].attributes_values[0].name,
+          },
+        ]
+      : []
+  );
 
   // HANDLE CHAMGE TYPE AND OPTIONS
   // const handleChangeVariant = (variantName, value) => () => {
@@ -113,33 +115,41 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   };
 
   useEffect(() => {
+    const itemData = {
+      id,
+      slug,
+      title: product_name,
+      price: product_price,
+      imgUrl: thumbnail,
+      rating: 4,
+      categoryName: category_name,
+      salePrice: sale_price,
+      description: product_short_description,
+      isNew: is_new,
+      isExternal: is_external,
+      shopName: shop_name,
+      isFavorited: isFavorite,
+    };
+    const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
     if (isFavorite) {
       setFavItems((prevFavItems) => {
-        return [
-          ...prevFavItems,
-          {
-            id,
-            slug,
-            title: product_name,
-            price: product_price,
-            imgUrl: thumbnail,
-            rating: 4,
-            categoryName: category_name,
-            salePrice: sale_price,
-            description: product_short_description,
-            isNew: is_new,
-            isExternal: is_external,
-            shopName: shop_name,
-            isFavorited: isFavorite,
-          },
-        ];
+        return [...prevFavItems, itemData];
       });
+      if (favItemsLS && typeof favItemsLS !== "undefined") {
+        const newFavItemsLS = [...favItemsLS, itemData];
+        window.localStorage.setItem("favItems", JSON.stringify(newFavItemsLS));
+      } else {
+        window.localStorage.setItem("favItems", JSON.stringify([itemData]));
+      }
     }
 
     if (!isFavorite) {
       setFavItems((prevFavItems) => {
         return prevFavItems.filter((favItem) => favItem.id !== id);
       });
+      if (favItemsLS && typeof favItemsLS !== "undefined") {
+        window.localStorage.setItem("favItems", JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id)))
+      } else {return}
     }
   }, [isFavorite]);
 
