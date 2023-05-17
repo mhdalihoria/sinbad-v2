@@ -43,12 +43,14 @@ const ProductIntro = ({ product, productImages, attributes }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const [userToken, setUserToken] = useState(null);
 
-  const [selectAttributes, setSelectAttributes] = useState([
-    {
-      name: attributes[0].attribute_name,
-      value: attributes[0].attributes_values[0].name,
-    },
-  ]);
+  const [selectAttributes, setSelectAttributes] = useState(attributes.length > 0
+    ? [
+        {
+          name: attributes[0].attribute_name,
+          value: attributes[0].attributes_values[0].name,
+        },
+      ]
+    : []);
 
   // HANDLE CHAMGE TYPE AND OPTIONS
   // const handleChangeVariant = (variantName, value) => () => {
