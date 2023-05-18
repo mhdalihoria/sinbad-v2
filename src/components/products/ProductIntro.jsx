@@ -17,7 +17,7 @@ import usePostFetch from "components/fetch/usePostFetch";
 
 // ================================================================
 
-const ProductIntro = ({ product, productImages, attributes }) => {
+const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage }) => {
   //TODO: thumnail comes undefined someteimes
   const {
     id,
@@ -115,6 +115,14 @@ const ProductIntro = ({ product, productImages, attributes }) => {
     });
   };
 
+  useEffect(()=> {
+    if(favItemsLocalStorage.length > 0) {
+      if(favItemsLocalStorage.find(item => item.id === id)) {
+        setIsFavorite(true)
+      }
+    }
+  }, [])
+
   useEffect(() => {
     const itemData = {
       id,
@@ -146,7 +154,7 @@ const ProductIntro = ({ product, productImages, attributes }) => {
       
       if (favItemsLS && typeof favItemsLS !== "undefined") {
         window.localStorage.setItem("favItems", JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id)))
-      } else {return}
+      }
     }
   }, [isFavorite]);
 

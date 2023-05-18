@@ -39,6 +39,7 @@ const ProductDetails = (props) => {
     reviews,
     product_images: productImages,
   } = productData || {};
+  const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([])
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
 
@@ -48,6 +49,13 @@ const ProductDetails = (props) => {
       // setPrice(productRequest.data.product.product_price);
     }
   }, [productRequest]);
+
+  useEffect(() => {
+    const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
+    if (favItemsLS && typeof favItemsLS !== "undefined") {
+      setFavItemsLocalStorage(favItemsLS)
+    }
+  }, []);
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
     return <h1>Loading...</h1>;
@@ -62,7 +70,7 @@ const ProductDetails = (props) => {
         {/* PRODUCT DETAILS INFO AREA */}
         {product ? (
           <>
-            <ProductIntro product={product} productImages={productImages} attributes={attributes}/>
+            <ProductIntro product={product} productImages={productImages} attributes={attributes} favItemsLocalStorage={favItemsLocalStorage}/>
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs
               textColor="primary"
@@ -80,7 +88,7 @@ const ProductDetails = (props) => {
             </Box>
 
             {relatedProducts && (
-              <RelatedProducts productsData={relatedProducts} />
+              <RelatedProducts productsData={relatedProducts} favItemsLocalStorage={favItemsLocalStorage} />
             )}
           </>
          ) : (
