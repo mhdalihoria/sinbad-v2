@@ -17,7 +17,12 @@ import usePostFetch from "components/fetch/usePostFetch";
 
 // ================================================================
 
-const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage }) => {
+const ProductIntro = ({
+  product,
+  productImages,
+  attributes,
+  favItemsLocalStorage,
+}) => {
   //TODO: thumnail comes undefined someteimes
   const {
     id,
@@ -115,13 +120,13 @@ const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage 
     });
   };
 
-  useEffect(()=> {
-    if(favItemsLocalStorage.length > 0) {
-      if(favItemsLocalStorage.find(item => item.id === id)) {
-        setIsFavorite(true)
+  useEffect(() => {
+    if (favItemsLocalStorage.length > 0) {
+      if (favItemsLocalStorage.find((item) => item.id === id)) {
+        setIsFavorite(true);
       }
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     const itemData = {
@@ -129,7 +134,11 @@ const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage 
       slug,
       title: product_name,
       price: product_price,
-      imgUrl: `${typeof thumbnail === "undefined" ? "https://placehold.jp/300x300.png": thumbnail}`,
+      imgUrl: `${
+        typeof thumbnail === "undefined"
+          ? "https://placehold.jp/300x300.png"
+          : thumbnail
+      }`,
       rating: 4,
       categoryName: category_name,
       salePrice: sale_price,
@@ -141,7 +150,6 @@ const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage 
     };
     const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
     if (isFavorite) {
-      
       if (favItemsLS && typeof favItemsLS !== "undefined") {
         const newFavItemsLS = [...favItemsLS, itemData];
         window.localStorage.setItem("favItems", JSON.stringify(newFavItemsLS));
@@ -151,9 +159,11 @@ const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage 
     }
 
     if (!isFavorite) {
-      
       if (favItemsLS && typeof favItemsLS !== "undefined") {
-        window.localStorage.setItem("favItems", JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id)))
+        window.localStorage.setItem(
+          "favItems",
+          JSON.stringify(favItemsLS.filter((favItem) => favItem.id !== id))
+        );
       }
     }
   }, [isFavorite]);
@@ -248,6 +258,11 @@ const ProductIntro = ({ product, productImages, attributes,favItemsLocalStorage 
                           width: "30px",
                           minHeight: "30px",
                           background: code,
+                          border: selectAttributes.find(
+                            (attrObj) =>
+                              attrObj.name === attr.attribute_name &&
+                              attrObj.value === name
+                          ) && "3px solid grey",
                         }}
                         key={name}
                         onClick={() => selectAttr(attr.attribute_name, name)}
