@@ -134,8 +134,15 @@ const ProductCard1 = ({
 
     if (isFavorite) {
       if (favItemsLS && typeof favItemsLS !== "undefined") {
-        const newFavItemsLS = [...favItemsLS, itemData];
-        window.localStorage.setItem("favItems", JSON.stringify(newFavItemsLS));
+        if (!favItemsLS.find((favItem) => favItem.id === id)) {
+          const newFavItemsLS = [...favItemsLS, itemData];
+          window.localStorage.setItem(
+            "favItems",
+            JSON.stringify(newFavItemsLS)
+          );
+        } else {
+          return;
+        }
       } else {
         window.localStorage.setItem("favItems", JSON.stringify([itemData]));
       }
