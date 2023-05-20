@@ -124,7 +124,7 @@ const MiniCart = ({ toggleSidenav }) => {
               </Button>
             </FlexBox>
 
-            <Link href={`/product/${item.id}`}>
+            <Link href={`/products/${item.id}`}>
               <a>
                 <Avatar
                   alt={item.name}
@@ -146,7 +146,7 @@ const MiniCart = ({ toggleSidenav }) => {
                 textOverflow: "ellipsis",
               }}
             >
-              <Link href={`/product/${item.slug}`}>
+              <Link href={`/products/${item.id}`}>
                 <a>
                   <H5 ellipsis fontSize="14px" className="title">
                     {item.name}
@@ -170,7 +170,7 @@ const MiniCart = ({ toggleSidenav }) => {
                 })}
 
               <Tiny color="grey.600">
-                {currency(item.price)} x {item.qty}
+                {item.price} <strong>( x {item.qty} )</strong>
               </Tiny>
 
               <Box
@@ -179,7 +179,7 @@ const MiniCart = ({ toggleSidenav }) => {
                 color="primary.main"
                 mt={0.5}
               >
-                {currency(item.qty * item.price)}
+                {item.qty * item.price}
               </Box>
             </Box>
 
