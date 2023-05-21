@@ -7,6 +7,7 @@ import ProductIntro from "components/products/ProductIntro";
 import ProductReview from "components/products/ProductReview";
 import RelatedProducts from "components/products/RelatedProducts";
 import ProductDescription from "components/products/ProductDescription";
+import ProductFeatures from "components/products/ProductFeatures";
 import { getRelatedProducts } from "utils/__api__/related-products";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import api from "utils/__api__/products";
@@ -37,12 +38,13 @@ const ProductDetails = (props) => {
     attributes,
     relatedProducts,
     reviews,
+    features,
     product_images: productImages,
   } = productData || {};
-  const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([])
+  const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
-
+  console.log(features);
   useEffect(() => {
     if (typeof productRequest !== "undefined") {
       setProductData(productRequest.data);
@@ -53,7 +55,7 @@ const ProductDetails = (props) => {
   useEffect(() => {
     const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
     if (favItemsLS && typeof favItemsLS !== "undefined") {
-      setFavItemsLocalStorage(favItemsLS)
+      setFavItemsLocalStorage(favItemsLS);
     }
   }, []);
   // Show a loading state when the fallback is rendered
@@ -70,7 +72,12 @@ const ProductDetails = (props) => {
         {/* PRODUCT DETAILS INFO AREA */}
         {product ? (
           <>
-            <ProductIntro product={product} productImages={productImages} attributes={attributes} favItemsLocalStorage={favItemsLocalStorage}/>
+            <ProductIntro
+              product={product}
+              productImages={productImages}
+              attributes={attributes}
+              favItemsLocalStorage={favItemsLocalStorage}
+            />
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs
               textColor="primary"
@@ -80,22 +87,27 @@ const ProductDetails = (props) => {
             >
               <Tab className="inner-tab" label="Description" />
               <Tab className="inner-tab" label="Review (3)" />
+              {typeof features !== "undefined" && features.length > 0 && (
+                <Tab className="inner-tab" label="Features" />
+              )}
             </StyledTabs>
 
             <Box mb={6}>
               {selectedOption === 0 && <ProductDescription product={product} />}
-              {selectedOption === 1 && <ProductReview reviews={reviews}/>}
+              {selectedOption === 1 && <ProductReview reviews={reviews} />}
+              {selectedOption === 2 && <ProductFeatures features={features} />}
             </Box>
 
-            {relatedProducts && (
-              <RelatedProducts productsData={relatedProducts} favItemsLocalStorage={favItemsLocalStorage} />
+            {relatedProducts && relatedProducts.length > 0 && (
+              <RelatedProducts
+                productsData={relatedProducts}
+                favItemsLocalStorage={favItemsLocalStorage}
+              />
             )}
           </>
-         ) : (
+        ) : (
           <H2>Loading...</H2>
-        )} 
-
-       
+        )}
       </Container>
     </ShopLayout1>
   );
