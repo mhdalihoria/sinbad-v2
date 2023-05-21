@@ -12,7 +12,7 @@ import productVariants from "data/product-variants";
 import ProductImageViewer from "components/products-components/ProductImageViewer";
 import ProductPageImportedProduct from "components/products-components/ProductPageImportedProduct";
 import usePostFetch from "components/fetch/usePostFetch";
-import { nanoid } from 'nanoid'
+import { nanoid } from "nanoid";
 
 // ================================================================
 
@@ -76,8 +76,18 @@ const ProductIntro = ({
   // HANDLE SELECT IMAGE
   const handleImageClick = (ind) => () => setSelectedImage(ind);
 
-    const selectAttr = (name, value) => setSelectAttributes([{ name, value }]);
+  const selectAttr = (name, value) => {
+    setSelectAttributes(prevSelectAttributes=> {
+      const attributesArr = [...prevSelectAttributes]
+      const indexOfAttr = attributesArr.findIndex(attr => attr.name === name)
+      attributesArr[indexOfAttr] = {
+        ...attributesArr[indexOfAttr],
+        value: value
+      }
 
+      return attributesArr
+    })
+  };
 
   const addToWishList = async () => {
     const body = JSON.stringify({
@@ -99,19 +109,19 @@ const ProductIntro = ({
 
   // HANDLE CHANGE CART
   const handleCartAmountChange = (amount) => () => {
-      dispatch({
-        type: "CHANGE_CART_AMOUNT",
-        payload: {
-          price: product_price,
-          qty: amount,
-          name: product_name,
-          imgUrl: thumbnail,
-          id: nanoid(),
-          slug,
-          attributes: selectAttributes,
-        },
-      });
-    setItemAmount(1)
+    dispatch({
+      type: "CHANGE_CART_AMOUNT",
+      payload: {
+        price: product_price,
+        qty: amount,
+        name: product_name,
+        imgUrl: thumbnail,
+        id: nanoid(),
+        slug,
+        attributes: selectAttributes,
+      },
+    });
+    setItemAmount(1);
   };
 
   useEffect(() => {
@@ -337,9 +347,9 @@ const ProductIntro = ({
                 setItemAmount((prevItem) => {
                   if (prevItem > 1) {
                     return prevItem - 1;
-                  } 
-                  if(prevItem === 1) {
-                    return prevItem
+                  }
+                  if (prevItem === 1) {
+                    return prevItem;
                   }
                 });
               }}
