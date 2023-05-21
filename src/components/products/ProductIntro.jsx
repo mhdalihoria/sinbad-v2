@@ -76,17 +76,8 @@ const ProductIntro = ({
   // HANDLE SELECT IMAGE
   const handleImageClick = (ind) => () => setSelectedImage(ind);
 
-  const selectAttr = (name, value) => {
-    const existingItem = selectAttributes?.find((item) => item.name === name);
-    setSelectAttributes((prevSelectAttributes) => {
-      if (existingItem) {
-        existingItem.value = value;
-        return [existingItem];
-      } else {
-        return [...prevSelectAttributes, { name, value }];
-      }
-    });
-  };
+    const selectAttr = (name, value) => setSelectAttributes([{ name, value }]);
+
 
   const addToWishList = async () => {
     const body = JSON.stringify({
@@ -108,18 +99,18 @@ const ProductIntro = ({
 
   // HANDLE CHANGE CART
   const handleCartAmountChange = (amount) => () => {
-    dispatch({
-      type: "CHANGE_CART_AMOUNT",
-      payload: {
-        price: product_price,
-        qty: amount,
-        name: product_name,
-        imgUrl: thumbnail,
-        id: nanoid(),
-        slug,
-        attributes: selectAttributes,
-      },
-    });
+      dispatch({
+        type: "CHANGE_CART_AMOUNT",
+        payload: {
+          price: product_price,
+          qty: amount,
+          name: product_name,
+          imgUrl: thumbnail,
+          id: nanoid(),
+          slug,
+          attributes: selectAttributes,
+        },
+      });
     setItemAmount(1)
   };
 
