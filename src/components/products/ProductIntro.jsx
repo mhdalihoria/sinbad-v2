@@ -12,6 +12,7 @@ import productVariants from "data/product-variants";
 import ProductImageViewer from "components/products-components/ProductImageViewer";
 import ProductPageImportedProduct from "components/products-components/ProductPageImportedProduct";
 import usePostFetch from "components/fetch/usePostFetch";
+import { nanoid } from 'nanoid'
 
 // ================================================================
 
@@ -48,6 +49,7 @@ const ProductIntro = ({
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [userToken, setUserToken] = useState(null);
+  const [itemAmount, setItemAmount] = useState(1);
 
   const [selectAttributes, setSelectAttributes] = useState(
     attributes.length > 0
@@ -113,11 +115,12 @@ const ProductIntro = ({
         qty: amount,
         name: product_name,
         imgUrl: thumbnail,
-        id,
+        id: nanoid(),
         slug,
         attributes: selectAttributes,
       },
     });
+    setItemAmount(1)
   };
 
   useEffect(() => {
@@ -258,11 +261,12 @@ const ProductIntro = ({
                           width: "30px",
                           minHeight: "30px",
                           background: code,
-                          border: selectAttributes.find(
-                            (attrObj) =>
-                              attrObj.name === attr.attribute_name &&
-                              attrObj.value === name
-                          ) && "3px solid grey",
+                          border:
+                            selectAttributes.find(
+                              (attrObj) =>
+                                attrObj.name === attr.attribute_name &&
+                                attrObj.value === name
+                            ) && "3px solid grey",
                         }}
                         key={name}
                         onClick={() => selectAttr(attr.attribute_name, name)}
@@ -330,51 +334,64 @@ const ProductIntro = ({
             <ProductPageImportedProduct product={product} />
           )}
 
-          {!cartItem?.qty ? (
+          <FlexBox alignItems="center" mb={4.5} mt={2.5}>
             <Button
-              color="primary"
-              variant="contained"
-              onClick={handleCartAmountChange(1)}
+              size="small"
               sx={{
-                mb: 4.5,
-                mt: 2.5,
-                px: "1.75rem",
-                height: 40,
+                p: 1,
+              }}
+              color="primary"
+              variant="outlined"
+              onClick={() => {
+                setItemAmount((prevItem) => {
+                  if (prevItem > 1) {
+                    return prevItem - 1;
+                  } 
+                  if(prevItem === 1) {
+                    return prevItem
+                  }
+                });
               }}
             >
-              Add to Cart
+              <Remove fontSize="small" />
             </Button>
+
+            <H3 fontWeight="600" mx={2.5}>
+              {itemAmount}
+            </H3>
+
+            <Button
+              size="small"
+              sx={{
+                p: 1,
+              }}
+              color="primary"
+              variant="outlined"
+              onClick={() => {
+                setItemAmount((prevItem) => prevItem + 1);
+              }}
+            >
+              <Add fontSize="small" />
+            </Button>
+          </FlexBox>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={handleCartAmountChange(itemAmount)}
+            sx={{
+              mb: 4.5,
+              mt: 2.5,
+              px: "1.75rem",
+              height: 40,
+            }}
+          >
+            Add to Cart
+          </Button>
+          {/* {!cartItem?.qty ? (
+            
           ) : (
-            <FlexBox alignItems="center" mb={4.5} mt={2.5}>
-              <Button
-                size="small"
-                sx={{
-                  p: 1,
-                }}
-                color="primary"
-                variant="outlined"
-                onClick={handleCartAmountChange(cartItem?.qty - 1)}
-              >
-                <Remove fontSize="small" />
-              </Button>
-
-              <H3 fontWeight="600" mx={2.5}>
-                {cartItem?.qty.toString().padStart(2, "0")}
-              </H3>
-
-              <Button
-                size="small"
-                sx={{
-                  p: 1,
-                }}
-                color="primary"
-                variant="outlined"
-                onClick={handleCartAmountChange(cartItem?.qty + 1)}
-              >
-                <Add fontSize="small" />
-              </Button>
-            </FlexBox>
-          )}
+            
+          )} */}
 
           <div>
             <div>
