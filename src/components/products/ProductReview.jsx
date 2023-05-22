@@ -4,12 +4,23 @@ import { useFormik } from "formik";
 import { FlexBox } from "components/flex-box";
 import ProductComment from "./ProductComment";
 import { H2, H5 } from "components/Typography";
+import Pagination from "components/pagination/Pagination";
+import { useState } from "react";
 
 // ===================================================
 
 // ===================================================
 
 const ProductReview = ({reviews}) => {
+const [currentPage, setCurrentPage] = useState(1)
+const [reviewsPerPage] = useState(5)
+
+const indexOfLastReview = currentPage * reviewsPerPage;
+const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
+const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+
+const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   const handleFormSubmit = async (values, {
     resetForm
   }) => {
@@ -31,7 +42,12 @@ const ProductReview = ({reviews}) => {
     validationSchema: reviewSchema
   });
   return <Box>
-      {reviews.map((item, ind) => <ProductComment {...item} key={ind} />)}
+      {currentReviews.map((item, ind) => <ProductComment {...item} key={ind} />)}
+      <Pagination
+        reviewsPerPage={reviewsPerPage}
+        totalReviews={reviews.length}
+        paginate={paginate}
+      />
 
       <H2 fontWeight="600" mt={7} mb={2.5}>
         Write a Review for this product
