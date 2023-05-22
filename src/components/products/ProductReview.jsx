@@ -47,6 +47,7 @@ const paginate = (pageNumber) => setCurrentPage(pageNumber);
         reviewsPerPage={reviewsPerPage}
         totalReviews={reviews.length}
         paginate={paginate}
+        currentPage={currentPage}
       />
 
       <H2 fontWeight="600" mt={7} mb={2.5}>
