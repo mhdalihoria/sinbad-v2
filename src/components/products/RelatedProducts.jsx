@@ -21,7 +21,7 @@ const RelatedProducts = ({ productsData, favItemsLocalStorage }) => {
   }, [width]);
   return (
     <Box mb={7.5}>
-      <H3 mb={3}>Realted Products</H3>
+      <H3 mb={3}>المنتجات المتعلقة:</H3>
       <Carousel
         totalSlides={productsData.length}
         visibleSlides={visibleSlides}
