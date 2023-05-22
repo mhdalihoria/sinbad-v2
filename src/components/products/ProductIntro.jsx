@@ -180,12 +180,12 @@ const ProductIntro = ({
   }, []);
 
   const displayAvailable = (productQuantity, displayQuantity) => {
-    if (!productQuantity || productQuantity === 0) {
-      return "Out Of Stock";
+    if (productQuantity === 0) {
+      return "غير متوفر";
     } else if (displayQuantity && productQuantity > 0) {
       return `${productQuantity} قطعة`;
-    } else if (!displayQuantity && product_quantity === null) {
-      return "Available";
+    } else if (!displayQuantity && productQuantity === null) {
+      return "متوفر";
     }
   };
   return (
