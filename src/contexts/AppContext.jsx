@@ -26,9 +26,9 @@ const reducer = (state, action) => {
     case "CHANGE_CART_AMOUNT":
       let cartList = state.cart;
       let cartItem = action.payload;
-      let exist = cartList.find((item) => item.id === cartItem.id);
+      let exist = cartList.find((item) => item.nanoId === cartItem.nanoId);
       if (cartItem.qty < 1) {
-        const filteredCart = cartList.filter((item) => item.id !== cartItem.id);
+        const filteredCart = cartList.filter((item) => item.nanoId !== cartItem.nanoId);
         return {
           ...state,
           cart: filteredCart,
@@ -38,7 +38,7 @@ const reducer = (state, action) => {
       // IF PRODUCT ALREADY EXITS IN CART
       if (exist) {
         const newCart = cartList.map((item) =>
-          item.id === cartItem.id
+          item.nanoId === cartItem.nanoId
             ? {
                 ...item,
                 qty: cartItem.qty,
