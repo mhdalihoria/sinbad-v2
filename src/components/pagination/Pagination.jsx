@@ -9,6 +9,7 @@ const PaginationContainer = styled("ul")(({ theme }) => ({
 
 }));
 const PaginationButton = styled("button", {
+  //we write the following lines to add the "currentPage" prop as well as the "number" prop to the MUI styled component
   shouldForwardProp: (prop) => prop !== "currentPage" && prop !== "number"
 })(({ theme, currentPage, number }) => ({
   background: currentPage === number ? theme.palette.primary.contrastText: theme.palette.primary.main,
@@ -19,7 +20,7 @@ const PaginationButton = styled("button", {
   textAlign: "center",
   borderRadius: "3px",
   cursor: "pointer",
-  border: currentPage === number ? `1px solid ${theme.palette.primary.main}`: `1px solid ${theme.palette.primary.contrastText}`,
+  border: currentPage === number ? `1px solid ${theme.palette.primary.main}`: `none`,
   
   "&:hover": {
     opacity: "0.7",
