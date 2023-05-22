@@ -44,7 +44,6 @@ const ProductDetails = (props) => {
   const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
-  console.log(features);
   useEffect(() => {
     if (typeof productRequest !== "undefined") {
       setProductData(productRequest.data);
