@@ -84,10 +84,10 @@ const ProductDetails = (props) => {
               indicatorColor="primary"
               onChange={handleOptionClick}
             >
-              <Tab className="inner-tab" label="Description" />
-              <Tab className="inner-tab" label="Review (3)" />
+              <Tab className="inner-tab" label="الوصف" />
+              <Tab className="inner-tab" label={`التقييمات ${reviews.length > 0 ? "(" + reviews.length + ")": " "}`}   />
               {typeof features !== "undefined" && features.length > 0 && (
-                <Tab className="inner-tab" label="Features" />
+                <Tab className="inner-tab" label="المواصفات" />
               )}
             </StyledTabs>
 
