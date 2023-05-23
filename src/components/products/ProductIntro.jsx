@@ -22,6 +22,7 @@ const ProductIntro = ({
   product,
   productImages,
   attributes,
+  commission,
   favItemsLocalStorage,
 }) => {
   //TODO: thumnail comes undefined someteimes
@@ -44,13 +45,14 @@ const ProductIntro = ({
     category_name,
     is_new,
     is_external,
+    role_prices,
   } = product;
   const { state, dispatch, favItems, setFavItems } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
   const [userToken, setUserToken] = useState(null);
   const [itemAmount, setItemAmount] = useState(1);
-
+  console.log(role_prices);
   const [selectAttributes, setSelectAttributes] = useState(
     attributes.length > 0
       ? [
@@ -77,16 +79,16 @@ const ProductIntro = ({
   const handleImageClick = (ind) => () => setSelectedImage(ind);
 
   const selectAttr = (name, value) => {
-    setSelectAttributes(prevSelectAttributes=> {
-      const attributesArr = [...prevSelectAttributes]
-      const indexOfAttr = attributesArr.findIndex(attr => attr.name === name)
+    setSelectAttributes((prevSelectAttributes) => {
+      const attributesArr = [...prevSelectAttributes];
+      const indexOfAttr = attributesArr.findIndex((attr) => attr.name === name);
       attributesArr[indexOfAttr] = {
         ...attributesArr[indexOfAttr],
-        value: value
-      }
+        value: value,
+      };
 
-      return attributesArr
-    })
+      return attributesArr;
+    });
   };
 
   const addToWishList = async () => {
@@ -199,44 +201,27 @@ const ProductIntro = ({
             <H6>{product_short_description}</H6>
           </FlexBox>
 
-          <FlexBox alignItems="center" mb={2}>
-            <Box lineHeight="1">تقييم:</Box>
-            <Box mx={1} lineHeight="1">
-              <BazaarRating
-                color="warn"
-                fontSize="1.25rem"
-                value={4}
-                readOnly
-              />
-            </Box>
-            <H6 lineHeight="1">(50)</H6>
-          </FlexBox>
-
-          {with_delivery_fee !== false && (
-            <Box mb={1}>
-              <H5>بدون توصيل</H5>
-            </Box>
-          )}
-          <Box
-            pt={1}
-            mb={2}
-            style={{ display: "flex", justifyContent: "space-between" }}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1rem",
+            }}
           >
-            <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
-              {has_offer ? (
-                <>
-                  <H2 color="primary.main" mb={0.5} lineHeight="1">
-                    {sale_price}
-                    {/* {currency(product_price)} */}
-                  </H2>
-                  <del style={{ color: "grey" }}>{product_price}</del>
-                </>
-              ) : (
-                <H2 color="primary.main" mb={0.5} lineHeight="1">
-                  {product_price}
-                </H2>
-              )}
-            </div>
+            <FlexBox alignItems="center">
+              <Box lineHeight="1">تقييم:</Box>
+              <Box mx={1} lineHeight="1">
+                <BazaarRating
+                  color="warn"
+                  fontSize="1.25rem"
+                  value={4}
+                  readOnly
+                />
+              </Box>
+              <H6 lineHeight="1">(50)</H6>
+            </FlexBox>
+
             <Box
               color="inherit"
               style={{
@@ -248,6 +233,79 @@ const ProductIntro = ({
             >
               {displayAvailable(product_quantity, display_quantity)}
             </Box>
+          </div>
+
+          {with_delivery_fee !== false && (
+            <Box mb={1}>
+              <H5>بدون توصيل</H5>
+            </Box>
+          )}
+          <Box
+            pt={1}
+            mb={2}
+            style={{ display: "flex", justifyContent: "space-between" }}
+          >
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                alignItems: "start",
+                flexDirection: "column",
+              }}
+            >
+              {role_prices.length > 1 &&
+                role_prices.map((rolePrice) => {
+                  return (
+                    <div key={rolePrice.price}>
+                      <Span style={{ fontSize: ".8rem" }}>
+                        {rolePrice.price_name.length > 1
+                          ? `${rolePrice.price_name} :`
+                          : ""}{" "}
+                      </Span>
+                      <H2 color="primary.main" mb={0.1} lineHeight="1">
+                        {rolePrice.price}
+                      </H2>
+                    </div>
+                  );
+                })}
+
+              {has_offer ? (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  {role_prices.length > 1 && (
+                    <Span style={{ fontSize: ".8rem" }}>سعر العرض: </Span>
+                  )}
+                  <div style={{ display: "flex", gap: "10px",  alignItems: "baseline", }}>
+                    <H2 color="primary.main" mb={0.5} lineHeight="1">
+                      {sale_price}
+                      {/* {currency(product_price)} */}
+                    </H2>
+                    <del style={{ color: "grey" }}>{product_price}</del>
+                  </div>
+                </div>
+              ) : (
+                <H2 color="primary.main" mb={0.5} lineHeight="1">
+                  {product_price}
+                </H2>
+              )}
+            </div>
+            {commission && (
+              <Box
+                color="inherit"
+                style={{
+                  background: "green",
+                  color: "white",
+                  borderRadius: "5px",
+                  padding: "5px",
+                }}
+              >
+                {commission}
+              </Box>
+            )}
           </Box>
 
           {attributes.map((attr) => (
@@ -336,7 +394,7 @@ const ProductIntro = ({
             <ProductPageImportedProduct product={product} />
           )}
 
-          <FlexBox alignItems="center" mb={4.5} mt={2.5}>
+          <FlexBox alignItems="center" mb={1.5} mt={2.5}>
             <Button
               size="small"
               sx={{
