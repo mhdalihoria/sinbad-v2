@@ -39,6 +39,7 @@ const ProductDetails = ({ productId }) => {
     relatedProducts,
     reviews,
     features,
+    commission,
     product_images: productImages,
   } = productData || {};
 
@@ -61,7 +62,7 @@ const ProductDetails = ({ productId }) => {
 
   useEffect(()=> {
     const token = JSON.parse(window.localStorage.getItem("user_token"))
-    const productRequest = async (id, token) => {
+    const productRequest = async (id, token = "") => {
       const response = await useGetFetch(
         `https://sinbad-store.com/api/v2/product/${id}`,
         {
@@ -73,9 +74,12 @@ const ProductDetails = ({ productId }) => {
       setProductRequest(response)
     }
 
-    // if (token && typeof token !== "undefined") {
+    if (token && typeof token !== "undefined") {
       productRequest(productId, token)
-    // }
+    } else {
+      productRequest(productId)
+
+    }
 
   }, [router.isFallback])
 
@@ -98,6 +102,7 @@ const ProductDetails = ({ productId }) => {
               productImages={productImages}
               attributes={attributes}
               favItemsLocalStorage={favItemsLocalStorage}
+              commission={commission}
             />
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs
