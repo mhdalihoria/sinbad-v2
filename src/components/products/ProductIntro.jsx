@@ -24,6 +24,7 @@ const ProductIntro = ({
   attributes,
   commission,
   favItemsLocalStorage,
+  userToken
 }) => {
   //TODO: thumnail comes undefined someteimes
   const {
@@ -50,9 +51,7 @@ const ProductIntro = ({
   const { state, dispatch, favItems, setFavItems } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [userToken, setUserToken] = useState(null);
   const [itemAmount, setItemAmount] = useState(1);
-  console.log(role_prices);
   const [selectAttributes, setSelectAttributes] = useState(
     attributes.length > 0
       ? [
@@ -97,7 +96,7 @@ const ProductIntro = ({
     });
     const headers = {
       "X-localization": "ar",
-      Authorization: `Bearer ${userToken}`,
+      "Authorization": `Bearer ${userToken}`,
       "Content-Type": "application/json",
     };
     const response = await usePostFetch(
@@ -175,11 +174,6 @@ const ProductIntro = ({
     }
   }, [isFavorite]);
 
-  useEffect(() => {
-    if (!window) return;
-    let token = JSON.parse(window.localStorage.getItem("user_token"));
-    if (token && token.length > 0) setUserToken(token);
-  }, []);
 
   const displayAvailable = (productQuantity, displayQuantity) => {
     if (productQuantity === 0) {
