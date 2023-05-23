@@ -29,9 +29,9 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 // ===============================================================
 
-const ProductDetails = (props) => {
-  const { productRequest } = props;
+const ProductDetails = ({ productId }) => {
   const router = useRouter();
+  const [productRequest, setProductRequest] = useState({})
   const [productData, setProductData] = useState();
   const {
     product,
@@ -41,11 +41,12 @@ const ProductDetails = (props) => {
     features,
     product_images: productImages,
   } = productData || {};
+
   const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
   useEffect(() => {
-    if (typeof productRequest !== "undefined") {
+    if (productRequest ) {
       setProductData(productRequest.data);
       // setPrice(productRequest.data.product.product_price);
     }
@@ -57,8 +58,29 @@ const ProductDetails = (props) => {
       setFavItemsLocalStorage(favItemsLS);
     }
   }, []);
+
+  useEffect(()=> {
+    const token = JSON.parse(window.localStorage.getItem("user_token"))
+    const productRequest = async (id, token) => {
+      const response = await useGetFetch(
+        `https://sinbad-store.com/api/v2/product/${id}`,
+        {
+          method: "GET",
+          headers: { "X-localization": "ar", "Authorization": `Bearer ${token}` },
+          // headers: { "X-localization": "ar" },
+        }
+      );
+      setProductRequest(response)
+    }
+
+    // if (token && typeof token !== "undefined") {
+      productRequest(productId, token)
+    // }
+
+  }, [router.isFallback])
+
   // Show a loading state when the fallback is rendered
-  if (router.isFallback) {
+  if (router.isFallback ) {
     return <h1>Loading...</h1>;
   }
   return (
@@ -134,16 +156,10 @@ export const getStaticProps = async ({ params }) => {
   // const product = await api.getProduct(params.slug);
 
   const productId = params.id;
-  const productRequest = await useGetFetch(
-    `https://sinbad-store.com/api/v2/product/${productId}`,
-    {
-      method: "GET",
-      headers: { "X-localization": "ar" },
-    }
-  );
+ 
   return {
     props: {
-      productRequest,
+      productId,
     },
   };
 };
