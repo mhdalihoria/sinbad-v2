@@ -31,8 +31,10 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 
 const ProductDetails = ({ productId }) => {
   const router = useRouter();
-  const [productRequest, setProductRequest] = useState({})
+  const [productRequest, setProductRequest] = useState({});
   const [productData, setProductData] = useState();
+  const [userToken, setUserToken] = useState(null);
+
   const {
     product,
     attributes,
@@ -42,16 +44,21 @@ const ProductDetails = ({ productId }) => {
     commission,
     product_images: productImages,
   } = productData || {};
-
   const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
   const handleOptionClick = (_, value) => setSelectedOption(value);
   useEffect(() => {
-    if (productRequest ) {
+    if (productRequest) {
       setProductData(productRequest.data);
       // setPrice(productRequest.data.product.product_price);
     }
   }, [productRequest]);
+
+  useEffect(() => {
+    if (!window) return;
+    let token = JSON.parse(window.localStorage.getItem("user_token"));
+    if (token && token.length > 0) setUserToken(token);
+  }, [router.isFallback]); //we're using router.isFallback, so the in our case, we set the state when we have the data and when we display the page
 
   useEffect(() => {
     const favItemsLS = JSON.parse(window.localStorage.getItem("favItems"));
@@ -60,31 +67,29 @@ const ProductDetails = ({ productId }) => {
     }
   }, []);
 
-  useEffect(()=> {
-    const token = JSON.parse(window.localStorage.getItem("user_token"))
+  useEffect(() => {
+    const token = JSON.parse(window.localStorage.getItem("user_token"));
     const productRequest = async (id, token = "") => {
       const response = await useGetFetch(
         `https://sinbad-store.com/api/v2/product/${id}`,
         {
           method: "GET",
-          headers: { "X-localization": "ar", "Authorization": `Bearer ${token}` },
+          headers: { "X-localization": "ar", Authorization: `Bearer ${token}` },
           // headers: { "X-localization": "ar" },
         }
       );
-      setProductRequest(response)
-    }
+      setProductRequest(response);
+    };
 
     if (token && typeof token !== "undefined") {
-      productRequest(productId, token)
+      productRequest(productId, token);
     } else {
-      productRequest(productId)
-
+      productRequest(productId);
     }
-
-  }, [router.isFallback])
+  }, [router.isFallback]); //we're using router.isFallback, so the in our case, we set the state when we have the data and when we display the page
 
   // Show a loading state when the fallback is rendered
-  if (router.isFallback ) {
+  if (router.isFallback) {
     return <h1>Loading...</h1>;
   }
   return (
@@ -98,6 +103,7 @@ const ProductDetails = ({ productId }) => {
         {product ? (
           <>
             <ProductIntro
+              userToken={userToken}
               product={product}
               productImages={productImages}
               attributes={attributes}
@@ -112,7 +118,12 @@ const ProductDetails = ({ productId }) => {
               onChange={handleOptionClick}
             >
               <Tab className="inner-tab" label="الوصف" />
-              <Tab className="inner-tab" label={`التقييمات ${reviews.length > 0 ? "(" + reviews.length + ")": " "}`}   />
+              <Tab
+                className="inner-tab"
+                label={`التقييمات ${
+                  reviews.length > 0 ? "(" + reviews.length + ")" : " "
+                }`}
+              />
               {typeof features !== "undefined" && features.length > 0 && (
                 <Tab className="inner-tab" label="المواصفات" />
               )}
@@ -120,7 +131,9 @@ const ProductDetails = ({ productId }) => {
 
             <Box mb={6}>
               {selectedOption === 0 && <ProductDescription product={product} />}
-              {selectedOption === 1 && <ProductReview reviews={reviews} />}
+              {selectedOption === 1 && (
+                <ProductReview reviews={reviews} id={product.id} userToken={userToken} />
+              )}
               {selectedOption === 2 && <ProductFeatures features={features} />}
             </Box>
 
@@ -161,7 +174,7 @@ export const getStaticProps = async ({ params }) => {
   // const product = await api.getProduct(params.slug);
 
   const productId = params.id;
- 
+
   return {
     props: {
       productId,
