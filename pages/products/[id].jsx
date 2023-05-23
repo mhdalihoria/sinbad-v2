@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Box, Container, styled, Tab, Tabs } from "@mui/material";
+import { Box, Container, styled, Tab, Tabs, useTheme } from "@mui/material";
 import { H2 } from "components/Typography";
 import ShopLayout1 from "components/layouts/ShopLayout1";
 import ProductIntro from "components/products/ProductIntro";
@@ -11,6 +11,7 @@ import ProductFeatures from "components/products/ProductFeatures";
 import { getRelatedProducts } from "utils/__api__/related-products";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import api from "utils/__api__/products";
+import Link from "next/link";
 
 // styled component
 const StyledTabs = styled(Tabs)(({ theme }) => ({
@@ -34,7 +35,6 @@ const ProductDetails = ({ productId }) => {
   const [productRequest, setProductRequest] = useState({});
   const [productData, setProductData] = useState();
   const [userToken, setUserToken] = useState(null);
-
   const {
     product,
     attributes,
@@ -46,6 +46,7 @@ const ProductDetails = ({ productId }) => {
   } = productData || {};
   const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
   const [selectedOption, setSelectedOption] = useState(0);
+  const theme = useTheme();
   const handleOptionClick = (_, value) => setSelectedOption(value);
   useEffect(() => {
     if (productRequest) {
@@ -132,7 +133,23 @@ const ProductDetails = ({ productId }) => {
             <Box mb={6}>
               {selectedOption === 0 && <ProductDescription product={product} />}
               {selectedOption === 1 && (
-                <ProductReview reviews={reviews} id={product.id} userToken={userToken} />
+                <>
+                  {userToken && typeof userToken !== "undefined" ? (
+                    <ProductReview
+                      reviews={reviews}
+                      id={product.id}
+                      userToken={userToken}
+                    />
+                  ) : (
+                    <p>
+                      يجب{" "}
+                      <Link href={"/signup"}>
+                        <span style={{color: theme.palette.primary.main, cursor: "pointer"}}> تسجيل الدخول</span>
+                      </Link>{" "}
+                      لتقييم هذا المنتج
+                    </p>
+                  )}
+                </>
               )}
               {selectedOption === 2 && <ProductFeatures features={features} />}
             </Box>
