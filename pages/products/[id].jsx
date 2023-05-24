@@ -12,7 +12,7 @@ import { getRelatedProducts } from "utils/__api__/related-products";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import api from "utils/__api__/products";
 import Link from "next/link";
-
+import  CountDown from "../../src/components/products-components/CountDown"
 // styled component
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   minHeight: 0,
@@ -111,6 +111,7 @@ const ProductDetails = ({ productId }) => {
               favItemsLocalStorage={favItemsLocalStorage}
               commission={commission}
             />
+            <CountDown />
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs
               textColor="primary"
