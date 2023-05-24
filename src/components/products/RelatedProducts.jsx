@@ -9,7 +9,7 @@ import { TramRounded } from "@mui/icons-material";
 
 // ===================================================
 
-const RelatedProducts = ({ productsData, favItemsLocalStorage }) => {
+const RelatedProducts = ({ productsData, favItemsLocalStorage, offer }) => {
   const width = useWindowSize();
   const [visibleSlides, setVisibleSlides] = useState(4);
   useEffect(() => {
@@ -53,6 +53,7 @@ const RelatedProducts = ({ productsData, favItemsLocalStorage }) => {
                 ) ?
                 true : false
               }
+              offer={offer}
             />
           </Grid>
         ))}

@@ -160,6 +160,7 @@ const ProductDetails = ({ productId }) => {
               <RelatedProducts
                 productsData={relatedProducts}
                 favItemsLocalStorage={favItemsLocalStorage}
+                offer={offer}
               />
             )}
           </>

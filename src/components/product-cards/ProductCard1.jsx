@@ -12,6 +12,7 @@ import { useAppContext } from "contexts/AppContext";
 import ProductViewDialog from "components/products/ProductViewDialog";
 import { FlexBox } from "../flex-box";
 import { calculateDiscount, currency } from "lib";
+import CountDown from "components/products-components/CountDown";
 
 // styled components
 const StyledBazaarCard = styled(BazaarCard)({
@@ -89,6 +90,7 @@ const ProductCard1 = ({
   isExternal,
   shopName,
   isFavorited = false,
+  offer = null,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
@@ -179,6 +181,11 @@ const ProductCard1 = ({
           {!!isNew && <StyledChip color="warning" size="small" label={`new`} />}
           {!!isExternal && (
             <StyledChip color="secondary" size="small" label={`أصلي`} />
+          )}
+          {offer && typeof offer !== undefined && (
+            <div style={{ marginRight: ".1rem",  marginTop: ".5rem" }}>
+              <CountDown direction="column" offer={offer} />
+            </div>
           )}
         </div>
 
