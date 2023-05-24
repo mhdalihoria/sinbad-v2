@@ -42,6 +42,7 @@ const ProductDetails = ({ productId }) => {
     reviews,
     features,
     commission,
+    offer,
     product_images: productImages,
   } = productData || {};
   const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
@@ -87,7 +88,7 @@ const ProductDetails = ({ productId }) => {
     } else {
       productRequest(productId);
     }
-  }, [router.isFallback]); //we're using router.isFallback, so the in our case, we set the state when we have the data and when we display the page
+  }, [productId, router.isFallback]); //we're using router.isFallback, so the in our case, we set the state when we have the data and when we display the page
 
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
@@ -110,8 +111,8 @@ const ProductDetails = ({ productId }) => {
               attributes={attributes}
               favItemsLocalStorage={favItemsLocalStorage}
               commission={commission}
+              offer={offer}
             />
-            <CountDown />
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs
               textColor="primary"
