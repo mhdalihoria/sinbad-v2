@@ -1,6 +1,19 @@
+import { styled } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
-const CountDown = () => {
+const TimerCard = styled("div")({
+  background: "rgb(242, 242, 242)",
+  width: "50px",
+  height: "50px",
+  boxShadow: "0px 0px 3px 0px rgba(0,0,0,0.75)",
+
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+});
+
+const CountDown = ({ direction = "column", offer }) => {
   const calculateTimeLeft = () => {
     let year = new Date().getFullYear();
     const difference = +new Date(`2023-6-1`) - +new Date();
@@ -40,9 +53,23 @@ const CountDown = () => {
   return (
     <div>
       {timerComponents.length ? (
-        <div>
-          <span>{timerComponents[0]} ايام</span> {" - "}
-          <span>{timerComponents[1]} (س) : {timerComponents[2]} (د): {timerComponents[3]} (ث)</span>
+        <div style={{display: "flex", gap: "10px", flexDirection: direction}}>
+          <TimerCard>
+            <div>{timerComponents[0]}</div>
+            <span> ايام</span>
+          </TimerCard>
+          <TimerCard>
+            <div>{timerComponents[1]}</div>
+            <span> ساعات</span>
+          </TimerCard>
+          <TimerCard>
+            <div>{timerComponents[2]}</div>
+            <span> دقائق</span>
+          </TimerCard>
+          <TimerCard>
+            <div>{timerComponents[3]}</div>
+            <span> ثوان</span>
+          </TimerCard>
         </div>
       ) : (
         <span>Time's up!</span>
