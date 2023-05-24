@@ -13,6 +13,7 @@ import ProductImageViewer from "components/products-components/ProductImageViewe
 import ProductPageImportedProduct from "components/products-components/ProductPageImportedProduct";
 import usePostFetch from "components/fetch/usePostFetch";
 import { nanoid } from "nanoid";
+import CountDown from "components/products-components/CountDown";
 
 // ================================================================
 
@@ -24,7 +25,8 @@ const ProductIntro = ({
   attributes,
   commission,
   favItemsLocalStorage,
-  userToken
+  userToken,
+  offer,
 }) => {
   //TODO: thumnail comes undefined someteimes
   const {
@@ -96,7 +98,7 @@ const ProductIntro = ({
     });
     const headers = {
       "X-localization": "ar",
-      "Authorization": `Bearer ${userToken}`,
+      Authorization: `Bearer ${userToken}`,
       "Content-Type": "application/json",
     };
     const response = await usePostFetch(
@@ -173,7 +175,6 @@ const ProductIntro = ({
       }
     }
   }, [isFavorite]);
-
 
   const displayAvailable = (productQuantity, displayQuantity) => {
     if (productQuantity === 0) {
@@ -273,7 +274,13 @@ const ProductIntro = ({
                   {role_prices.length > 1 && (
                     <Span style={{ fontSize: ".8rem" }}>سعر العرض: </Span>
                   )}
-                  <div style={{ display: "flex", gap: "10px",  alignItems: "baseline", }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "baseline",
+                    }}
+                  >
                     <H2 color="primary.main" mb={0.5} lineHeight="1">
                       {sale_price}
                       {/* {currency(product_price)} */}
@@ -490,6 +497,14 @@ const ProductIntro = ({
                   }}
                 ></i>
               </div>
+              {offer && typeof offer !== undefined && (
+                <div style={{ marginTop: "2rem" }}>
+                  <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
+                    مدة العرض:
+                  </div>
+                  <CountDown direction="row" offer={offer} />
+                </div>
+              )}
             </div>
           </div>
         </Grid>
