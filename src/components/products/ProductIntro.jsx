@@ -69,34 +69,52 @@ const ProductIntro = ({
   const [mazadUserValue, setMazadUserValue] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [mazadUserError, setMazadUserError] = useState(null);
-
+  const [mazadUserMsg, setMazadUserMsg] = useState({
+    status: false,
+    message: "",
+  });
+  const [mazadPrice, setMazadPrice] = useState(
+    mazad.max_bid ? mazad.max_bid : mazad.start_price
+  );
+  console.log(mazadUserMsg);
   const changeMazadUserValue = (e) => {
     setMazadUserValue(e.target.value);
   };
 
   const submitMazad = async () => {
     if (/^\d+$/.test(mazadUserValue)) {
-        const headers = {
-          "X-localization": "ar",
-          "Authorization": `Bearer ${userToken}`,
-          "Content-Type": "application/json",
-        };
-        const body = JSON.stringify({
-          "mazad_id": 3,
-          "amount": mazadUserValue,
+      const headers = {
+        "X-localization": "ar",
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      };
+      const body = JSON.stringify({
+        mazad_id: 3,
+        amount: mazadUserValue,
+      });
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/add-mazad-bid",
+        headers,
+        body
+      );
+      if(response.data.status){setMazadPrice(mazadUserValue);}
+      setMazadUserMsg({
+        status: response.data.status,
+        message: response.data.message,
+      });
+      setTimeout(()=>{
+        setMazadUserValue("");
+        setMazadUserMsg({
+          status: false,
+          message: "",
         });
-        const response = await usePostFetch(
-          "https://sinbad-store.com/api/v2/add-mazad-bid",
-          headers,
-          body
-        );
-        console.log(response.data);
-      
+      }, 1500)
+      console.log(response.data);
     } else {
       setMazadUserError("ادحل أرقام فقط");
       setTimeout(() => {
         setMazadUserError(null);
-      }, 1000);
+      }, 2500);
     }
     console.log(mazadUserValue);
   };
@@ -542,13 +560,20 @@ const ProductIntro = ({
                 <div style={{ marginTop: "2rem" }}>
                   <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
                     <p style={{ margin: "0" }}>أعلى مزايدة:</p>
-                    <p style={{ marginTop: "0.5rem" }}>
-                      {mazad.max_bid ? mazad.max_bid : mazad.start_price}
-                    </p>
+                    <p style={{ marginTop: "0.5rem", marginBottom: "0" }}>{mazadPrice}</p>
                   </div>
                   <div>
                     {userToken ? (
                       <>
+                        <div
+                          style={{
+                            color: mazadUserMsg.status ? "green" : "red",
+                            margin: "1rem 0 2rem"
+                          }}
+                        >
+                          {mazadUserMsg.message}
+                        </div>
+
                         <TextField
                           id="outlined-basic"
                           name="mazadUserValue"
