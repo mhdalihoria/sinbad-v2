@@ -43,6 +43,7 @@ const ProductDetails = ({ productId }) => {
     features,
     commission,
     offer,
+    mazad,
     product_images: productImages,
   } = productData || {};
   const [favItemsLocalStorage, setFavItemsLocalStorage] = useState([]);
@@ -112,6 +113,7 @@ const ProductDetails = ({ productId }) => {
               favItemsLocalStorage={favItemsLocalStorage}
               commission={commission}
               offer={offer}
+              mazad={mazad}
             />
             {/* PRODUCT DESCRIPTION AND REVIEW */}
             <StyledTabs

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Add, Remove } from "@mui/icons-material";
-import { Avatar, Box, Button, Chip, Grid } from "@mui/material";
+import { Avatar, Box, Button, Chip, Grid, TextField } from "@mui/material";
 import LazyImage from "components/LazyImage";
 import BazaarRating from "components/BazaarRating";
 import { H1, H2, H3, H5, H6, Span } from "components/Typography";
@@ -14,6 +14,7 @@ import ProductPageImportedProduct from "components/products-components/ProductPa
 import usePostFetch from "components/fetch/usePostFetch";
 import { nanoid } from "nanoid";
 import CountDown from "components/products-components/CountDown";
+import Image from "next/image";
 
 // ================================================================
 
@@ -27,6 +28,7 @@ const ProductIntro = ({
   favItemsLocalStorage,
   userToken,
   offer,
+  mazad,
 }) => {
   //TODO: thumnail comes undefined someteimes
   const {
@@ -64,20 +66,40 @@ const ProductIntro = ({
         ]
       : []
   );
+  const [mazadUserValue, setMazadUserValue] = useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [mazadUserError, setMazadUserError] = useState(null);
 
-  // HANDLE CHAMGE TYPE AND OPTIONS
-  // const handleChangeVariant = (variantName, value) => () => {
-  //   setSelectVariants((state) => ({
-  //     ...state,
-  //     [variantName.toLowerCase()]: value,
-  //   }));
-  // };
+  const changeMazadUserValue = (e) => {
+    setMazadUserValue(e.target.value);
+  };
 
-  // CHECK PRODUCT EXIST OR NOT IN THE CART
-  const cartItem = state.cart.find((item) => item.id === id);
-
-  // HANDLE SELECT IMAGE
-  const handleImageClick = (ind) => () => setSelectedImage(ind);
+  const submitMazad = async () => {
+    if (/^\d+$/.test(mazadUserValue)) {
+        const headers = {
+          "X-localization": "ar",
+          "Authorization": `Bearer ${userToken}`,
+          "Content-Type": "application/json",
+        };
+        const body = JSON.stringify({
+          "mazad_id": 3,
+          "amount": mazadUserValue,
+        });
+        const response = await usePostFetch(
+          "https://sinbad-store.com/api/v2/add-mazad-bid",
+          headers,
+          body
+        );
+        console.log(response.data);
+      
+    } else {
+      setMazadUserError("ادحل أرقام فقط");
+      setTimeout(() => {
+        setMazadUserError(null);
+      }, 1000);
+    }
+    console.log(mazadUserValue);
+  };
 
   const selectAttr = (name, value) => {
     setSelectAttributes((prevSelectAttributes) => {
@@ -196,7 +218,7 @@ const ProductIntro = ({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                height: "100%"
+                height: "100%",
               }}
             >
               <H1 color="red">Coming Soon</H1>
@@ -379,11 +401,14 @@ const ProductIntro = ({
               <FlexBox alignItems="center" mb={2}>
                 <Box>الماركة:</Box>
                 <Link href="/" passHref>
-                  <a>
-                    <H6 ml={1}>
-                      {brand_name} {brand_logo}
-                    </H6>
-                  </a>
+                  <div
+                    style={{ display: "flex", alignItems: "end", gap: "10px" }}
+                  >
+                    <H1 mb={1} ml={1} style={{ fontSize: ".9rem" }}>
+                      {brand_name}
+                    </H1>{" "}
+                    <Image src={brand_logo} width={"50px"} height={"30px"} />
+                  </div>
                 </Link>
               </FlexBox>
             )}
@@ -463,12 +488,6 @@ const ProductIntro = ({
               Add to Cart
             </Button>
 
-            {/* {!cartItem?.qty ? (
-            
-          ) : (
-            
-          )} */}
-
             <div>
               <div>
                 <div
@@ -520,6 +539,61 @@ const ProductIntro = ({
                     <CountDown direction="row" offer={offer} />
                   </div>
                 )}
+                <div style={{ marginTop: "2rem" }}>
+                  <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
+                    <p style={{ margin: "0" }}>أعلى مزايدة:</p>
+                    <p style={{ marginTop: "0.5rem" }}>
+                      {mazad.max_bid ? mazad.max_bid : mazad.start_price}
+                    </p>
+                  </div>
+                  <div>
+                    {userToken ? (
+                      <>
+                        <TextField
+                          id="outlined-basic"
+                          name="mazadUserValue"
+                          value={mazadUserValue}
+                          label="ادخل قيمة المزاد"
+                          variant="outlined"
+                          onChange={(e) => changeMazadUserValue(e)}
+                          sx={{ marginRight: "1rem" }}
+                        />
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          disabled={isButtonDisabled}
+                          onClick={submitMazad}
+                        >
+                          تبث الفيمة
+                        </Button>
+                        <div>{mazadUserError}</div>
+                      </>
+                    ) : (
+                      <div
+                        style={{
+                          border: "grey 1px solid",
+                          background: "rgb(211,211,211)",
+                          fontWeight: "600",
+                          padding: "1rem",
+                          textAlign: "center",
+                        }}
+                      >
+                        يحب{" "}
+                        <Link href={"/signup"}>
+                          <span
+                            style={{
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                            }}
+                          >
+                            تسجيل الدخول
+                          </span>
+                        </Link>{" "}
+                        للمشاركة في المزاد
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </Grid>
