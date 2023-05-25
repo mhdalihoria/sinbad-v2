@@ -54,6 +54,7 @@ const RelatedProducts = ({ productsData, favItemsLocalStorage, offer }) => {
                 true : false
               }
               offer={offer}
+              isFuture={item.is_future}
             />
           </Grid>
         ))}

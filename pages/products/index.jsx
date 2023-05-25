@@ -26,6 +26,7 @@ const Products = ({ allProducts }) => {
           isExternal={product.is_external}
           shopName={product.shop_name}
           hoverEffect
+          isFuture={product.is_future}
         />
       </div>
     );

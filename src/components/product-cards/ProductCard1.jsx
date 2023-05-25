@@ -91,6 +91,7 @@ const ProductCard1 = ({
   shopName,
   isFavorited = false,
   offer = null,
+  isFuture = false,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
@@ -160,186 +161,204 @@ const ProductCard1 = ({
     }
   }, [isFavorite]);
   return (
-    <StyledBazaarCard hoverEffect={hoverEffect}>
-      <ImageWrapper>
-        <div
-          style={{
-            zIndex: 1,
-            height: "50px",
-            display: "flex",
-            flexDirection: "column",
-            position: "absolute",
-          }}
-        >
-          {!!salePrice && (
-            <StyledChip
-              color="primary"
-              size="small"
-              label={`${Math.round(((price - salePrice) / price) * 100)}% off`}
-            />
-          )}
-          {!!isNew && <StyledChip color="warning" size="small" label={`new`} />}
-          {!!isExternal && (
-            <StyledChip color="secondary" size="small" label={`أصلي`} />
-          )}
-          {offer && typeof offer !== undefined && (
-            <div style={{ marginRight: ".1rem",  marginTop: ".5rem" }}>
-              <CountDown direction="column" offer={offer} />
-            </div>
-          )}
-        </div>
-
-        <HoverIconWrapper
-          className="hover-box"
-          style={{ background: "white", borderRadius: "5px" }}
-        >
-          <IconButton onClick={toggleDialog}>
-            <RemoveRedEye color="disabled" fontSize="small" />
-          </IconButton>
-
-          <IconButton onClick={toggleIsFavorite}>
-            {isFavorite ? (
-              <Favorite color="primary" fontSize="small" />
-            ) : (
-              <FavoriteBorder fontSize="small" color="disabled" />
-            )}
-          </IconButton>
-        </HoverIconWrapper>
-
-        <Link href={`/products/${slug}`}>
-          <a>
-            <LazyImage
-              src={imgUrl}
-              width={0}
-              height={0}
-              layout="responsive"
-              alt={title}
-            />
-          </a>
-        </Link>
-      </ImageWrapper>
-
-      <ProductViewDialog
-        openDialog={openModal}
-        handleCloseDialog={toggleDialog}
-        product={{
-          title,
-          price,
-          categoryName,
-          salePrice,
-          description,
-          shopName,
-          id,
-          slug,
-          imgGroup: [imgUrl, imgUrl],
-        }}
-      />
-
-      <ContentWrapper>
-        <FlexBox>
-          <Box flex="1 1 0" minWidth="0px" mr={1}>
-            <Link href={`/products/${slug}`}>
-              <a>
-                <H3
-                  mb={1}
-                  title={title}
-                  fontSize="14px"
-                  fontWeight="600"
-                  className="title"
-                  color="text.secondary"
-                >
-                  {title}
-                </H3>
-              </a>
-            </Link>
-
-            {!!shopName && (
-              <>
-                <Span>المتجر: {shopName} </Span> <br />
-                <br />
-              </>
-            )}
-            {!hideRating && (
-              <BazaarRating value={rating || 0} color="warn" readOnly />
-            )}
-
-            {showProductSize && (
-              <Span color="grey.600" mb={1} display="block">
-                {showProductSize}
-              </Span>
-            )}
-
-            <FlexBox alignItems="center" gap={1} mt={0.5}>
-              <Box fontWeight="600" color="primary.main">
-                {/* {calculateDiscount(price, ((price - salePrice) / price) * 100)} */}
-                {!!salePrice ? salePrice : price}
-              </Box>
-
-              {!!salePrice && (
-                <Box color="grey.600" fontWeight="600">
-                  <del>{price}</del>
-                </Box>
-              )}
-            </FlexBox>
-          </Box>
-
-          <FlexBox
-            width="30px"
-            alignItems="center"
-            className="add-cart"
-            flexDirection="column-reverse"
-            justifyContent={!!cartItem?.qty ? "space-between" : "flex-start"}
+    <>
+      {isFuture && isFuture !== 0 ? (
+        <h1 style={{ position: "absolute", top: "70px", right: "50px", color: "red" }}>Coming Soon</h1>
+      ) : (
+        <span></span>
+      )}
+      <StyledBazaarCard
+        hoverEffect={hoverEffect}
+        style={{ opacity: isFuture ? ".2" : "1" }}
+      >
+        <ImageWrapper>
+          <div
+            style={{
+              zIndex: 1,
+              height: "50px",
+              display: "flex",
+              flexDirection: "column",
+              position: "absolute",
+            }}
           >
-            <Button
-              color="primary"
-              variant="outlined"
-              sx={{
-                padding: "3px",
-              }}
-              onClick={handleCartAmountChange({
-                id,
-                slug,
-                price,
-                imgUrl,
-                name: title,
-                qty: (cartItem?.qty || 0) + 1,
-              })}
-            >
-              <Add fontSize="small" />
-            </Button>
+            {!!salePrice && (
+              <StyledChip
+                color="primary"
+                size="small"
+                label={`${Math.round(
+                  ((price - salePrice) / price) * 100
+                )}% off`}
+              />
+            )}
+            {!!isNew && (
+              <StyledChip color="warning" size="small" label={`new`} />
+            )}
+            {!!isExternal && (
+              <StyledChip color="secondary" size="small" label={`أصلي`} />
+            )}
+            {offer && typeof offer !== undefined && (
+              <div style={{ marginRight: ".1rem", marginTop: ".5rem" }}>
+                <CountDown direction="column" offer={offer} />
+              </div>
+            )}
+          </div>
 
-            {!!cartItem?.qty && (
-              <Fragment>
-                <Box color="text.primary" fontWeight="600">
-                  {cartItem?.qty}
+          <HoverIconWrapper
+            className="hover-box"
+            style={{ background: "white", borderRadius: "5px" }}
+          >
+            <IconButton onClick={toggleDialog}>
+              <RemoveRedEye color="disabled" fontSize="small" />
+            </IconButton>
+
+            <IconButton onClick={toggleIsFavorite}>
+              {isFavorite ? (
+                <Favorite color="primary" fontSize="small" />
+              ) : (
+                <FavoriteBorder fontSize="small" color="disabled" />
+              )}
+            </IconButton>
+          </HoverIconWrapper>
+
+          <Link href={`/products/${slug}`}>
+            <a>
+              <LazyImage
+                src={imgUrl}
+                width={0}
+                height={0}
+                layout="responsive"
+                alt={title}
+              />
+            </a>
+          </Link>
+        </ImageWrapper>
+
+        <ProductViewDialog
+          openDialog={openModal}
+          handleCloseDialog={toggleDialog}
+          product={{
+            title,
+            price,
+            categoryName,
+            salePrice,
+            description,
+            shopName,
+            id,
+            slug,
+            imgGroup: [imgUrl, imgUrl],
+          }}
+        />
+
+        <ContentWrapper>
+          <FlexBox>
+            <Box flex="1 1 0" minWidth="0px" mr={1}>
+              <Link href={`/products/${slug}`}>
+                <a>
+                  <H3
+                    mb={1}
+                    title={title}
+                    fontSize="14px"
+                    fontWeight="600"
+                    className="title"
+                    color="text.secondary"
+                  >
+                    {title}
+                  </H3>
+                </a>
+              </Link>
+
+              {!!shopName && (
+                <>
+                  <Span>المتجر: {shopName} </Span> <br />
+                  <br />
+                </>
+              )}
+              {!hideRating && (
+                <BazaarRating value={rating || 0} color="warn" readOnly />
+              )}
+
+              {showProductSize && (
+                <Span color="grey.600" mb={1} display="block">
+                  {showProductSize}
+                </Span>
+              )}
+
+              <FlexBox alignItems="center" gap={1} mt={0.5}>
+                <Box fontWeight="600" color="primary.main">
+                  {/* {calculateDiscount(price, ((price - salePrice) / price) * 100)} */}
+                  {!!salePrice ? salePrice : price}
                 </Box>
 
+                {!!salePrice && (
+                  <Box color="grey.600" fontWeight="600">
+                    <del>{price}</del>
+                  </Box>
+                )}
+              </FlexBox>
+            </Box>
+
+            {isFuture !== 1 && !isFuture && (
+              <FlexBox
+                width="30px"
+                alignItems="center"
+                className="add-cart"
+                flexDirection="column-reverse"
+                justifyContent={
+                  !!cartItem?.qty ? "space-between" : "flex-start"
+                }
+              >
                 <Button
                   color="primary"
                   variant="outlined"
                   sx={{
                     padding: "3px",
                   }}
-                  onClick={handleCartAmountChange(
-                    {
-                      id,
-                      slug,
-                      price,
-                      imgUrl,
-                      name: title,
-                      qty: (cartItem?.qty || 0) - 1,
-                    },
-                    "remove"
-                  )}
+                  onClick={handleCartAmountChange({
+                    id,
+                    slug,
+                    price,
+                    imgUrl,
+                    name: title,
+                    qty: (cartItem?.qty || 0) + 1,
+                  })}
                 >
-                  <Remove fontSize="small" />
+                  <Add fontSize="small" />
                 </Button>
-              </Fragment>
+
+                {!!cartItem?.qty && (
+                  <Fragment>
+                    <Box color="text.primary" fontWeight="600">
+                      {cartItem?.qty}
+                    </Box>
+
+                    <Button
+                      color="primary"
+                      variant="outlined"
+                      sx={{
+                        padding: "3px",
+                      }}
+                      onClick={handleCartAmountChange(
+                        {
+                          id,
+                          slug,
+                          price,
+                          imgUrl,
+                          name: title,
+                          qty: (cartItem?.qty || 0) - 1,
+                        },
+                        "remove"
+                      )}
+                    >
+                      <Remove fontSize="small" />
+                    </Button>
+                  </Fragment>
+                )}
+              </FlexBox>
             )}
           </FlexBox>
-        </FlexBox>
-      </ContentWrapper>
-    </StyledBazaarCard>
+        </ContentWrapper>
+      </StyledBazaarCard>
+    </>
   );
 };
 export default ProductCard1;

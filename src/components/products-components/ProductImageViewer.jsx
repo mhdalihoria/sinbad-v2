@@ -21,7 +21,7 @@ const ProductImageViewer = ({ productImages, product }) => {
 
 
   return (
-    <Grid item md={6} xs={12} alignItems="center">
+    <Grid item md={6} xs={12} alignItems="center" style={{opacity: product.is_future ? "0.5" : "1"}}>
       <FlexBox justifyContent="center" mb={6}>
         <InnerImageZoom
           src={productImages[selectedImage]}

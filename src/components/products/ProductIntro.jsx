@@ -189,112 +189,48 @@ const ProductIntro = ({
     <Box width="100%">
       <Grid container spacing={3} justifyContent="space-around">
         <ProductImageViewer productImages={productImages} product={product} />
-        <Grid item md={6} xs={12} alignItems="center">
-          <H1 mb={1}>{product_name}</H1>
-
-          <FlexBox alignItems="center" mb={1}>
-            <H6>{product_short_description}</H6>
-          </FlexBox>
-
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
-            <FlexBox alignItems="center">
-              <Box lineHeight="1">تقييم:</Box>
-              <Box mx={1} lineHeight="1">
-                <BazaarRating
-                  color="warn"
-                  fontSize="1.25rem"
-                  value={4}
-                  readOnly
-                />
-              </Box>
-              <H6 lineHeight="1">(50)</H6>
-            </FlexBox>
-
-            <Box
-              color="inherit"
-              style={{
-                background: "green",
-                color: "white",
-                borderRadius: "5px",
-                padding: "5px",
-              }}
-            >
-              {displayAvailable(product_quantity, display_quantity)}
-            </Box>
-          </div>
-
-          {with_delivery_fee !== false && (
-            <Box mb={1}>
-              <H5>بدون توصيل</H5>
-            </Box>
-          )}
-          <Box
-            pt={1}
-            mb={2}
-            style={{ display: "flex", justifyContent: "space-between" }}
-          >
+        {product.is_future ? (
+          <Grid item md={6} xs={12} alignItems="center">
             <div
               style={{
                 display: "flex",
-                gap: "10px",
-                alignItems: "start",
-                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%"
               }}
             >
-              {role_prices.length > 1 &&
-                role_prices.map((rolePrice) => {
-                  return (
-                    <div key={rolePrice.price}>
-                      <Span style={{ fontSize: ".8rem" }}>
-                        {rolePrice.price_name.length > 1
-                          ? `${rolePrice.price_name} :`
-                          : ""}{" "}
-                      </Span>
-                      <H2 color="primary.main" mb={0.1} lineHeight="1">
-                        {rolePrice.price}
-                      </H2>
-                    </div>
-                  );
-                })}
-
-              {has_offer ? (
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  {role_prices.length > 1 && (
-                    <Span style={{ fontSize: ".8rem" }}>سعر العرض: </Span>
-                  )}
-                  <div
-                    style={{
-                      display: "flex",
-                      gap: "10px",
-                      alignItems: "baseline",
-                    }}
-                  >
-                    <H2 color="primary.main" mb={0.5} lineHeight="1">
-                      {sale_price}
-                      {/* {currency(product_price)} */}
-                    </H2>
-                    <del style={{ color: "grey" }}>{product_price}</del>
-                  </div>
-                </div>
-              ) : (
-                <H2 color="primary.main" mb={0.5} lineHeight="1">
-                  {product_price}
-                </H2>
-              )}
+              <H1 color="red">Coming Soon</H1>
             </div>
-            {commission && (
+          </Grid>
+        ) : (
+          <Grid item md={6} xs={12} alignItems="center">
+            <H1 mb={1}>{product_name}</H1>
+
+            <FlexBox alignItems="center" mb={1}>
+              <H6>{product_short_description}</H6>
+            </FlexBox>
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "1rem",
+              }}
+            >
+              <FlexBox alignItems="center">
+                <Box lineHeight="1">تقييم:</Box>
+                <Box mx={1} lineHeight="1">
+                  <BazaarRating
+                    color="warn"
+                    fontSize="1.25rem"
+                    value={4}
+                    readOnly
+                  />
+                </Box>
+                <H6 lineHeight="1">(50)</H6>
+              </FlexBox>
+
               <Box
                 color="inherit"
                 style={{
@@ -304,210 +240,290 @@ const ProductIntro = ({
                   padding: "5px",
                 }}
               >
-                {commission}
+                {displayAvailable(product_quantity, display_quantity)}
+              </Box>
+            </div>
+
+            {with_delivery_fee !== false && (
+              <Box mb={1}>
+                <H5>بدون توصيل</H5>
               </Box>
             )}
-          </Box>
-
-          {attributes.map((attr) => (
-            <Box key={attr.attribute_name} mb={2}>
-              <H6 mb={1}>{attr.attribute_name}:</H6>
-
-              <div style={{ display: "flex", gap: "5px" }}>
-                {attr.attributes_values.map(
-                  ({ product_attribute_id, name, code }) => {
-                    return code.length > 1 ? (
-                      <div
-                        style={{
-                          width: "30px",
-                          minHeight: "30px",
-                          background: code,
-                          border:
-                            selectAttributes.find(
-                              (attrObj) =>
-                                attrObj.name === attr.attribute_name &&
-                                attrObj.value === name
-                            ) && "3px solid grey",
-                        }}
-                        key={name}
-                        onClick={() => selectAttr(attr.attribute_name, name)}
-                      ></div>
-                    ) : (
-                      <Chip
-                        key={product_attribute_id}
-                        label={name}
-                        // onClick={handleChangeVariant(variant.title, value)}
-                        sx={{
-                          borderRadius: "4px",
-                          mr: 1,
-                          cursor: "pointer",
-                        }}
-                        color="primary"
-                        // color={
-                        //   selectVariants[name.toLowerCase()] === value
-                        //     ? "primary"
-                        //     : "default"
-                        // }
-                      />
+            <Box
+              pt={1}
+              mb={2}
+              style={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  alignItems: "start",
+                  flexDirection: "column",
+                }}
+              >
+                {role_prices.length > 1 &&
+                  role_prices.map((rolePrice) => {
+                    return (
+                      <div key={rolePrice.price}>
+                        <Span style={{ fontSize: ".8rem" }}>
+                          {rolePrice.price_name.length > 1
+                            ? `${rolePrice.price_name} :`
+                            : ""}{" "}
+                        </Span>
+                        <H2 color="primary.main" mb={0.1} lineHeight="1">
+                          {rolePrice.price}
+                        </H2>
+                      </div>
                     );
-                  }
+                  })}
+
+                {has_offer ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    {role_prices.length > 1 && (
+                      <Span style={{ fontSize: ".8rem" }}>سعر العرض: </Span>
+                    )}
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "10px",
+                        alignItems: "baseline",
+                      }}
+                    >
+                      <H2 color="primary.main" mb={0.5} lineHeight="1">
+                        {sale_price}
+                        {/* {currency(product_price)} */}
+                      </H2>
+                      <del style={{ color: "grey" }}>{product_price}</del>
+                    </div>
+                  </div>
+                ) : (
+                  <H2 color="primary.main" mb={0.5} lineHeight="1">
+                    {product_price}
+                  </H2>
                 )}
               </div>
+              {commission && (
+                <Box
+                  color="inherit"
+                  style={{
+                    background: "green",
+                    color: "white",
+                    borderRadius: "5px",
+                    padding: "5px",
+                  }}
+                >
+                  {commission}
+                </Box>
+              )}
             </Box>
-          ))}
 
-          {view_count && (
-            <Box mb={2}>
-              <Span>عدد المشاهدات: {view_count}</Span>
-            </Box>
-          )}
-          {(brand_name.length > 1 || brand_logo.length > 1) && (
-            <FlexBox alignItems="center" mb={2}>
-              <Box>الماركة:</Box>
-              <Link href="/" passHref>
-                <a>
-                  <H6 ml={1}>
-                    {brand_name} {brand_logo}
-                  </H6>
-                </a>
-              </Link>
+            {attributes.map((attr) => (
+              <Box key={attr.attribute_name} mb={2}>
+                <H6 mb={1}>{attr.attribute_name}:</H6>
+
+                <div style={{ display: "flex", gap: "5px" }}>
+                  {attr.attributes_values.map(
+                    ({ product_attribute_id, name, code }) => {
+                      return code.length > 1 ? (
+                        <div
+                          style={{
+                            width: "30px",
+                            minHeight: "30px",
+                            background: code,
+                            border:
+                              selectAttributes.find(
+                                (attrObj) =>
+                                  attrObj.name === attr.attribute_name &&
+                                  attrObj.value === name
+                              ) && "3px solid grey",
+                          }}
+                          key={name}
+                          onClick={() => selectAttr(attr.attribute_name, name)}
+                        ></div>
+                      ) : (
+                        <Chip
+                          key={product_attribute_id}
+                          label={name}
+                          // onClick={handleChangeVariant(variant.title, value)}
+                          sx={{
+                            borderRadius: "4px",
+                            mr: 1,
+                            cursor: "pointer",
+                          }}
+                          color="primary"
+                          // color={
+                          //   selectVariants[name.toLowerCase()] === value
+                          //     ? "primary"
+                          //     : "default"
+                          // }
+                        />
+                      );
+                    }
+                  )}
+                </div>
+              </Box>
+            ))}
+
+            {view_count && (
+              <Box mb={2}>
+                <Span>عدد المشاهدات: {view_count}</Span>
+              </Box>
+            )}
+            {(brand_name.length > 1 || brand_logo.length > 1) && (
+              <FlexBox alignItems="center" mb={2}>
+                <Box>الماركة:</Box>
+                <Link href="/" passHref>
+                  <a>
+                    <H6 ml={1}>
+                      {brand_name} {brand_logo}
+                    </H6>
+                  </a>
+                </Link>
+              </FlexBox>
+            )}
+
+            {shop_name.length > 1 && (
+              <FlexBox alignItems="center" mb={2}>
+                <Box>المتجر:</Box>
+                <Link href="/" passHref>
+                  <a>
+                    <H6 ml={1}>{shop_name}</H6>
+                  </a>
+                </Link>
+              </FlexBox>
+            )}
+            {category_name && (
+              <FlexBox alignItems="center" mb={2}>
+                <Box>التصنيف:</Box>
+                <H6 ml={1}>{category_name}</H6>
+              </FlexBox>
+            )}
+
+            {product.is_global == 1 && (
+              <ProductPageImportedProduct product={product} />
+            )}
+
+            <FlexBox alignItems="center" mb={1.5} mt={2.5}>
+              <Button
+                size="small"
+                sx={{
+                  p: 1,
+                }}
+                color="primary"
+                variant="outlined"
+                onClick={() => {
+                  setItemAmount((prevItem) => {
+                    if (prevItem > 1) {
+                      return prevItem - 1;
+                    }
+                    if (prevItem === 1) {
+                      return prevItem;
+                    }
+                  });
+                }}
+              >
+                <Remove fontSize="small" />
+              </Button>
+
+              <H3 fontWeight="600" mx={2.5}>
+                {itemAmount}
+              </H3>
+
+              <Button
+                size="small"
+                sx={{
+                  p: 1,
+                }}
+                color="primary"
+                variant="outlined"
+                onClick={() => {
+                  setItemAmount((prevItem) => prevItem + 1);
+                }}
+              >
+                <Add fontSize="small" />
+              </Button>
             </FlexBox>
-          )}
-
-          {shop_name.length > 1 && (
-            <FlexBox alignItems="center" mb={2}>
-              <Box>المتجر:</Box>
-              <Link href="/" passHref>
-                <a>
-                  <H6 ml={1}>{shop_name}</H6>
-                </a>
-              </Link>
-            </FlexBox>
-          )}
-          {category_name && (
-            <FlexBox alignItems="center" mb={2}>
-              <Box>التصنيف:</Box>
-              <H6 ml={1}>{category_name}</H6>
-            </FlexBox>
-          )}
-
-          {product.is_global == 1 && (
-            <ProductPageImportedProduct product={product} />
-          )}
-
-          <FlexBox alignItems="center" mb={1.5} mt={2.5}>
             <Button
-              size="small"
-              sx={{
-                p: 1,
-              }}
               color="primary"
-              variant="outlined"
-              onClick={() => {
-                setItemAmount((prevItem) => {
-                  if (prevItem > 1) {
-                    return prevItem - 1;
-                  }
-                  if (prevItem === 1) {
-                    return prevItem;
-                  }
-                });
+              variant="contained"
+              onClick={handleCartAmountChange(itemAmount)}
+              sx={{
+                mb: 4.5,
+                mt: 2.5,
+                px: "1.75rem",
+                height: 40,
               }}
             >
-              <Remove fontSize="small" />
+              Add to Cart
             </Button>
 
-            <H3 fontWeight="600" mx={2.5}>
-              {itemAmount}
-            </H3>
-
-            <Button
-              size="small"
-              sx={{
-                p: 1,
-              }}
-              color="primary"
-              variant="outlined"
-              onClick={() => {
-                setItemAmount((prevItem) => prevItem + 1);
-              }}
-            >
-              <Add fontSize="small" />
-            </Button>
-          </FlexBox>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={handleCartAmountChange(itemAmount)}
-            sx={{
-              mb: 4.5,
-              mt: 2.5,
-              px: "1.75rem",
-              height: 40,
-            }}
-          >
-            Add to Cart
-          </Button>
-          {/* {!cartItem?.qty ? (
+            {/* {!cartItem?.qty ? (
             
           ) : (
             
           )} */}
 
-          <div>
             <div>
-              <div
-                style={{ display: "flex", gap: "10px", marginBottom: "1rem" }}
-              >
-                <span>
-                  <i className="fa-solid fa-code-compare"></i> اضافة للمقارنة
-                </span>
-                <span
-                  style={{
-                    cursor: "pointer",
-                    color: isFavorite ? "red" : "black",
-                  }}
-                  onClick={() => {
-                    setIsFavorite((prevFav) => !prevFav);
-                    userToken && addToWishList();
-                  }}
+              <div>
+                <div
+                  style={{ display: "flex", gap: "10px", marginBottom: "1rem" }}
                 >
-                  <i className="fa-solid fa-heart"></i> اضافة للمفضلة
-                </span>
-              </div>
-              <div style={{ display: "flex", gap: "10px" }}>
-                <i
-                  className="fa-brands fa-whatsapp"
-                  style={{
-                    color: "white",
-                    background: "green",
-                    padding: "7px 20px",
-                    fontSize: "1rem",
-                    borderRadius: "6px",
-                  }}
-                ></i>
-                <i
-                  className="fa-brands fa-facebook"
-                  style={{
-                    color: "white",
-                    background: "#3b5998 ",
-                    padding: "7px 20px",
-                    fontSize: "1rem",
-                    borderRadius: "6px",
-                  }}
-                ></i>
-              </div>
-              {offer && typeof offer !== undefined && (
-                <div style={{ marginTop: "2rem" }}>
-                  <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
-                    مدة العرض:
-                  </div>
-                  <CountDown direction="row" offer={offer} />
+                  <span>
+                    <i className="fa-solid fa-code-compare"></i> اضافة للمقارنة
+                  </span>
+                  <span
+                    style={{
+                      cursor: "pointer",
+                      color: isFavorite ? "red" : "black",
+                    }}
+                    onClick={() => {
+                      setIsFavorite((prevFav) => !prevFav);
+                      userToken && addToWishList();
+                    }}
+                  >
+                    <i className="fa-solid fa-heart"></i> اضافة للمفضلة
+                  </span>
                 </div>
-              )}
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <i
+                    className="fa-brands fa-whatsapp"
+                    style={{
+                      color: "white",
+                      background: "green",
+                      padding: "7px 20px",
+                      fontSize: "1rem",
+                      borderRadius: "6px",
+                    }}
+                  ></i>
+                  <i
+                    className="fa-brands fa-facebook"
+                    style={{
+                      color: "white",
+                      background: "#3b5998 ",
+                      padding: "7px 20px",
+                      fontSize: "1rem",
+                      borderRadius: "6px",
+                    }}
+                  ></i>
+                </div>
+                {offer && typeof offer !== undefined && (
+                  <div style={{ marginTop: "2rem" }}>
+                    <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
+                      مدة العرض:
+                    </div>
+                    <CountDown direction="row" offer={offer} />
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
-        </Grid>
+          </Grid>
+        )}
       </Grid>
     </Box>
   );
