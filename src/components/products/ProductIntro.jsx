@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Add, Remove } from "@mui/icons-material";
-import { Avatar, Box, Button, Chip, Grid, TextField } from "@mui/material";
+import { Avatar, Box, Button, Chip, Grid, TextField, useTheme } from "@mui/material";
 import LazyImage from "components/LazyImage";
 import BazaarRating from "components/BazaarRating";
 import { H1, H2, H3, H5, H6, Span } from "components/Typography";
@@ -76,11 +76,11 @@ const ProductIntro = ({
   const [mazadPrice, setMazadPrice] = useState(
     mazad.max_bid ? mazad.max_bid : mazad.start_price
   );
-  console.log(mazadUserMsg);
+  const theme = useTheme()
   const changeMazadUserValue = (e) => {
     setMazadUserValue(e.target.value);
   };
-
+console.log(mazadUserMsg)
   const submitMazad = async () => {
     if (/^\d+$/.test(mazadUserValue)) {
       const headers = {
@@ -97,18 +97,20 @@ const ProductIntro = ({
         headers,
         body
       );
-      if(response.data.status){setMazadPrice(mazadUserValue);}
+      if (response.data.status) {
+        setMazadPrice(mazadUserValue);
+      }
       setMazadUserMsg({
         status: response.data.status,
         message: response.data.message,
       });
-      setTimeout(()=>{
+      setTimeout(() => {
         setMazadUserValue("");
         setMazadUserMsg({
           status: false,
           message: "",
         });
-      }, 1500)
+      }, 1500);
       console.log(response.data);
     } else {
       setMazadUserError("ادحل أرقام فقط");
@@ -560,15 +562,22 @@ const ProductIntro = ({
                 <div style={{ marginTop: "2rem" }}>
                   <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
                     <p style={{ margin: "0" }}>أعلى مزايدة:</p>
-                    <p style={{ marginTop: "0.5rem", marginBottom: "0" }}>{mazadPrice}</p>
+                    <p style={{ marginTop: "0rem", marginBottom: "0", fontSize:"1.3rem", color:theme.palette.primary.main }}>
+                      {mazadPrice}
+                    </p>
+                  </div>
+                  <div>
+                  <p style={{fontWeight: "600"  }}>الوقع البافي للمزاد:</p>
+
+                    <CountDown endDate={mazad.end_date} direction="row" />
                   </div>
                   <div>
                     {userToken ? (
                       <>
                         <div
                           style={{
-                            color: mazadUserMsg.status ? "green" : "red",
-                            margin: "1rem 0 2rem"
+                            color: mazadUserMsg.status ? theme.palette.success[900] : theme.palette.error[900],
+                            margin: "2rem 0 1rem",
                           }}
                         >
                           {mazadUserMsg.message}
