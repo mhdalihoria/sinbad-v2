@@ -22,17 +22,7 @@ import Form from "pages-sections/carrier/Form";
 const CheckoutForm = ({ allCountries }) => {
   const router = useRouter();
   const [sameAsShipping, setSameAsShipping] = useState(false);
-  // --------------------------------------------------------------------
-  const [countrySelect, setCountrySelect] = useState("");
-  const [citySelect, setCitySelect] = useState("");
-  const [locationSelect, setLocationSelect] = useState("");
-  // --------------------------------------------------------------------
 
-  // --------------------------------------------------------------------
-  const { cities } = { ...allCountries[Number(countrySelect) - 1] };
-  const { locations } =
-    citySelect !== "" ? { ...cities[Number(citySelect) - 1] } : {};
-  // --------------------------------------------------------------------
   const formik = useFormik({
     initialValues: {
       country: "",
@@ -130,35 +120,39 @@ const CheckoutForm = ({ allCountries }) => {
             <Grid item sm={6} xs={12}>
               <Form
                 data={allCountries}
-                label={"countries"}
+                label={"country"}
                 selected={values.country}
                 setSelected={(nextValue) => setFieldValue("country", nextValue)}
-                style={{marginBottom: "1rem"}}
+                style={{ marginBottom: "1rem" }}
               />
               <Form
                 data={{ ...allCountries[Number(values.country) - 1] }.cities}
                 label={"city"}
                 selected={values.city}
                 setSelected={(nextValue) => setFieldValue("city", nextValue)}
-                style={{marginBottom: "1rem"}}
+                style={{ marginBottom: "1rem" }}
               />
 
-              <Form
-                data={
-                  typeof { ...allCountries[Number(values.country) - 1] }
-                    .cities === "undefined"
-                    ? []
-                    : { ...allCountries[Number(values.country) - 1] }.cities[
-                        Number(values.city) - 1
-                      ].locations
-                }
-                label={"Locations"}
-                selected={values.location}
-                setSelected={(nextValue) =>
-                  setFieldValue("location", nextValue)
-                }
-                style={{marginBottom: "1rem"}}
-              />
+              
+
+              {values.country !== "" && values.city !== "" && (
+                <Form
+                  data={
+                    { ...allCountries[Number(values.country) - 1] }.cities[
+                      Number(values.city) - 1
+                    ].locations &&
+                    { ...allCountries[Number(values.country) - 1] }.cities[
+                      Number(values.city) - 1
+                    ].locations
+                  }
+                  label={"Locations"}
+                  selected={values.location}
+                  setSelected={(nextValue) =>
+                    setFieldValue("location", nextValue)
+                  }
+                  style={{ marginBottom: "1rem" }}
+                />
+              )}
             </Grid>
           </Grid>
         </Card1>
