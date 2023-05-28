@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Grid } from "@mui/material";
-import allCountries from "../src/utils/__api__/deliveryCountries";
 import MainHeader from "../src/pages-sections/header/MainHeader"
 import Form from "../src/pages-sections/carrier/Form";
 import DeliveryTable from "../src/pages-sections/carrier/Table";
@@ -80,6 +79,7 @@ const Carrier = ({ allCountries }) => {
             label={"الموقع"}
           />
         </Grid>
+        
 
         {deliveryDetails !== null ? (
           <Grid item xs={12} sm={12} md={12} lg={12}>
