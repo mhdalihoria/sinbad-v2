@@ -43,9 +43,6 @@ const CountDown = ({ direction = "column", offer, endDate="2023-6-1 "}) => {
   const timerComponents = [];
 
   Object.keys(timeLeft).forEach((interval) => {
-    if (!timeLeft[interval]) {
-      return;
-    }
 
     timerComponents.push(<span>{timeLeft[interval]}</span>);
   });
@@ -72,7 +69,7 @@ const CountDown = ({ direction = "column", offer, endDate="2023-6-1 "}) => {
           </TimerCard>
         </div>
       ) : (
-        <span>Time's up!</span>
+        <span>إنتهى وقت المزايدة</span>
       )}
     </div>
   );
