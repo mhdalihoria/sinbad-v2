@@ -80,7 +80,7 @@ const ProductIntro = ({
   const changeMazadUserValue = (e) => {
     setMazadUserValue(e.target.value);
   };
-console.log(mazadUserMsg)
+
   const submitMazad = async () => {
     if (/^\d+$/.test(mazadUserValue)) {
       const headers = {
@@ -314,7 +314,7 @@ console.log(mazadUserMsg)
                             : ""}{" "}
                         </Span>
                         <H2 color="primary.main" mb={0.1} lineHeight="1">
-                          {rolePrice.price}
+                          {currency(rolePrice.price)}
                         </H2>
                       </div>
                     );
@@ -338,15 +338,15 @@ console.log(mazadUserMsg)
                       }}
                     >
                       <H2 color="primary.main" mb={0.5} lineHeight="1">
-                        {sale_price}
+                        {currency(sale_price)}
                         {/* {currency(product_price)} */}
                       </H2>
-                      <del style={{ color: "grey" }}>{product_price}</del>
+                      <del style={{ color: "grey" }}>{currency(product_price)}</del>
                     </div>
                   </div>
                 ) : (
                   <H2 color="primary.main" mb={0.5} lineHeight="1">
-                    {product_price}
+                    {currency(product_price)}
                   </H2>
                 )}
               </div>
@@ -563,7 +563,7 @@ console.log(mazadUserMsg)
                   <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
                     <p style={{ margin: "0" }}>أعلى مزايدة:</p>
                     <p style={{ marginTop: "0rem", marginBottom: "0", fontSize:"1.3rem", color:theme.palette.primary.main }}>
-                      {mazadPrice}
+                      {currency(mazadPrice)}
                     </p>
                   </div>
                   <div>
