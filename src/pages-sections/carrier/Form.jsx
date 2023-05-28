@@ -1,6 +1,6 @@
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
-const Form = ({ data, setSelected, selected, label }) => {
+const Form = ({ data, setSelected, selected, label, style = {} }) => {
 
 
   const handleChange = (e) => {
@@ -16,7 +16,7 @@ const Form = ({ data, setSelected, selected, label }) => {
   });
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth style={style}>
       <InputLabel id="demo-simple-select-label">{label}</InputLabel>
       <Select
         labelId="demo-simple-select-label"
