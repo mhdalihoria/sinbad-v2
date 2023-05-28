@@ -64,8 +64,8 @@ function currency(price, fraction = 2) {
   const formatCurrency = new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: publicRuntimeConfig.currency,
-    maximumFractionDigits: fraction,
-    minimumFractionDigits: fraction
+    maximumFractionDigits: 0,
+    minimumFractionDigits: 0
   });
   return formatCurrency.format(price);
 }
