@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import {
   Button,
   Checkbox,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -28,22 +29,9 @@ const CheckoutForm = ({ allCountries }) => {
       country: "",
       city: "",
       location: "",
-      shipping_zip: "",
-      shipping_name: "",
-      shipping_email: "",
-      shipping_contact: "",
-      shipping_company: "",
-      shipping_address1: "",
-      shipping_address2: "",
-      shipping_country: countryList[229],
-      billing_zip: "",
-      billing_name: "",
-      billing_email: "",
-      billing_contact: "",
-      billing_company: "",
-      billing_address1: "",
-      billing_address2: "",
-      billing_country: countryList[229],
+      phoneNum: "",
+      fullAddress: "",
+      fullName: ""
     },
     // Pass the Yup schema to validate the form
     validationSchema: checkoutSchema,
@@ -72,7 +60,7 @@ const CheckoutForm = ({ allCountries }) => {
     const checked = e.currentTarget.checked;
     setSameAsShipping(checked);
     setFieldValue("same_as_shipping", checked);
-    setFieldValue("billing_name", checked ? values.shipping_name : "");
+    setFieldValue("billing_name", checked ? values.fullName : "");
   };
   return (
     <div>
@@ -87,72 +75,132 @@ const CheckoutForm = ({ allCountries }) => {
           </Typography>
 
           <Grid container spacing={6}>
-            <Grid item sm={6} xs={12}>
-              <TextField
-                fullWidth
-                sx={{
-                  mb: 2,
-                }}
-                label="Full Name"
-                onBlur={handleBlur}
-                name="shipping_name"
-                onChange={handleChange}
-                value={values.shipping_name}
-                error={!!touched.shipping_name && !!errors.shipping_name}
-                helperText={touched.shipping_name && errors.shipping_name}
-              />
-              <TextField
-                fullWidth
-                type="email"
-                sx={{
-                  mb: 2,
-                }}
-                onBlur={handleBlur}
-                name="shipping_email"
-                label="Email Address"
-                onChange={handleChange}
-                value={values.shipping_email}
-                error={!!touched.shipping_email && !!errors.shipping_email}
-                helperText={touched.shipping_email && errors.shipping_email}
-              />
+            <Grid
+              container
+              sx={{ marginTop: "4rem", marginLeft: "3rem", justifyContent: "space-between"}}
+            >
+              <Grid item sm={3.5} xs={6}>
+                <TextField
+                  sx={{
+                    mb: 2,
+                  }}
+                  label="Full Name"
+                  onBlur={handleBlur}
+                  name="fullName"
+                  onChange={handleChange}
+                  value={values.fullName}
+                  error={!!touched.fullName && !!errors.fullName}
+                  helperText={touched.fullName && errors.fullName}
+                />
+              </Grid>
+              <Grid item sm={4} xs={6}>
+                <TextField
+                  type="phoneNum"
+                  sx={{
+                    mb: 2,
+                  }}
+                  onBlur={handleBlur}
+                  name="phoneNum"
+                  label="Phone Number"
+                  onChange={handleChange}
+                  value={values.phoneNum}
+                  error={!!touched.phoneNum && !!errors.phoneNum}
+                  helperText={touched.phoneNum && errors.phoneNum}
+                />
+              </Grid>
+              <Grid item sm={4} xs={6}>
+                <TextField
+                  type="email"
+                  sx={{
+                    mb: 2,
+                  }}
+                  onBlur={handleBlur}
+                  name="shipping_email"
+                  label="Email Address"
+                  onChange={handleChange}
+                  value={values.shipping_email}
+                  error={!!touched.shipping_email && !!errors.shipping_email}
+                  helperText={touched.shipping_email && errors.shipping_email}
+                />
+              </Grid>
+              <Grid item sm={12} xs={12}>
+                <TextField
+                  type="fullAddress"
+                  sx={{
+                    mb: 2,
+                  }}
+                  fullWidth
+                  multiline
+                  rows={4}
+                  onBlur={handleBlur}
+                  name="fullAddress"
+                  label="Full Address"
+                  onChange={handleChange}
+                  value={values.fullAddress}
+                  error={!!touched.fullAddress && !!errors.fullAddress}
+                  helperText={touched.fullAddress && errors.fullAddress}
+                />
+              </Grid>
             </Grid>
 
-            <Grid item sm={6} xs={12}>
-              <Form
-                data={allCountries}
-                label={"country"}
-                selected={values.country}
-                setSelected={(nextValue) => setFieldValue("country", nextValue)}
-                style={{ marginBottom: "1rem" }}
-              />
-              <Form
-                data={{ ...allCountries[Number(values.country) - 1] }.cities}
-                label={"city"}
-                selected={values.city}
-                setSelected={(nextValue) => setFieldValue("city", nextValue)}
-                style={{ marginBottom: "1rem" }}
-              />
+            <Divider
+              sx={{
+                mb: "1rem",
+              }}
+            />
 
-              
-
-              {values.country !== "" && values.city !== "" && (
+            <Grid
+              container
+              sx={{ margin: "2rem", marginLeft: "3rem" }}
+              justifyContent={"space-between"}
+            >
+              <Grid item sm={3} xs={6}>
                 <Form
-                  data={
-                    { ...allCountries[Number(values.country) - 1] }.cities[
-                      Number(values.city) - 1
-                    ].locations &&
-                    { ...allCountries[Number(values.country) - 1] }.cities[
-                      Number(values.city) - 1
-                    ].locations
-                  }
-                  label={"Locations"}
-                  selected={values.location}
+                  data={allCountries}
+                  label={"country"}
+                  selected={values.country}
                   setSelected={(nextValue) =>
-                    setFieldValue("location", nextValue)
+                    setFieldValue("country", nextValue)
                   }
                   style={{ marginBottom: "1rem" }}
                 />
-              )}
+              </Grid>
+              <Grid item sm={3} xs={6}>
+                {values.country !== "" && (
+                  <Form
+                    data={
+                      { ...allCountries[Number(values.country) - 1] }.cities
+                    }
+                    label={"city"}
+                    selected={values.city}
+                    setSelected={(nextValue) =>
+                      setFieldValue("city", nextValue)
+                    }
+                    style={{ marginBottom: "1rem" }}
+                  />
+                )}
+              </Grid>
+
+              <Grid item sm={4} xs={6}>
+                {values.country !== "" && values.city !== "" && (
+                  <Form
+                    data={
+                      { ...allCountries[Number(values.country) - 1] }.cities[
+                        Number(values.city) - 1
+                      ].locations &&
+                      { ...allCountries[Number(values.country) - 1] }.cities[
+                        Number(values.city) - 1
+                      ].locations
+                    }
+                    label={"Locations"}
+                    selected={values.location}
+                    setSelected={(nextValue) =>
+                      setFieldValue("location", nextValue)
+                    }
+                    style={{ marginBottom: "1rem" }}
+                  />
+                )}
+              </Grid>
             </Grid>
           </Grid>
         </Card1>
