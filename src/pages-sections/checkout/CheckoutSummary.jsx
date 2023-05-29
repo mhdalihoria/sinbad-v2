@@ -25,13 +25,6 @@ const CheckoutSummary = () => {
         </Typography>
       </FlexBetween>
 
-      <FlexBetween mb={1}>
-        <Typography color="grey.600">Tax:</Typography>
-        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          -
-        </Typography>
-      </FlexBetween>
-
       <FlexBetween mb={2}>
         <Typography color="grey.600">Discount:</Typography>
         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
