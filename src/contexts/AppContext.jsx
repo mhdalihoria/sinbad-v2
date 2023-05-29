@@ -28,7 +28,9 @@ const reducer = (state, action) => {
       let cartItem = action.payload;
       let exist = cartList.find((item) => item.nanoId === cartItem.nanoId);
       if (cartItem.qty < 1) {
-        const filteredCart = cartList.filter((item) => item.nanoId !== cartItem.nanoId);
+        const filteredCart = cartList.filter(
+          (item) => item.nanoId !== cartItem.nanoId
+        );
         return {
           ...state,
           cart: filteredCart,
@@ -76,10 +78,13 @@ const reducer = (state, action) => {
 
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const [discount, setDiscount] = useState(null);
   const contextValue = useMemo(
     () => ({
       state,
       dispatch,
+      discount,
+      setDiscount,
     }),
     [state, dispatch]
   );
@@ -106,7 +111,6 @@ export const AppProvider = ({ children }) => {
       window.localStorage.setItem("cart", JSON.stringify(state));
     }
   }, [state]);
-
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
