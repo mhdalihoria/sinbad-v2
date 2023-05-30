@@ -31,7 +31,8 @@ const CheckoutForm = ({ allCountries }) => {
       location: "",
       phoneNum: "",
       fullAddress: "",
-      fullName: ""
+      fullName: "",
+      email: "",
     },
     // Pass the Yup schema to validate the form
     validationSchema: checkoutSchema,
@@ -77,7 +78,11 @@ const CheckoutForm = ({ allCountries }) => {
           <Grid container spacing={6}>
             <Grid
               container
-              sx={{ marginTop: "4rem", marginLeft: "3rem", justifyContent: "space-between"}}
+              sx={{
+                marginTop: "4rem",
+                marginLeft: "3rem",
+                justifyContent: "space-between",
+              }}
             >
               <Grid item sm={3.5} xs={6}>
                 <TextField
@@ -115,12 +120,12 @@ const CheckoutForm = ({ allCountries }) => {
                     mb: 2,
                   }}
                   onBlur={handleBlur}
-                  name="shipping_email"
+                  name="email"
                   label="Email Address"
                   onChange={handleChange}
-                  value={values.shipping_email}
-                  error={!!touched.shipping_email && !!errors.shipping_email}
-                  helperText={touched.shipping_email && errors.shipping_email}
+                  value={values.email}
+                  error={!!touched.email && !!errors.email}
+                  helperText={touched.email && errors.email}
                 />
               </Grid>
               <Grid item sm={12} xs={12}>
@@ -232,6 +237,13 @@ const CheckoutForm = ({ allCountries }) => {
 
 // uncomment these fields below for from validation
 const checkoutSchema = yup.object().shape({
+  country: yup.string().required("required"),
+  city: yup.string().required("required"),
+  location: yup.string().required("required"),
+  phoneNum: yup.string().required("required"),
+  fullAddress: yup.string().required("required"),
+  fullName: yup.string().required("required"),
+  email: yup.string().required("required"),
   // shipping_name: yup.string().required("required"),
   // shipping_email: yup.string().email("invalid email").required("required"),
   // shipping_contact: yup.string().required("required"),
