@@ -88,6 +88,7 @@ const CheckoutForm = ({ allCountries }) => {
                 <TextField
                   sx={{
                     mb: 2,
+                    width: "90%",
                   }}
                   label="Full Name"
                   onBlur={handleBlur}
@@ -103,6 +104,7 @@ const CheckoutForm = ({ allCountries }) => {
                   type="phoneNum"
                   sx={{
                     mb: 2,
+                    width: "90%",
                   }}
                   onBlur={handleBlur}
                   name="phoneNum"
@@ -118,6 +120,7 @@ const CheckoutForm = ({ allCountries }) => {
                   type="email"
                   sx={{
                     mb: 2,
+                    width: "90%",
                   }}
                   onBlur={handleBlur}
                   name="email"
@@ -136,7 +139,7 @@ const CheckoutForm = ({ allCountries }) => {
                   setSelected={(nextValue) =>
                     setFieldValue("country", nextValue)
                   }
-                  style={{ marginBottom: "1rem", width: "215px" }}
+                  style={{ marginBottom: "1rem", width: "90%" }}
                 />
               </Grid>
             </Grid>
@@ -157,7 +160,7 @@ const CheckoutForm = ({ allCountries }) => {
                     setSelected={(nextValue) =>
                       setFieldValue("city", nextValue)
                     }
-                    style={{ marginBottom: "1rem", width: "215px" }}
+                    style={{ marginBottom: "1rem",  width: "90%" }}
                   />
                 )}
               </Grid>
@@ -178,16 +181,16 @@ const CheckoutForm = ({ allCountries }) => {
                     setSelected={(nextValue) =>
                       setFieldValue("location", nextValue)
                     }
-                    style={{ marginBottom: "1rem", width: "215px" }}
+                    style={{ marginBottom: "1rem",  width: "90%" }}
                   />
                 )}
               </Grid>
-              <Grid item sm={12} xs={6}>
+              <Grid item sm={12} xs={12}>
                 <TextField
                   type="fullAddress"
                   sx={{
                     mb: 2,
-                    width: "83%"
+                    width: "95%",
                   }}
                   multiline
                   rows={1}
