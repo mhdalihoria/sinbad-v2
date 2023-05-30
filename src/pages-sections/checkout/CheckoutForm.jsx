@@ -84,7 +84,7 @@ const CheckoutForm = ({ allCountries }) => {
                 justifyContent: "space-between",
               }}
             >
-              <Grid item sm={3.5} xs={6}>
+              <Grid item sm={6} xs={6}>
                 <TextField
                   sx={{
                     mb: 2,
@@ -98,7 +98,7 @@ const CheckoutForm = ({ allCountries }) => {
                   helperText={touched.fullName && errors.fullName}
                 />
               </Grid>
-              <Grid item sm={4} xs={6}>
+              <Grid item sm={6} xs={6}>
                 <TextField
                   type="phoneNum"
                   sx={{
@@ -113,7 +113,7 @@ const CheckoutForm = ({ allCountries }) => {
                   helperText={touched.phoneNum && errors.phoneNum}
                 />
               </Grid>
-              <Grid item sm={4} xs={6}>
+              <Grid item sm={6} xs={6}>
                 <TextField
                   type="email"
                   sx={{
@@ -128,38 +128,7 @@ const CheckoutForm = ({ allCountries }) => {
                   helperText={touched.email && errors.email}
                 />
               </Grid>
-              <Grid item sm={12} xs={12}>
-                <TextField
-                  type="fullAddress"
-                  sx={{
-                    mb: 2,
-                  }}
-                  fullWidth
-                  multiline
-                  rows={4}
-                  onBlur={handleBlur}
-                  name="fullAddress"
-                  label="Full Address"
-                  onChange={handleChange}
-                  value={values.fullAddress}
-                  error={!!touched.fullAddress && !!errors.fullAddress}
-                  helperText={touched.fullAddress && errors.fullAddress}
-                />
-              </Grid>
-            </Grid>
-
-            <Divider
-              sx={{
-                mb: "1rem",
-              }}
-            />
-
-            <Grid
-              container
-              sx={{ margin: "2rem", marginLeft: "3rem" }}
-              justifyContent={"space-between"}
-            >
-              <Grid item sm={3} xs={6}>
+              <Grid item sm={6} xs={6}>
                 <Form
                   data={allCountries}
                   label={"country"}
@@ -167,10 +136,17 @@ const CheckoutForm = ({ allCountries }) => {
                   setSelected={(nextValue) =>
                     setFieldValue("country", nextValue)
                   }
-                  style={{ marginBottom: "1rem" }}
+                  style={{ marginBottom: "1rem", width: "215px" }}
                 />
               </Grid>
-              <Grid item sm={3} xs={6}>
+            </Grid>
+
+            <Grid
+              container
+              sx={{ marginLeft: "3rem", marginTop: "0", width: "100%" }}
+              justifyContent={"space-between"}
+            >
+              <Grid item sm={6} xs={6}>
                 {values.country !== "" && (
                   <Form
                     data={
@@ -181,12 +157,12 @@ const CheckoutForm = ({ allCountries }) => {
                     setSelected={(nextValue) =>
                       setFieldValue("city", nextValue)
                     }
-                    style={{ marginBottom: "1rem" }}
+                    style={{ marginBottom: "1rem", width: "215px" }}
                   />
                 )}
               </Grid>
 
-              <Grid item sm={4} xs={6}>
+              <Grid item sm={6} xs={6}>
                 {values.country !== "" && values.city !== "" && (
                   <Form
                     data={
@@ -202,9 +178,27 @@ const CheckoutForm = ({ allCountries }) => {
                     setSelected={(nextValue) =>
                       setFieldValue("location", nextValue)
                     }
-                    style={{ marginBottom: "1rem" }}
+                    style={{ marginBottom: "1rem", width: "215px" }}
                   />
                 )}
+              </Grid>
+              <Grid item sm={12} xs={6}>
+                <TextField
+                  type="fullAddress"
+                  sx={{
+                    mb: 2,
+                    width: "83%"
+                  }}
+                  multiline
+                  rows={1}
+                  onBlur={handleBlur}
+                  name="fullAddress"
+                  label="Full Address"
+                  onChange={handleChange}
+                  value={values.fullAddress}
+                  error={!!touched.fullAddress && !!errors.fullAddress}
+                  helperText={touched.fullAddress && errors.fullAddress}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -226,7 +220,7 @@ const CheckoutForm = ({ allCountries }) => {
 
           <Grid item sm={6} xs={12}>
             <Button variant="contained" color="primary" type="submit" fullWidth>
-              Proceed to Payment
+              Proceed
             </Button>
           </Grid>
         </Grid>
