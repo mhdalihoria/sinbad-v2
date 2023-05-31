@@ -38,6 +38,7 @@ const PaymentForm = ({ banks }) => {
     console.log(values)
     // router.push("/payment")
   };
+  console.log(paymentMethod)
   const handlePaymentMethodChange = ({ target: { name } }) => {
     setPaymentMethod(name);
   };
@@ -99,7 +100,7 @@ const PaymentForm = ({ banks }) => {
 
         {paymentMethod === "bank-transfer" && (
           <Formik
-            onSubmit={async(values) =>{ console.log(values)}}
+            onSubmit= { handleFormSubmit }
             initialValues={initialValues}
             validationSchema={checkoutSchema}
             enableReinitialize
@@ -194,15 +195,12 @@ const PaymentForm = ({ banks }) => {
         )}
 
         <FormControlLabel
-          sx={{
-            mb: 3,
-          }}
-          name="credit-card"
+          name="cash"
           onChange={handlePaymentMethodChange}
-          label={<Paragraph fontWeight={600}>Pay with credit card</Paragraph>}
+          label={<Paragraph fontWeight={600}>Pay With Cash</Paragraph>}
           control={
             <Radio
-              checked={paymentMethod === "credit-card"}
+              checked={paymentMethod === "cash"}
               color="primary"
               size="small"
             />
@@ -216,148 +214,13 @@ const PaymentForm = ({ banks }) => {
           }}
         />
 
-        {paymentMethod === "credit-card" && (
-          <Formik
-            onSubmit={handleFormSubmit}
-            initialValues={initialValues}
-            validationSchema={checkoutSchema}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box mb={3}>
-                  <Grid container spacing={3}>
-                    <Grid item sm={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        name="card_no"
-                        label="Card Number"
-                        onBlur={handleBlur}
-                        value={values.card_no}
-                        onChange={handleChange}
-                        helperText={touched.card_no && errors.card_no}
-                      />
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        name="exp_date"
-                        label="Exp Date"
-                        placeholder="MM/YY"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.exp_date}
-                        helperText={touched.exp_date && errors.exp_date}
-                      />
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        name="name"
-                        onBlur={handleBlur}
-                        value={values.name}
-                        label="Name on Card"
-                        onChange={handleChange}
-                        helperText={touched.name && errors.name}
-                      />
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        name="name"
-                        onBlur={handleBlur}
-                        value={values.name}
-                        label="Name on Card"
-                        onChange={handleChange}
-                        helperText={touched.name && errors.name}
-                      />
-                    </Grid>
-                  </Grid>
-                </Box>
-
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    mb: 4,
-                  }}
-                >
-                  Submit
-                </Button>
-
-                <Divider
-                  sx={{
-                    mb: 3,
-                    mx: -4,
-                  }}
-                />
-              </form>
-            )}
-          </Formik>
-        )}
-
         <FormControlLabel
-          name="paypal"
-          sx={{
-            mb: 3,
-          }}
+          name="wallet"
           onChange={handlePaymentMethodChange}
-          label={<Paragraph fontWeight={600}>Pay with Paypal</Paragraph>}
+          label={<Paragraph fontWeight={600}>Pay With Wallet</Paragraph>}
           control={
             <Radio
-              checked={paymentMethod === "paypal"}
-              color="primary"
-              size="small"
-            />
-          }
-        />
-
-        <Divider
-          sx={{
-            mb: 3,
-            mx: -4,
-          }}
-        />
-
-        {paymentMethod === "paypal" && (
-          <Fragment>
-            <FlexBox alignItems="flex-end" mb={4}>
-              <TextField
-                fullWidth
-                name="email"
-                type="email"
-                label="Paypal Email"
-                sx={{
-                  mr: isMobile ? "1rem" : "30px",
-                }}
-              />
-              <Button variant="outlined" color="primary" type="button">
-                Submit
-              </Button>
-            </FlexBox>
-
-            <Divider
-              sx={{
-                mb: 3,
-                mx: -4,
-              }}
-            />
-          </Fragment>
-        )}
-
-        <FormControlLabel
-          name="cod"
-          onChange={handlePaymentMethodChange}
-          label={<Paragraph fontWeight={600}>Cash On Delivery</Paragraph>}
-          control={
-            <Radio
-              checked={paymentMethod === "cod"}
+              checked={paymentMethod === "wallet"}
               color="primary"
               size="small"
             />
