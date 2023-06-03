@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useState } from "react";
-import { Box, Button, Divider, Grid, Radio, TextField, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  Radio,
+  TextField,
+  styled,
+} from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import * as yup from "yup";
-import { Formik } from "formik";
 import Card1 from "components/Card1";
 import { FlexBox } from "components/flex-box";
 import { Paragraph } from "components/Typography";
 import useWindowSize from "hooks/useWindowSize";
 import Form from "pages-sections/carrier/Form";
 import { useAppContext } from "contexts/AppContext";
+import { Formik, Field, ErrorMessage } from "formik";
 
 const FileButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -33,12 +41,7 @@ const PaymentForm = ({ banks }) => {
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
   const width = useWindowSize();
   const router = useRouter();
-  const isMobile = width < 769;
-  const handleFormSubmit = async (values) => {
-    console.log(values)
-    // router.push("/payment")
-  };
-  console.log(paymentMethod)
+  console.log(paymentMethod);
   const handlePaymentMethodChange = ({ target: { name } }) => {
     setPaymentMethod(name);
   };
@@ -46,26 +49,7 @@ const PaymentForm = ({ banks }) => {
     bank_id: "",
     amount: getTotalPrice() || "",
     transferNum: "",
-    card_no: "",
-    name: "",
-    exp_date: "",
-    cvc: "",
-    shipping_zip: "",
-    shipping_country: "",
-    shipping_address1: "",
-    shipping_address2: "",
-    billing_name: "",
-    billing_email: "",
-    billing_contact: "",
-    billing_company: "",
-    billing_zip: "",
-    billing_country: "",
-    billing_address1: "",
-    billing_address2: "",
-  };
-
-  const handleFileChange = (e) => {
-    setTransferDoc(e.target.files[0]);
+    transferDoc: "",
   };
 
   return (
@@ -100,10 +84,12 @@ const PaymentForm = ({ banks }) => {
 
         {paymentMethod === "bank-transfer" && (
           <Formik
-            onSubmit= { handleFormSubmit }
             initialValues={initialValues}
-            validationSchema={checkoutSchema}
-            enableReinitialize
+            enableReinitialize={true}
+            validationSchema={paymentSchema}
+            onSubmit={(values) => {
+              console.log(values);
+            }}
           >
             {({
               values,
@@ -112,7 +98,7 @@ const PaymentForm = ({ banks }) => {
               handleChange,
               handleBlur,
               handleSubmit,
-              setFieldValue
+              setFieldValue,
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box mb={3}>
@@ -127,6 +113,11 @@ const PaymentForm = ({ banks }) => {
                         }
                         style={{ marginBottom: "1rem", width: "100%" }}
                       />
+                      {touched.bank_id && errors.bank_id && (
+                        <p style={{ color: "red", margin: "0", marginTop: "-10px" }}>
+                          {touched.bank_id && errors.bank_id}
+                        </p>
+                      )}
                     </Grid>
                     <Grid item sm={6} xs={12}>
                       <TextField
@@ -137,8 +128,13 @@ const PaymentForm = ({ banks }) => {
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.amount}
-                        helperText={touched.amount && errors.amount}
+                        // helperText={touched.amount && errors.amount}
                       />
+                      {touched.amount && errors.amount && (
+                        <p style={{ color: "red", margin: "0" }}>
+                          {touched.amount && errors.amount}
+                        </p>
+                      )}
                     </Grid>
                     <Grid item sm={6} xs={12}>
                       <TextField
@@ -150,45 +146,52 @@ const PaymentForm = ({ banks }) => {
                         onChange={handleChange}
                         helperText={touched.transferNum && errors.transferNum}
                       />
+                      {touched.transferNum && errors.transferNum && (
+                        <p style={{ color: "red", margin: "0" }}>
+                          {touched.transferNum && errors.transferNum}
+                        </p>
+                      )}
                     </Grid>
                     <Grid item sm={6} xs={12}>
-                      <FileButton variant="contained" component="label">
-                        Upload Transfer Document
+                      <FileButton variant="outlined" component="label">
+                        Choose File
                         <input
+                          style={{ display: "none" }}
                           type="file"
-                          name="transferDoc"
-                          hidden
-                          required
+                          onChange={(event) => {
+                            setFieldValue(
+                              "transferDoc",
+                              event.currentTarget.files[0]
+                            );
+                          }}
                           accept=".doc, .docx,.txt,.pdf,.png,.jpg,.jpeg"
-                          onChange={(e) => handleFileChange(e)}
+                          name="transferDoc"
                         />
                       </FileButton>
-                      {transferDoc && (
-                        <p>
-                          {transferDoc.name} {" - "}(
-                          {(transferDoc.size / 1000000).toFixed(2)} MB)
+                      {values.transferDoc && (
+                        <span style={{ marginRight: "1rem" }}>
+                          {values.transferDoc.name} {" - "}(
+                          {(values.transferDoc.size / 1000000).toFixed(2)} MB)
+                        </span>
+                      )}
+                      {touched.transferDoc && errors.transferDoc && (
+                        <p style={{ color: "red", margin: "0" }}>
+                          {touched.transferDoc && errors.transferDoc}
                         </p>
                       )}
                     </Grid>
                   </Grid>
                 </Box>
-
                 <Button
                   variant="outlined"
                   color="primary"
+                  type="submit"
                   sx={{
                     mb: 4,
                   }}
                 >
                   Submit
                 </Button>
-
-                <Divider
-                  sx={{
-                    mb: 3,
-                    mx: -4,
-                  }}
-                />
               </form>
             )}
           </Formik>
@@ -249,20 +252,11 @@ const PaymentForm = ({ banks }) => {
   );
 };
 
-const checkoutSchema = yup.object().shape({
-  // card_no: yup.string().required("required"),
-  // name: yup.string().required("required"),
-  // exp_date: yup.string().required("required"),
-  // cvc: yup.string().required("required"),
-  // shipping_zip: yup.string().required("required"),
-  // shipping_country: yup.object().required("required"),
-  // shipping_address1: yup.string().required("required"),
-  // billing_name: yup.string().required("required"),
-  // billing_email: yup.string().required("required"),
-  // billing_contact: yup.string().required("required"),
-  // billing_zip: yup.string().required("required"),
-  // billing_country: yup.string().required("required"),
-  // billing_address1: yup.string().required("required"),
+const paymentSchema = yup.object().shape({
+  bank_id: yup.number().required("required"),
+  amount: yup.number().required("required"),
+  transferNum: yup.number().required("required"),
+  transferDoc: yup.mixed().required("File is required"),
 });
 
 export default PaymentForm;
