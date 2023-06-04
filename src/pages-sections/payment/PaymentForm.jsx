@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -33,15 +33,15 @@ const FileButton = styled(Button)(({ theme }) => ({
 }));
 
 const PaymentForm = ({ banks }) => {
-  const [paymentMethod, setPaymentMethod] = useState("bank-transfer");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+  const [bankPaymentForm, setBankPaymentForm] = useState(null);
   const [transferDoc, setTransferDoc] = useState(null);
-  const { state } = useAppContext();
+  const { state, orderData, setOrderData } = useAppContext();
   const cartList = state.cart;
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
   const width = useWindowSize();
   const router = useRouter();
-  console.log(paymentMethod);
   const handlePaymentMethodChange = ({ target: { name } }) => {
     setPaymentMethod(name);
   };
@@ -52,6 +52,28 @@ const PaymentForm = ({ banks }) => {
     transferDoc: "",
   };
 
+  useEffect(() => {
+    setOrderData((prevOrder) => {
+      return {
+        ...prevOrder,
+        paymentMethod: paymentMethod,
+      };
+    });
+  }, [paymentMethod]);
+  useEffect(() => {
+    if(bankPaymentForm){
+    setOrderData((prevOrder) => {
+      return {
+        ...prevOrder,
+        bank: bankPaymentForm.bank_id,
+        totalPrice: bankPaymentForm.amount,
+        transferDocument: bankPaymentForm.transferDoc,
+        transferNo: bankPaymentForm.transferNum,
+      };
+    });
+  }
+  }, [bankPaymentForm]);
+
   return (
     <Fragment>
       <Card1
@@ -59,6 +81,45 @@ const PaymentForm = ({ banks }) => {
           mb: 4,
         }}
       >
+        <FormControlLabel
+          name="cash"
+          onChange={handlePaymentMethodChange}
+          label={<Paragraph fontWeight={600}>Pay With Cash</Paragraph>}
+          control={
+            <Radio
+              checked={paymentMethod === "cash"}
+              color="primary"
+              size="small"
+            />
+          }
+        />
+
+        <Divider
+          sx={{
+            mb: 3,
+            mx: -4,
+          }}
+        />
+
+        <FormControlLabel
+          name="wallet"
+          onChange={handlePaymentMethodChange}
+          label={<Paragraph fontWeight={600}>Pay With Wallet</Paragraph>}
+          control={
+            <Radio
+              checked={paymentMethod === "wallet"}
+              color="primary"
+              size="small"
+            />
+          }
+        />
+        <Divider
+          sx={{
+            mb: 3,
+            mx: -4,
+          }}
+        />
+
         <FormControlLabel
           sx={{
             mb: 3,
@@ -75,20 +136,13 @@ const PaymentForm = ({ banks }) => {
           }
         />
 
-        <Divider
-          sx={{
-            mb: 3,
-            mx: -4,
-          }}
-        />
-
         {paymentMethod === "bank-transfer" && (
           <Formik
             initialValues={initialValues}
             enableReinitialize={true}
             validationSchema={paymentSchema}
             onSubmit={(values) => {
-              console.log(values);
+              setBankPaymentForm(values);
             }}
           >
             {({
@@ -114,7 +168,13 @@ const PaymentForm = ({ banks }) => {
                         style={{ marginBottom: "1rem", width: "100%" }}
                       />
                       {touched.bank_id && errors.bank_id && (
-                        <p style={{ color: "red", margin: "0", marginTop: "-10px" }}>
+                        <p
+                          style={{
+                            color: "red",
+                            margin: "0",
+                            marginTop: "-10px",
+                          }}
+                        >
                           {touched.bank_id && errors.bank_id}
                         </p>
                       )}
@@ -144,7 +204,6 @@ const PaymentForm = ({ banks }) => {
                         value={values.transferNum}
                         label="Transfer Number"
                         onChange={handleChange}
-                        helperText={touched.transferNum && errors.transferNum}
                       />
                       {touched.transferNum && errors.transferNum && (
                         <p style={{ color: "red", margin: "0" }}>
@@ -196,39 +255,6 @@ const PaymentForm = ({ banks }) => {
             )}
           </Formik>
         )}
-
-        <FormControlLabel
-          name="cash"
-          onChange={handlePaymentMethodChange}
-          label={<Paragraph fontWeight={600}>Pay With Cash</Paragraph>}
-          control={
-            <Radio
-              checked={paymentMethod === "cash"}
-              color="primary"
-              size="small"
-            />
-          }
-        />
-
-        <Divider
-          sx={{
-            mb: 3,
-            mx: -4,
-          }}
-        />
-
-        <FormControlLabel
-          name="wallet"
-          onChange={handlePaymentMethodChange}
-          label={<Paragraph fontWeight={600}>Pay With Wallet</Paragraph>}
-          control={
-            <Radio
-              checked={paymentMethod === "wallet"}
-              color="primary"
-              size="small"
-            />
-          }
-        />
       </Card1>
 
       <Grid container spacing={7}>

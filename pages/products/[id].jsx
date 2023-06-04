@@ -34,7 +34,8 @@ const ProductDetails = ({ productId }) => {
   const router = useRouter();
   const [productRequest, setProductRequest] = useState({});
   const [productData, setProductData] = useState();
-  const [userToken, setUserToken] = useState(null);
+  const { userToken, setUserToken } = useAppContext();
+
   const {
     product,
     attributes,

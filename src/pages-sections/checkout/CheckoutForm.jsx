@@ -20,9 +20,13 @@ import Autocomplete from "@mui/material/Autocomplete";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import countryList from "data/countryList";
 import Form from "pages-sections/carrier/Form";
+import { useAppContext } from "contexts/AppContext";
+import usePostFetch from "components/fetch/usePostFetch";
 const CheckoutForm = ({ allCountries }) => {
   const router = useRouter();
   const [sameAsShipping, setSameAsShipping] = useState(false);
+  const { orderData, setOrderData, userToken, state } = useAppContext();
+  const cartList = state.cart;
 
   const formik = useFormik({
     initialValues: {
@@ -39,7 +43,25 @@ const CheckoutForm = ({ allCountries }) => {
 
     // Handle form submission
     onSubmit: async (values) => {
-      console.log(values);
+      // const headers = {
+      //   "X-localization": "ar",
+      //   "Authorization": `Bearer ${userToken}`,
+      //   "Content-Type": "application/json"
+      // }
+      // const body =JSON.stringify({
+      //   "coupon_code": "",
+      //   "carrier_id": values.location,
+      //   "cart_items": cartList
+      // })
+      // const response = await usePostFetch("https://sinbad-store.com/api/v2/checkout-cart-summary", headers, body)
+      // const data = response.data
+      // console.log(data.data)
+      console.log(values.location);
+      setOrderData({
+        ...orderData,
+          carrierId: values.location 
+      })
+      router.push("/payment")
     },
   });
 
@@ -72,7 +94,7 @@ const CheckoutForm = ({ allCountries }) => {
           }}
         >
           <Typography fontWeight="600" mb={2}>
-            Shipping Address
+            عنوان الشحن
           </Typography>
 
           <Grid container spacing={6}>
@@ -90,7 +112,7 @@ const CheckoutForm = ({ allCountries }) => {
                     mb: 2,
                     width: "90%",
                   }}
-                  label="Full Name"
+                  label="الأسم الكامل*"
                   onBlur={handleBlur}
                   name="fullName"
                   onChange={handleChange}
@@ -108,7 +130,7 @@ const CheckoutForm = ({ allCountries }) => {
                   }}
                   onBlur={handleBlur}
                   name="phoneNum"
-                  label="Phone Number"
+                  label="رقم الموبايل*"
                   onChange={handleChange}
                   value={values.phoneNum}
                   error={!!touched.phoneNum && !!errors.phoneNum}
@@ -124,7 +146,7 @@ const CheckoutForm = ({ allCountries }) => {
                   }}
                   onBlur={handleBlur}
                   name="email"
-                  label="Email Address"
+                  label="عنوان البريد الاكتروني*"
                   onChange={handleChange}
                   value={values.email}
                   error={!!touched.email && !!errors.email}
@@ -134,7 +156,7 @@ const CheckoutForm = ({ allCountries }) => {
               <Grid item sm={6} xs={6}>
                 <Form
                   data={allCountries}
-                  label={"country"}
+                  label={"البلد"}
                   selected={values.country}
                   setSelected={(nextValue) =>
                     setFieldValue("country", nextValue)
@@ -155,12 +177,12 @@ const CheckoutForm = ({ allCountries }) => {
                     data={
                       { ...allCountries[Number(values.country) - 1] }.cities
                     }
-                    label={"city"}
+                    label={"المدينة*"}
                     selected={values.city}
                     setSelected={(nextValue) =>
                       setFieldValue("city", nextValue)
                     }
-                    style={{ marginBottom: "1rem",  width: "90%" }}
+                    style={{ marginBottom: "1rem", width: "90%" }}
                   />
                 )}
               </Grid>
@@ -176,12 +198,12 @@ const CheckoutForm = ({ allCountries }) => {
                         Number(values.city) - 1
                       ].locations
                     }
-                    label={"Locations"}
+                    label={"المنطقة*"}
                     selected={values.location}
                     setSelected={(nextValue) =>
                       setFieldValue("location", nextValue)
                     }
-                    style={{ marginBottom: "1rem",  width: "90%" }}
+                    style={{ marginBottom: "1rem", width: "90%" }}
                   />
                 )}
               </Grid>
@@ -196,7 +218,7 @@ const CheckoutForm = ({ allCountries }) => {
                   rows={1}
                   onBlur={handleBlur}
                   name="fullAddress"
-                  label="Full Address"
+                  label="العنوان الكامل"
                   onChange={handleChange}
                   value={values.fullAddress}
                   error={!!touched.fullAddress && !!errors.fullAddress}

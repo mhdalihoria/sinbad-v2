@@ -79,15 +79,43 @@ const reducer = (state, action) => {
 export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [discount, setDiscount] = useState(null);
+  const [orderData, setOrderData] = useState({
+    couponCode: null,
+    carrierId: null,
+    totalPrice: null,
+    shippingCost: null,
+    shippedMobile: null,
+    shippedLocation_id: null,
+    shippedFull_name: null,
+    shippedAddress: null,
+    paymentMethod: null,
+    notes: null,
+    referenceNo: null,
+    transferDocument: null,
+    bank: null,
+    transferNo: null,
+  });
+  console.log(orderData)
+  const [userToken, setUserToken] = useState(null);
   const contextValue = useMemo(
     () => ({
       state,
       dispatch,
       discount,
       setDiscount,
+      orderData,
+      setOrderData,
+      userToken,
+      setUserToken,
     }),
     [state, dispatch]
   );
+
+  useEffect(() => {
+    if (!window) return;
+    let token = JSON.parse(window.localStorage.getItem("user_token"));
+    if (token && token.length > 0) setUserToken(token);
+  }, []);
 
   useEffect(() => {
     const itemsFromLocalStorage = JSON.parse(localStorage.getItem("cart"));
