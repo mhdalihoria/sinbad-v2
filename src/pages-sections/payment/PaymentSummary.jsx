@@ -21,7 +21,7 @@ const PaymentSummary = () => {
   const handleCouponFetch = async () => {
     const headers = {
       "X-localization": "ar",
-      Authorization: `Bearer ${userToken}`,
+      "Authorization": `Bearer ${userToken}`,
       "Content-Type": "application/json",
     };
     const body = JSON.stringify({
