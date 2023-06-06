@@ -10,6 +10,7 @@ import ProductDescription from "components/products/ProductDescription";
 import ProductFeatures from "components/products/ProductFeatures";
 import { getRelatedProducts } from "utils/__api__/related-products";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
+import {useAppContext} from "../../src/contexts/AppContext";
 import api from "utils/__api__/products";
 import Link from "next/link";
 import  CountDown from "../../src/components/products-components/CountDown"
