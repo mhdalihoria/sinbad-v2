@@ -80,8 +80,8 @@ export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [discount, setDiscount] = useState(null);
   const [orderData, setOrderData] = useState({
-    couponCode: null,
-    carrierId: null,
+    couponCode: "302539",
+    carrierId: "5",
     totalPrice: null,
     shippingCost: null,
     shippedMobile: null,
