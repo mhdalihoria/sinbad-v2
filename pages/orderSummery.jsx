@@ -3,6 +3,7 @@ import { Grid } from "@mui/material";
 import PaymentForm from "pages-sections/payment/PaymentForm";
 import PaymentSummary from "pages-sections/payment/PaymentSummary";
 import OrderSummeryTable from "pages-sections/order/OrderSummeryTable";
+import OrderSummerySummery from "pages-sections/order/OrderSummerySummery";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
 import usePostFetch from "../src/components/fetch/usePostFetch";
@@ -66,9 +67,9 @@ const OrderSummery = () => {
           <OrderSummeryTable data = {orderSummeryResponse}/>
         </Grid>
 
-        {/* <Grid item lg={4} md={4} xs={12}>
-          <PaymentSummary />
-        </Grid> */}
+        <Grid item lg={4} md={4} xs={12}>
+          <OrderSummerySummery />
+        </Grid>
       </Grid>
     </CheckoutNavLayout>
   );
