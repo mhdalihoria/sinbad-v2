@@ -61,7 +61,7 @@ const CheckoutForm = ({ allCountries }) => {
         ...orderData,
           carrierId: values.location 
       })
-      router.push("/payment")
+      router.push("/orderSummery")
     },
   });
 
