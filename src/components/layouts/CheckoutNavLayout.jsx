@@ -15,15 +15,11 @@ import ShopLayout1 from "./ShopLayout1";
 
 // ======================================================
 
-const CheckoutNavLayout = ({
-  children
-}) => {
+const CheckoutNavLayout = ({ children }) => {
   const [selectedStep, setSelectedStep] = useState(0);
   const router = useRouter();
-  const {
-    pathname
-  } = router;
-  const handleStepChange = step => {
+  const { pathname } = router;
+  const handleStepChange = (step) => {
     switch (step) {
       case 0:
         router.push("/cart");
@@ -32,11 +28,12 @@ const CheckoutNavLayout = ({
         router.push("/checkout");
         break;
       case 2:
-        router.push("/payment");
-        break;
-      case 3:
         router.push("/orderSummery");
         break;
+      case 3:
+        router.push("/payment");
+        break;
+
       default:
         break;
     }
@@ -49,46 +46,63 @@ const CheckoutNavLayout = ({
       case "/checkout":
         setSelectedStep(2);
         break;
-      case "/payment":
+      case "/orderSummery":
         setSelectedStep(3);
         break;
-      case "/orderSummery":
+      case "/payment":
         setSelectedStep(4);
         break;
+
       default:
         break;
     }
   }, [pathname]);
-  return <ShopLayout1>
-      <Container sx={{
-      my: 4
-    }}>
-        <Box mb={3} display={{
-        sm: "block",
-        xs: "none"
-      }}>
+  return (
+    <ShopLayout1>
+      <Container
+        sx={{
+          my: 4,
+        }}
+      >
+        <Box
+          mb={3}
+          display={{
+            sm: "block",
+            xs: "none",
+          }}
+        >
           <Grid container spacing={3}>
             <Grid item xs={12}>
-              <Stepper stepperList={stepperList} selectedStep={selectedStep} onChange={handleStepChange} />
+              <Stepper
+                stepperList={stepperList}
+                selectedStep={selectedStep}
+                onChange={handleStepChange}
+              />
             </Grid>
           </Grid>
         </Box>
 
         {children}
       </Container>
-    </ShopLayout1>;
+    </ShopLayout1>
+  );
 };
-const stepperList = [{
-  title: "Cart",
-  disabled: false
-}, {
-  title: "Details",
-  disabled: false
-}, {
-  title: "Payment",
-  disabled: false
-}, {
-  title: "Summery",
-  disabled: false
-}];
+const stepperList = [
+  {
+    title: "Cart",
+    disabled: false,
+  },
+  {
+    title: "Details",
+    disabled: false,
+  },
+  {
+    title: "Summery",
+    disabled: false,
+  },
+  {
+    title: "Payment",
+    disabled: false,
+  },
+];
 export default CheckoutNavLayout;
