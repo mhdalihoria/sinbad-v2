@@ -7,7 +7,7 @@ import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
 import { useEffect, useState } from "react";
 const PaymentSummary = () => {
-  const { state, setDiscount, discount } = useAppContext();
+  const { state, setDiscount, discount, setOrderData } = useAppContext();
   const cartList = state.cart;
   const getTotalPrice = () => cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
   const [userToken, setUserToken] = useState(null);
@@ -35,6 +35,12 @@ const PaymentSummary = () => {
     );
     const data = response.data
     setDiscount(data.data.total_discount)
+    setOrderData(prevData => {
+      return {
+        ...prevData,
+        couponCode: discountInput,
+      }
+    })
 
     if (data) {
       setDiscountResponseMsg({
