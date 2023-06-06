@@ -1,7 +1,15 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Add, Remove } from "@mui/icons-material";
-import { Avatar, Box, Button, Chip, Grid, TextField, useTheme } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Grid,
+  TextField,
+  useTheme,
+} from "@mui/material";
 import LazyImage from "components/LazyImage";
 import BazaarRating from "components/BazaarRating";
 import { H1, H2, H3, H5, H6, Span } from "components/Typography";
@@ -76,7 +84,7 @@ const ProductIntro = ({
   const [mazadPrice, setMazadPrice] = useState(
     mazad.max_bid ? mazad.max_bid : mazad.start_price
   );
-  const theme = useTheme()
+  const theme = useTheme();
   const changeMazadUserValue = (e) => {
     setMazadUserValue(e.target.value);
   };
@@ -341,7 +349,9 @@ const ProductIntro = ({
                         {currency(sale_price)}
                         {/* {currency(product_price)} */}
                       </H2>
-                      <del style={{ color: "grey" }}>{currency(product_price)}</del>
+                      <del style={{ color: "grey" }}>
+                        {currency(product_price)}
+                      </del>
                     </div>
                   </div>
                 ) : (
@@ -559,75 +569,86 @@ const ProductIntro = ({
                     <CountDown direction="row" offer={offer} />
                   </div>
                 )}
-                <div style={{ marginTop: "2rem" }}>
-                  <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
-                    <p style={{ margin: "0" }}>أعلى مزايدة:</p>
-                    <p style={{ marginTop: "0rem", marginBottom: "0", fontSize:"1.3rem", color:theme.palette.primary.main }}>
-                      {currency(mazadPrice)}
-                    </p>
-                  </div>
-                  <div>
-                  <p style={{fontWeight: "600"  }}>الوقع البافي للمزاد:</p>
-
-                    <CountDown endDate={mazad.end_date} direction="row" />
-                  </div>
-                  <div>
-                    {userToken ? (
-                      <>
-                        <div
-                          style={{
-                            color: mazadUserMsg.status ? theme.palette.success[900] : theme.palette.error[900],
-                            margin: "2rem 0 1rem",
-                          }}
-                        >
-                          {mazadUserMsg.message}
-                        </div>
-
-                        <TextField
-                          id="outlined-basic"
-                          name="mazadUserValue"
-                          value={mazadUserValue}
-                          label="ادخل قيمة المزاد"
-                          variant="outlined"
-                          onChange={(e) => changeMazadUserValue(e)}
-                          sx={{ marginRight: "1rem" }}
-                        />
-                        <Button
-                          variant="contained"
-                          color="primary"
-                          disabled={isButtonDisabled}
-                          onClick={submitMazad}
-                        >
-                          تبث الفيمة
-                        </Button>
-                        <div>{mazadUserError}</div>
-                      </>
-                    ) : (
-                      <div
+                {mazad.id && (
+                  <div style={{ marginTop: "2rem" }}>
+                    <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
+                      <p style={{ margin: "0" }}>أعلى مزايدة:</p>
+                      <p
                         style={{
-                          border: "grey 1px solid",
-                          background: "rgb(211,211,211)",
-                          fontWeight: "600",
-                          padding: "1rem",
-                          textAlign: "center",
+                          marginTop: "0rem",
+                          marginBottom: "0",
+                          fontSize: "1.3rem",
+                          color: theme.palette.primary.main,
                         }}
                       >
-                        يحب{" "}
-                        <Link href={"/signup"}>
-                          <span
+                        {currency(mazadPrice)}
+                      </p>
+                    </div>
+                    <div>
+                      <p style={{ fontWeight: "600" }}>الوقع البافي للمزاد:</p>
+
+                      <CountDown endDate={mazad.end_date} direction="row" />
+                    </div>
+                    <div>
+                      {userToken ? (
+                        <>
+                          <div
                             style={{
-                              textDecoration: "underline",
-                              cursor: "pointer",
+                              color: mazadUserMsg.status
+                                ? theme.palette.success[900]
+                                : theme.palette.error[900],
+                              margin: "2rem 0 1rem",
                             }}
                           >
-                            تسجيل الدخول
-                          </span>
-                        </Link>{" "}
-                        للمشاركة في المزاد
-                      </div>
-                    )}
+                            {mazadUserMsg.message}
+                          </div>
+
+                          <TextField
+                            id="outlined-basic"
+                            name="mazadUserValue"
+                            value={mazadUserValue}
+                            label="ادخل قيمة المزاد"
+                            variant="outlined"
+                            onChange={(e) => changeMazadUserValue(e)}
+                            sx={{ marginRight: "1rem" }}
+                          />
+                          <Button
+                            variant="contained"
+                            color="primary"
+                            disabled={isButtonDisabled}
+                            onClick={submitMazad}
+                          >
+                            تبث الفيمة
+                          </Button>
+                          <div>{mazadUserError}</div>
+                        </>
+                      ) : (
+                        <div
+                          style={{
+                            border: "grey 1px solid",
+                            background: "rgb(211,211,211)",
+                            fontWeight: "600",
+                            padding: "1rem",
+                            textAlign: "center",
+                          }}
+                        >
+                          يحب{" "}
+                          <Link href={"/signup"}>
+                            <span
+                              style={{
+                                textDecoration: "underline",
+                                cursor: "pointer",
+                              }}
+                            >
+                              تسجيل الدخول
+                            </span>
+                          </Link>{" "}
+                          للمشاركة في المزاد
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </Grid>
