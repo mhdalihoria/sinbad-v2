@@ -70,14 +70,6 @@ const OrderSummerySummery = () => {
     }
   };
 
-  useEffect(() => {
-    setOrderData((prevOrderData) => {
-      return {
-        ...prevOrderData,
-        couponCode: discountInput,
-      };
-    });
-  }, [discountInput]);
 
   return (
     <Card1>
