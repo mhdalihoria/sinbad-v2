@@ -6,21 +6,22 @@ import { FlexBetween } from "components/flex-box";
 import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
 import { useEffect, useState } from "react";
-const OrderSummerySummery = () => {
-  const [discountInput, setDiscountInput] = useState(null);
-
+const OrderSummerySummery = ({ setCouponToken, data }) => {
+  const [discountInput, setDiscountInput] = useState(0);
   const { state, setDiscount, discount, setOrderData, userToken } =
     useAppContext();
   const [discountResponseMsg, setDiscountResponseMsg] = useState({
     status: false,
     message: "",
   });
-
   const cartList = state.cart;
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
 
+  console.log(data);
   const handleCouponFetch = async () => {
+    const discount = Number(discountInput.replace(/\D/g, ""));
+
     const headers = {
       "X-localization": "ar",
       Authorization: `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
@@ -52,12 +53,7 @@ const OrderSummerySummery = () => {
     const data = response.data;
     console.log(data);
     setDiscount(data.data.total_discount);
-    setOrderData((prevData) => {
-      return {
-        ...prevData,
-        couponCode: discountInput,
-      };
-    });
+    setCouponToken(discount);
 
     if (data) {
       setDiscountResponseMsg({
@@ -70,27 +66,30 @@ const OrderSummerySummery = () => {
     }
   };
 
-
   return (
     <Card1>
       <FlexBetween mb={1}>
         <Typography color="grey.600">Subtotal:</Typography>
         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {currency(getTotalPrice())}
+        {currency(
+          data.cart_items.reduce(
+            (acc, current) => acc + Number(current.qty) * Number(current.price),
+            0
+          ))}
         </Typography>
       </FlexBetween>
 
       <FlexBetween mb={1}>
         <Typography color="grey.600">Shipping:</Typography>
         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          -
+          {data.shipping_cost ? currency(data.shipping_cost) : "-"}
         </Typography>
       </FlexBetween>
 
       <FlexBetween mb={2}>
         <Typography color="grey.600">Discount:</Typography>
         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          -
+          {data.total_discount ? currency(data.total_discount) : "-"}
         </Typography>
       </FlexBetween>
 
@@ -107,7 +106,15 @@ const OrderSummerySummery = () => {
         textAlign="right"
         mb={3}
       >
-        {currency(getTotalPrice())}
+        {/* {currency(getTotalPrice())} */}
+        {currency(
+          data.cart_items.reduce(
+            (acc, current) => acc + Number(current.qty) * Number(current.price),
+            0
+          ) +
+            (data.shipping_cost ? data.shipping_cost : 0) -
+            (data.total_discount ? data.total_discount : 0)
+        )}
       </Typography>
 
       <Divider
