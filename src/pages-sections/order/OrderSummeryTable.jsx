@@ -15,11 +15,10 @@ import { currency } from "lib";
 const OrderSummeryTable = ({ data }) => {
   const theme = useTheme();
 
-  console.log(data);
   return (
     <Card1>
       <Paper>
-        {data && (
+        {data && data.cart_items.length > 0 ? (
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead style={{ background: theme.palette.primary.main }}>
@@ -90,7 +89,9 @@ const OrderSummeryTable = ({ data }) => {
                       {currency(item.price)}
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
-                      {typeof item.discount === "undefined" ? currency(0) : currency(item.discount)}
+                      {typeof item.discount === "undefined"
+                        ? currency(0)
+                        : currency(item.discount)}
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
                       {currency(item.commission)}
@@ -167,7 +168,7 @@ const OrderSummeryTable = ({ data }) => {
               </TableBody>
             </Table>
           </TableContainer>
-        )}
+        ): <div>Something Went Wrong <br /> You Don't Have Access to the Table</div>}
       </Paper>
     </Card1>
   );
