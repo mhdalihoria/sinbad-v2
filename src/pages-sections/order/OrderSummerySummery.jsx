@@ -1,16 +1,86 @@
 import { Button, Divider, TextField, Typography } from "@mui/material";
 import Card1 from "components/Card1";
+import { Span } from "components/Typography";
+import usePostFetch from "components/fetch/usePostFetch";
 import { FlexBetween } from "components/flex-box";
 import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
+import { useEffect, useState } from "react";
 const OrderSummerySummery = () => {
-  const {
-    state
-  } = useAppContext();
+  const [discountInput, setDiscountInput] = useState(null);
+
+  const { state, setDiscount, discount, setOrderData, userToken } =
+    useAppContext();
+  const [discountResponseMsg, setDiscountResponseMsg] = useState({
+    status: false,
+    message: "",
+  });
+
   const cartList = state.cart;
-  const getTotalPrice = () => cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
-  
-  return <Card1>
+  const getTotalPrice = () =>
+    cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
+
+  const handleCouponFetch = async () => {
+    const headers = {
+      "X-localization": "ar",
+      Authorization: `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
+      // Authorization: `Bearer ${userToken}`,
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      coupon_code: discountInput,
+      cart_items: [
+        {
+          id: "4608",
+          price: "235000",
+          qty: "2",
+          product_attribute_id: "",
+        },
+        {
+          id: "7710",
+          price: "1800000",
+          qty: "3",
+          product_attribute_id: "",
+        },
+      ],
+    });
+    const response = await usePostFetch(
+      "https://sinbad-store.com/api/v2/check-coupon-code",
+      headers,
+      body
+    );
+    const data = response.data;
+    console.log(data);
+    setDiscount(data.data.total_discount);
+    setOrderData((prevData) => {
+      return {
+        ...prevData,
+        couponCode: discountInput,
+      };
+    });
+
+    if (data) {
+      setDiscountResponseMsg({
+        status: data.status,
+        message: data.message,
+      });
+      setTimeout(() => {
+        setDiscountResponseMsg({ status: false, message: "" });
+      }, 3500);
+    }
+  };
+
+  useEffect(() => {
+    setOrderData((prevOrderData) => {
+      return {
+        ...prevOrderData,
+        couponCode: discountInput,
+      };
+    });
+  }, [discountInput]);
+
+  return (
+    <Card1>
       <FlexBetween mb={1}>
         <Typography color="grey.600">Subtotal:</Typography>
         <Typography fontSize="18px" fontWeight="600" lineHeight="1">
@@ -32,15 +102,60 @@ const OrderSummerySummery = () => {
         </Typography>
       </FlexBetween>
 
-      <Divider sx={{
-      mb: "1rem"
-    }} />
+      <Divider
+        sx={{
+          mb: "1rem",
+        }}
+      />
 
-      <Typography fontSize="25px" fontWeight="600" lineHeight="1" textAlign="right" mb={3}>
+      <Typography
+        fontSize="25px"
+        fontWeight="600"
+        lineHeight="1"
+        textAlign="right"
+        mb={3}
+      >
         {currency(getTotalPrice())}
       </Typography>
 
-      
-    </Card1>;
+      <Divider
+        sx={{
+          mb: 2,
+          mt: 2,
+        }}
+      />
+
+      {discountResponseMsg.message.length > 0 && (
+        <Span
+          style={{
+            color: discountResponseMsg.status ? "green" : "red",
+            fontSize: "1rem",
+          }}
+        >
+          {discountResponseMsg.message}
+        </Span>
+      )}
+      <TextField
+        placeholder="Voucher"
+        variant="outlined"
+        size="small"
+        fullWidth
+        onChange={(e) => setDiscountInput(e.target.value)}
+      />
+      <Button
+        variant="outlined"
+        color="primary"
+        fullWidth
+        sx={{
+          mt: "1rem",
+          mb: "30px",
+        }}
+        disabled={!discountInput && discountInput === ""}
+        onClick={handleCouponFetch}
+      >
+        Apply Voucher
+      </Button>
+    </Card1>
+  );
 };
 export default OrderSummerySummery;
