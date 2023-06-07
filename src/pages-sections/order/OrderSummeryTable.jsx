@@ -90,7 +90,7 @@ const OrderSummeryTable = ({ data }) => {
                       {currency(item.price)}
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
-                      {currency(item.discount)}
+                      {typeof item.discount === "undefined" ? currency(0) : currency(item.discount)}
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
                       {currency(item.commission)}
