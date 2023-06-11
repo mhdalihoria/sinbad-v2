@@ -7,8 +7,9 @@ import OrderSummerySummery from "pages-sections/order/OrderSummerySummery";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
 import usePostFetch from "../src/components/fetch/usePostFetch";
+import useGetFetch from "../src/components/fetch/useGetFetch";
 
-const OrderSummery = () => {
+const OrderSummery = ({banks}) => {
   const { state, orderData, setOrderData, userToken } = useAppContext();
   const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
   const [couponToken, setCouponToken] = useState(9999999);
@@ -23,7 +24,7 @@ const OrderSummery = () => {
       const body = JSON.stringify({
         "coupon_code": couponToken,
         "carrier_id": orderData.carrierId,
-       
+        
         "cart_items": state.cart,
       });
       const response = await usePostFetch(
@@ -49,6 +50,7 @@ const OrderSummery = () => {
       <Grid container flexWrap="wrap-reverse" spacing={3}>
         <Grid item lg={8} md={8} xs={12}>
           <OrderSummeryTable data={orderSummeryResponse} />
+          <PaymentForm banks={banks}/>
         </Grid>
 
         <Grid item lg={4} md={4} xs={12}>
@@ -61,5 +63,21 @@ const OrderSummery = () => {
     </CheckoutNavLayout>
   );
 };
+
+export const getStaticProps = async (ctx) => {
+  const requestOptions = {
+    method: 'GET',
+    headers: {"X-localization": "ar"},
+    redirect: 'follow'
+  };
+  
+  const response = await useGetFetch("https://sinbad-store.com/api/v2/get-banks",requestOptions)
+
+  return {
+    props: {
+      banks: response.data.banks
+    }
+  }
+}
 
 export default OrderSummery;
