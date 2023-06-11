@@ -33,7 +33,6 @@ const OrderSummery = () => {
       );
       const data = response.data.data;
       setOrderSummeryResponse(data);
-      console.log(body)
     };
 
     doFetch(state.cart);

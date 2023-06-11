@@ -18,7 +18,6 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
 
-  console.log(data);
   const handleCouponFetch = async () => {
     const discount = Number(discountInput.replace(/\D/g, ""));
 
@@ -110,7 +109,6 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
             textAlign="right"
             mb={3}
           >
-            {/* {currency(getTotalPrice())} */}
             {currency(
               data.cart_items.reduce(
                 (acc, current) =>
