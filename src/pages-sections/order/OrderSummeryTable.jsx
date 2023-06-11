@@ -182,7 +182,7 @@ const OrderSummeryTable = ({ data }) => {
           )}
         </Paper>
       </Card1>
-      <Grid container spacing={6} style={{ marginTop: "0rem" }}>
+      {/* <Grid container spacing={6} style={{ marginTop: "0rem" }}>
         <Grid item sm={6} xs={12}>
           <Link href="/checkout" passHref>
             <Button variant="outlined" color="primary" type="button" fullWidth>
@@ -198,7 +198,7 @@ const OrderSummeryTable = ({ data }) => {
             </Button>
           </Link>
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
   );
 };
