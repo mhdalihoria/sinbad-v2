@@ -7,68 +7,56 @@ import OrderSummerySummery from "pages-sections/order/OrderSummerySummery";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
 import usePostFetch from "../src/components/fetch/usePostFetch";
-import { useRouter } from "next/router";
 
 const OrderSummery = () => {
-  const router = useRouter()
-  const { state, orderData, userToken } = useAppContext();
+  const { state, orderData, setOrderData, userToken } = useAppContext();
   const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
-  // console.log(orderData.couponCode);
-  // console.log(state.cart);
-
+  const [couponToken, setCouponToken] = useState(9999999);
 
   useEffect(() => {
     const doFetch = async () => {
       const headers = {
         "X-localization": "ar",
-        "Authorization":
-          `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
+        "Authorization": `Bearer ${userToken}`,
         "Content-Type": "application/json",
       };
       const body = JSON.stringify({
-        "coupon_code": "302539",
-        "carrier_id": "5",
-        "cart_items": [
-          {
-            "id": "4608",
-            "price": "235000",
-            "qty": "2",
-            "product_attribute_id": ""
-          },
-          {
-            "id": "7710",
-            "price": "1800000",
-            "qty": "3",
-            "product_attribute_id": ""
-          }
-        ]
+        "coupon_code": couponToken,
+        "carrier_id": orderData.carrierId,
+       
+        "cart_items": state.cart,
       });
-      // const body = JSON.stringify({
-      //   "coupon_code": orderData.couponCode,
-      //   "carrier_id": orderData.carrierId,
-        
-      //   "cart_items": state.cart
-      // });
-      const response = await usePostFetch("https://sinbad-store.com/api/v2/checkout-cart-summary", headers, body);
-      const data = response.data.data
-        // if(!orderSummeryResponse) {
-          setOrderSummeryResponse(data)
-        // }
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/checkout-cart-summary",
+        headers,
+        body
+      );
+      const data = response.data.data;
+      setOrderSummeryResponse(data);
+      console.log(body)
     };
 
-    doFetch()
-    // console.log(orderSummeryResponse)
-  }, []);
+    doFetch(state.cart);
+    setOrderData((prevData) => {
+      return {
+        ...prevData,
+        couponCode: couponToken,
+      };
+    });
+  }, [couponToken, state.cart]);
 
   return (
     <CheckoutNavLayout>
       <Grid container flexWrap="wrap-reverse" spacing={3}>
         <Grid item lg={8} md={8} xs={12}>
-          <OrderSummeryTable data = {orderSummeryResponse}/>
+          <OrderSummeryTable data={orderSummeryResponse} />
         </Grid>
 
         <Grid item lg={4} md={4} xs={12}>
-          <OrderSummerySummery />
+          <OrderSummerySummery
+            setCouponToken={setCouponToken}
+            data={orderSummeryResponse}
+          />
         </Grid>
       </Grid>
     </CheckoutNavLayout>
