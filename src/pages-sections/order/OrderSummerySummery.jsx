@@ -68,61 +68,68 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
 
   return (
     <Card1>
-      <FlexBetween mb={1}>
-        <Typography color="grey.600">Subtotal:</Typography>
-        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-        {currency(
-          data.cart_items.reduce(
-            (acc, current) => acc + Number(current.qty) * Number(current.price),
-            0
-          ))}
-        </Typography>
-      </FlexBetween>
+      {data && data.cart_items && (
+        <>
+          <FlexBetween mb={1}>
+            <Typography color="grey.600">Subtotal:</Typography>
+            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+              {currency(
+                data.cart_items.reduce(
+                  (acc, current) =>
+                    acc + Number(current.qty) * Number(current.price),
+                  0
+                )
+              )}
+            </Typography>
+          </FlexBetween>
 
-      <FlexBetween mb={1}>
-        <Typography color="grey.600">Shipping:</Typography>
-        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {data.shipping_cost ? currency(data.shipping_cost) : "-"}
-        </Typography>
-      </FlexBetween>
+          <FlexBetween mb={1}>
+            <Typography color="grey.600">Shipping:</Typography>
+            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+              {data.shipping_cost ? currency(data.shipping_cost) : "-"}
+            </Typography>
+          </FlexBetween>
 
-      <FlexBetween mb={2}>
-        <Typography color="grey.600">Discount:</Typography>
-        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-          {data.total_discount ? currency(data.total_discount) : "-"}
-        </Typography>
-      </FlexBetween>
+          <FlexBetween mb={2}>
+            <Typography color="grey.600">Discount:</Typography>
+            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+              {data.total_discount ? currency(data.total_discount) : "-"}
+            </Typography>
+          </FlexBetween>
 
-      <Divider
-        sx={{
-          mb: "1rem",
-        }}
-      />
+          <Divider
+            sx={{
+              mb: "1rem",
+            }}
+          />
 
-      <Typography
-        fontSize="25px"
-        fontWeight="600"
-        lineHeight="1"
-        textAlign="right"
-        mb={3}
-      >
-        {/* {currency(getTotalPrice())} */}
-        {currency(
-          data.cart_items.reduce(
-            (acc, current) => acc + Number(current.qty) * Number(current.price),
-            0
-          ) +
-            (data.shipping_cost ? data.shipping_cost : 0) -
-            (data.total_discount ? data.total_discount : 0)
-        )}
-      </Typography>
+          <Typography
+            fontSize="25px"
+            fontWeight="600"
+            lineHeight="1"
+            textAlign="right"
+            mb={3}
+          >
+            {/* {currency(getTotalPrice())} */}
+            {currency(
+              data.cart_items.reduce(
+                (acc, current) =>
+                  acc + Number(current.qty) * Number(current.price),
+                0
+              ) +
+                (data.shipping_cost ? data.shipping_cost : 0) -
+                (data.total_discount ? data.total_discount : 0)
+            )}
+          </Typography>
 
-      <Divider
-        sx={{
-          mb: 2,
-          mt: 2,
-        }}
-      />
+          <Divider
+            sx={{
+              mb: 2,
+              mt: 2,
+            }}
+          />
+        </>
+      )}
 
       {discountResponseMsg.message.length > 0 && (
         <Span
