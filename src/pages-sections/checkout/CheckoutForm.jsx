@@ -56,11 +56,15 @@ const CheckoutForm = ({ allCountries }) => {
       // const response = await usePostFetch("https://sinbad-store.com/api/v2/checkout-cart-summary", headers, body)
       // const data = response.data
       // console.log(data.data)
-      console.log(values.location);
+      console.log(values);
       setOrderData({
         ...orderData,
-          carrierId: values.location 
-      })
+        carrierId: values.location,
+        shippedAddress: values.fullAddress,
+        shippedFull_name: values.fullAddress,
+        shippedLocation_id: values.location,
+        shippedMobile: values.phoneNum,
+      });
       router.push("/orderSummery")
     },
   });
