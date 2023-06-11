@@ -65,6 +65,17 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
     }
   };
 
+  useEffect(() => {
+    if (data && data.cart_items && data.shipping_cost) {
+      setOrderData((prevData) => {
+        return {
+          ...prevData,
+          shippingCost:data.shipping_cost
+        };
+      });
+    }
+  }, [data]);
+
   return (
     <Card1>
       {data && data.cart_items && (
