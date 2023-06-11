@@ -18,7 +18,7 @@ const OrderSummeryTable = ({ data }) => {
   return (
     <Card1>
       <Paper>
-        {data && data.cart_items.length > 0 ? (
+        {data && typeof data.cart_items !== "undefined" && data.cart_items.length > 0 ? (
           <TableContainer>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead style={{ background: theme.palette.primary.main }}>
