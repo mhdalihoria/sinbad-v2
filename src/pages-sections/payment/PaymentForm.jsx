@@ -19,6 +19,7 @@ import useWindowSize from "hooks/useWindowSize";
 import Form from "pages-sections/carrier/Form";
 import { useAppContext } from "contexts/AppContext";
 import { Formik, Field, ErrorMessage } from "formik";
+import usePostFetch from "components/fetch/usePostFetch";
 
 const FileButton = styled(Button)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -36,7 +37,7 @@ const PaymentForm = ({ banks }) => {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [bankPaymentForm, setBankPaymentForm] = useState(null);
   const [transferDoc, setTransferDoc] = useState(null);
-  const { state, orderData, setOrderData } = useAppContext();
+  const { state, orderData, setOrderData, userToken } = useAppContext();
   const cartList = state.cart;
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
@@ -67,10 +68,10 @@ const PaymentForm = ({ banks }) => {
           return {
             ...prevOrder,
             paymentMethod: paymentMethod,
-            bank: null, 
-            referenceNo: null, 
-            transferDocument: null, 
-            transferNo: null
+            bank: null,
+            referenceNo: null,
+            transferDocument: null,
+            transferNo: null,
           };
         });
       }
@@ -79,15 +80,16 @@ const PaymentForm = ({ banks }) => {
           return {
             ...prevOrder,
             paymentMethod: paymentMethod,
-            bank: null, 
-            referenceNo: null, 
-            transferDocument: null, 
-            transferNo: null
+            bank: null,
+            referenceNo: null,
+            transferDocument: null,
+            transferNo: null,
           };
         });
       }
     }
   }, [paymentMethod]);
+
   useEffect(() => {
     if (bankPaymentForm) {
       setOrderData((prevOrder) => {
@@ -101,6 +103,45 @@ const PaymentForm = ({ banks }) => {
       });
     }
   }, [bankPaymentForm]);
+
+  const submitOrder = async () => {
+    const headers = {
+      "X-localization": "ar",
+      // "Authorization": `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
+      "Authorization": `Bearer ${userToken}`,
+      "Content-Type": "application/json",
+    };
+    // const body = JSON.stringify({
+    //   "coupon_code": "302539",
+    //   "carrier_id": "5",
+    //   "total_price": 2350000,
+    //   "shipping_cost": 2500,
+    //   "shipped_mobile": "944683077",
+    //   "shipped_location_id": 1,
+    //   "shipped_full_name": "MZH",
+    //   "shipped_address": "Midan",
+    //   "payment_method": "Credit",
+    //   "notes": "this is a note",
+    //   "reference_no": "234234324324",
+    //   "cart_items": state.cart
+    // });
+    const body = JSON.stringify({
+      "coupon_code": orderData.couponCode,
+      "carrier_id": orderData.carrierId,
+      "total_price": orderData.totalPrice,
+      "shipping_cost": orderData.shippingCost,
+      "shipped_mobile": orderData.shippedMobile,
+      "shipped_location_id": orderData.shippedLocation_id,
+      "shipped_full_name": orderData.shippedFull_name,
+      "shipped_address": orderData.shippedAddress,
+      "payment_method": orderData.paymentMethod,
+      "notes": orderData.notes,
+      "reference_no": orderData.referenceNo,
+      "cart_items": state.cart
+    });
+    const response = await usePostFetch("https://sinbad-store.com/api/v2/add-order", headers, body);
+    console.log(response)
+  }
 
   return (
     <Fragment>
@@ -283,6 +324,10 @@ const PaymentForm = ({ banks }) => {
             )}
           </Formik>
         )}
+
+          <Button variant="contained" color="primary" type="button" fullWidth onClick={submitOrder}>
+            Submit Order
+          </Button>
       </Card1>
 
       <Grid container spacing={7}>
