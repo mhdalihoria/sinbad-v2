@@ -173,6 +173,7 @@ const ProductIntro = ({
         nanoId: nanoid(),
         slug,
         attributes: selectAttributes,
+        product_attribute_id: ""
       },
     });
     setItemAmount(1);

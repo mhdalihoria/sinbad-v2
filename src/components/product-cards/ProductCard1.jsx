@@ -320,6 +320,7 @@ const ProductCard1 = ({
                     imgUrl,
                     name: title,
                     qty: (cartItem?.qty || 0) + 1,
+                    product_attribute_id: ""
                   })}
                 >
                   <Add fontSize="small" />
