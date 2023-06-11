@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import PaymentForm from "pages-sections/payment/PaymentForm";
 import PaymentSummary from "pages-sections/payment/PaymentSummary";
+import AddOrder from "pages-sections/payment/AddOrder";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import useGetFetch from "components/fetch/useGetFetch"
 const Checkout = ({banks}) => {
@@ -8,6 +9,7 @@ const Checkout = ({banks}) => {
       <Grid container flexWrap="wrap-reverse" spacing={3}>
         <Grid item lg={8} md={8} xs={12}>
           <PaymentForm banks={banks}/>
+          <AddOrder />
         </Grid>
 
         <Grid item lg={4} md={4} xs={12}>
