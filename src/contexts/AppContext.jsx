@@ -95,6 +95,8 @@ export const AppProvider = ({ children }) => {
     bank: null,
     transferNo: null,
   });
+
+  console.log("Context", orderData);
   const [userToken, setUserToken] = useState(null);
   const contextValue = useMemo(
     () => ({
