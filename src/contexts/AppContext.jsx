@@ -80,7 +80,7 @@ export const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const [discount, setDiscount] = useState(null);
   const [orderData, setOrderData] = useState({
-    couponCode: "302539",
+    couponCode: null,
     carrierId: "5",
     totalPrice: null,
     shippingCost: null,
@@ -89,13 +89,12 @@ export const AppProvider = ({ children }) => {
     shippedFull_name: null,
     shippedAddress: null,
     paymentMethod: null,
-    notes: null,
+    notes: "تجريب الموقع الجديد",
     referenceNo: null,
     transferDocument: null,
     bank: null,
     transferNo: null,
   });
-  console.log(orderData)
   const [userToken, setUserToken] = useState(null);
   const contextValue = useMemo(
     () => ({
