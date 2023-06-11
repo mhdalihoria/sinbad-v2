@@ -53,25 +53,53 @@ const PaymentForm = ({ banks }) => {
   };
 
   useEffect(() => {
-    setOrderData((prevOrder) => {
-      return {
-        ...prevOrder,
-        paymentMethod: paymentMethod,
-      };
-    });
+    switch (paymentMethod) {
+      case "bank-transfer": {
+        setOrderData((prevOrder) => {
+          return {
+            ...prevOrder,
+            paymentMethod: paymentMethod,
+          };
+        });
+      }
+      case "wallet": {
+        setOrderData((prevOrder) => {
+          return {
+            ...prevOrder,
+            paymentMethod: paymentMethod,
+            bank: null, 
+            referenceNo: null, 
+            transferDocument: null, 
+            transferNo: null
+          };
+        });
+      }
+      case "cash": {
+        setOrderData((prevOrder) => {
+          return {
+            ...prevOrder,
+            paymentMethod: paymentMethod,
+            bank: null, 
+            referenceNo: null, 
+            transferDocument: null, 
+            transferNo: null
+          };
+        });
+      }
+    }
   }, [paymentMethod]);
   useEffect(() => {
-    if(bankPaymentForm){
-    setOrderData((prevOrder) => {
-      return {
-        ...prevOrder,
-        bank: bankPaymentForm.bank_id,
-        totalPrice: bankPaymentForm.amount,
-        transferDocument: bankPaymentForm.transferDoc,
-        transferNo: bankPaymentForm.transferNum,
-      };
-    });
-  }
+    if (bankPaymentForm) {
+      setOrderData((prevOrder) => {
+        return {
+          ...prevOrder,
+          bank: bankPaymentForm.bank_id,
+          totalPrice: bankPaymentForm.amount,
+          transferDocument: bankPaymentForm.transferDoc,
+          transferNo: bankPaymentForm.transferNum,
+        };
+      });
+    }
   }, [bankPaymentForm]);
 
   return (
