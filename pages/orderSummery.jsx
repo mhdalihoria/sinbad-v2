@@ -12,7 +12,7 @@ import useGetFetch from "../src/components/fetch/useGetFetch";
 const OrderSummery = ({banks}) => {
   const { state, orderData, setOrderData, userToken } = useAppContext();
   const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
-  const [couponToken, setCouponToken] = useState(9999999);
+  const [couponToken, setCouponToken] = useState(null);
 
   useEffect(() => {
     const doFetch = async () => {
