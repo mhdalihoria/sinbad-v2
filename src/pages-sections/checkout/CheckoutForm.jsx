@@ -59,13 +59,12 @@ const CheckoutForm = ({ allCountries }) => {
       console.log(values);
       setOrderData({
         ...orderData,
-        carrierId: values.location,
         shippedAddress: values.fullAddress,
         shippedFull_name: values.fullAddress,
         shippedLocation_id: values.location,
         shippedMobile: values.phoneNum,
       });
-      router.push("/orderSummery")
+      router.push("/delivery")
     },
   });
 

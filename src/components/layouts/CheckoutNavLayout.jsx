@@ -28,6 +28,9 @@ const CheckoutNavLayout = ({ children }) => {
         router.push("/checkout");
         break;
       case 2:
+        router.push("/delivery");
+        break;
+      case 3:
         router.push("/orderSummery");
         break;
       default:
@@ -42,8 +45,12 @@ const CheckoutNavLayout = ({ children }) => {
       case "/checkout":
         setSelectedStep(2);
         break;
-      case "/orderSummery":
+      case "/delivery":
         setSelectedStep(3);
+        break;
+        break;
+      case "/orderSummery":
+        setSelectedStep(4);
         break;
 
       default:
@@ -87,6 +94,10 @@ const stepperList = [
   },
   {
     title: "Details",
+    disabled: false,
+  },
+  {
+    title: "Delivery",
     disabled: false,
   },
   {
