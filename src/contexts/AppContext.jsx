@@ -81,11 +81,11 @@ export const AppProvider = ({ children }) => {
   const [discount, setDiscount] = useState(null);
   const [orderData, setOrderData] = useState({
     couponCode: null,
-    carrierId: "5",
+    carrierId: null,
     totalPrice: null,
     shippingCost: null,
     shippedMobile: null,
-    shippedLocation_id: null,
+    shippedLocation_id: "5",
     shippedFull_name: null,
     shippedAddress: null,
     paymentMethod: null,
