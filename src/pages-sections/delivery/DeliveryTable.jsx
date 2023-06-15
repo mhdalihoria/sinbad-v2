@@ -17,9 +17,8 @@ import { currency } from "lib";
 import Link from "next/link";
 import { useAppContext } from "contexts/AppContext";
 
-const DeliveryTable = ({ data }) => {
+const DeliveryTable = ({ data, checked, setChecked }) => {
   const theme = useTheme();
-  const [checked, setChecked] = useState(null);
   const {setOrderData} = useAppContext()
 
   useEffect(()=> {
