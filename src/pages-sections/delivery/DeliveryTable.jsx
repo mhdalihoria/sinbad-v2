@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card1 from "components/Card1";
 import {
   Button,
@@ -15,11 +15,21 @@ import {
 } from "@mui/material";
 import { currency } from "lib";
 import Link from "next/link";
+import { useAppContext } from "contexts/AppContext";
 
 const DeliveryTable = ({ data }) => {
   const theme = useTheme();
   const [checked, setChecked] = useState(null);
-  console.log(checked)
+  const {setOrderData} = useAppContext()
+
+  useEffect(()=> {
+    setOrderData(prevData => {
+      return {
+        ...prevData, 
+        carrierId: checked
+      }
+    })
+  }, [checked])
 
   return (
     <>
@@ -78,6 +88,26 @@ const DeliveryTable = ({ data }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
+                  <TableRow
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell style={{ textAlign: "center" }}>
+                      <Radio
+                        checked={checked === 0 ? true : false}
+                        color="primary"
+                        size="small"
+                        onClick={() => setChecked(0)}
+                      />
+                    </TableCell>
+                    <TableCell style={{ textAlign: "center" }}>
+                      الاستلام من المكتب
+                    </TableCell>
+                    <TableCell style={{ textAlign: "center" }}>
+                      {currency(0)}
+                    </TableCell>
+                    <TableCell style={{ textAlign: "center" }}></TableCell>
+                    <TableCell style={{ textAlign: "center" }}></TableCell>
+                  </TableRow>
                   {data.carrier_location.map((item, idx) => (
                     <TableRow
                       key={idx}
@@ -129,7 +159,13 @@ const DeliveryTable = ({ data }) => {
 
         <Grid item sm={6} xs={12}>
           <Link href="/orderSummery" passHref>
-            <Button variant="contained" color="primary" type="submit" fullWidth>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+              disabled={checked === null ? true : false}
+            >
               Proceed
             </Button>
           </Link>
