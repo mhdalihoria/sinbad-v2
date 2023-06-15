@@ -15,7 +15,7 @@ const Delivery = ({ banks }) => {
   const [carrier, setCarrier] = useState(null)
   const [couponToken, setCouponToken] = useState(null);
 
-  console.log(carrier)
+  console.log(orderData.carrierId)
 
   useEffect(() => {
     const doFetch = async () => {
@@ -55,7 +55,6 @@ const Delivery = ({ banks }) => {
         headers,
         body
       );
-      console.log("function", response, body)
       const data = response.data.data;
       setCarrier(data);
     };
@@ -70,7 +69,11 @@ const Delivery = ({ banks }) => {
         couponCode: couponToken,
       };
     });
-  }, [couponToken, state.cart]);
+  }, [couponToken, state.cart, orderData.carrierId]);
+
+useEffect(()=> {
+console.log("carrier", orderData.carrierId)
+}, [orderData])
 
   return (
     <CheckoutNavLayout>
