@@ -5,6 +5,7 @@ import usePostFetch from "components/fetch/usePostFetch";
 import { FlexBetween } from "components/flex-box";
 import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 const OrderSummerySummery = ({ setCouponToken, data }) => {
   const [discountInput, setDiscountInput] = useState(0);
@@ -15,8 +16,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
     message: "",
   });
   const cartList = state.cart;
-  const getTotalPrice = () =>
-    cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
+  const router = useRouter();
 
   const handleCouponFetch = async () => {
     const discount = Number(discountInput.replace(/\D/g, ""));
@@ -70,7 +70,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
       setOrderData((prevData) => {
         return {
           ...prevData,
-          shippingCost:data.shipping_cost
+          shippingCost: data.shipping_cost,
         };
       });
     }
@@ -130,46 +130,49 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
                 (data.total_discount ? data.total_discount : 0)
             )}
           </Typography>
+        </>
+      )}
 
-          <Divider
+      {router.pathname === "/delivery" && (
+        <>
+         <Divider
             sx={{
               mb: 2,
               mt: 2,
             }}
           />
+          {discountResponseMsg.message.length > 0 && (
+            <Span
+              style={{
+                color: discountResponseMsg.status ? "green" : "red",
+                fontSize: "1rem",
+              }}
+            >
+              {discountResponseMsg.message}
+            </Span>
+          )}
+          <TextField
+            placeholder="Voucher"
+            variant="outlined"
+            size="small"
+            fullWidth
+            onChange={(e) => setDiscountInput(e.target.value)}
+          />
+          <Button
+            variant="outlined"
+            color="primary"
+            fullWidth
+            sx={{
+              mt: "1rem",
+              mb: "30px",
+            }}
+            disabled={!discountInput && discountInput === ""}
+            onClick={handleCouponFetch}
+          >
+            Apply Voucher
+          </Button>
         </>
       )}
-
-      {discountResponseMsg.message.length > 0 && (
-        <Span
-          style={{
-            color: discountResponseMsg.status ? "green" : "red",
-            fontSize: "1rem",
-          }}
-        >
-          {discountResponseMsg.message}
-        </Span>
-      )}
-      <TextField
-        placeholder="Voucher"
-        variant="outlined"
-        size="small"
-        fullWidth
-        onChange={(e) => setDiscountInput(e.target.value)}
-      />
-      <Button
-        variant="outlined"
-        color="primary"
-        fullWidth
-        sx={{
-          mt: "1rem",
-          mb: "30px",
-        }}
-        disabled={!discountInput && discountInput === ""}
-        onClick={handleCouponFetch}
-      >
-        Apply Voucher
-      </Button>
     </Card1>
   );
 };
