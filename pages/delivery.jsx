@@ -13,27 +13,7 @@ const Delivery = () => {
   const [checked, setChecked] = useState(null);
   const [couponToken, setCouponToken] = useState(null);
 
-
   useEffect(() => {
-    const doFetch = async () => {
-      const headers = {
-        "X-localization": "ar",
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      };
-      const body = JSON.stringify({
-        coupon_code: couponToken,
-        carrier_id: checked,
-        cart_items: state.cart,
-      });
-      const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/checkout-cart-summary",
-        headers,
-        body
-      );
-      const data = response.data.data;
-      setOrderSummeryResponse(data);
-    };
     const doCarrierFetch = async () => {
       const headers = {
         "X-localization": "ar",
@@ -56,6 +36,28 @@ const Delivery = () => {
     if (state.cart.length > 0) {
       doCarrierFetch();
     }
+  }, [state.cart, orderData]);
+
+  useEffect(() => {
+    const doFetch = async () => {
+      const headers = {
+        "X-localization": "ar",
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      };
+      const body = JSON.stringify({
+        coupon_code: couponToken,
+        carrier_id: checked,
+        cart_items: state.cart,
+      });
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/checkout-cart-summary",
+        headers,
+        body
+      );
+      const data = response.data.data;
+      setOrderSummeryResponse(data);
+    };
     doFetch();
     setOrderData((prevData) => {
       return {
@@ -63,7 +65,7 @@ const Delivery = () => {
         couponCode: couponToken,
       };
     });
-  }, [couponToken, state.cart, orderData.carrierId, checked]);
+  }, [couponToken, state.cart, checked]);
 
   return (
     <CheckoutNavLayout>
