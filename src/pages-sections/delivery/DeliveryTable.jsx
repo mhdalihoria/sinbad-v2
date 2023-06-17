@@ -19,16 +19,6 @@ import { useAppContext } from "contexts/AppContext";
 
 const DeliveryTable = ({ data, checked, setChecked }) => {
   const theme = useTheme();
-  const {setOrderData} = useAppContext()
-
-  useEffect(()=> {
-    setOrderData(prevData => {
-      return {
-        ...prevData, 
-        carrierId: checked
-      }
-    })
-  }, [checked])
 
   return (
     <>

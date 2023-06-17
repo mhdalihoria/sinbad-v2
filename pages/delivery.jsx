@@ -7,8 +7,15 @@ import { useAppContext } from "../src/contexts/AppContext";
 import usePostFetch from "../src/components/fetch/usePostFetch";
 
 const Delivery = () => {
-  const { state, orderData, setOrderData, userToken } = useAppContext();
-  const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
+  const {
+    state,
+    orderData,
+    setOrderData,
+    userToken,
+    orderSummeryResponse,
+    setOrderSummeryResponse,
+  } = useAppContext();
+  // const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
   const [carrier, setCarrier] = useState(null);
   const [checked, setChecked] = useState(null);
   const [couponToken, setCouponToken] = useState(null);
@@ -39,33 +46,48 @@ const Delivery = () => {
   }, [state.cart, orderData]);
 
   useEffect(() => {
-    const doFetch = async () => {
-      const headers = {
-        "X-localization": "ar",
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      };
-      const body = JSON.stringify({
-        coupon_code: couponToken,
-        carrier_id: checked,
-        cart_items: state.cart,
-      });
-      const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/checkout-cart-summary",
-        headers,
-        body
-      );
-      const data = response.data.data;
-      setOrderSummeryResponse(data);
-    };
-    doFetch();
+    //   const doFetch = async () => {
+    //     const headers = {
+    //       "X-localization": "ar",
+    //       Authorization: `Bearer ${userToken}`,
+    //       "Content-Type": "application/json",
+    //     };
+    //     const body = JSON.stringify({
+    //       coupon_code: couponToken,
+    //       carrier_id: checked,
+    //       cart_items: state.cart,
+    //     });
+    //     const response = await usePostFetch(
+    //       "https://sinbad-store.com/api/v2/checkout-cart-summary",
+    //       headers,
+    //       body
+    //     );
+    //     const data = response.data.data;
+    //     setOrderSummeryResponse(data);
+    //   };
+    //   doFetch();
     setOrderData((prevData) => {
       return {
         ...prevData,
         couponCode: couponToken,
       };
     });
-  }, [couponToken, state.cart, checked]);
+  }, [couponToken]);
+
+  useEffect(() => {
+    console.log(orderSummeryResponse);
+  }, [orderSummeryResponse]);
+
+  useEffect(() => {
+    if (checked !== orderData.carrierId) {
+      setOrderData((prevData) => {
+        return {
+          ...prevData,
+          carrierId: checked,
+        };
+      });
+    }
+  }, [checked]);
 
   return (
     <CheckoutNavLayout>
