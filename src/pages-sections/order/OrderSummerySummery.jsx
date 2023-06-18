@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 const OrderSummerySummery = ({ setCouponToken, data }) => {
   const [discountInput, setDiscountInput] = useState(0);
-  const { state, setDiscount, discount, setOrderData, userToken } =
+  const { state, setDiscount, discount, setOrderData, userToken, orderSummeryResponse } =
     useAppContext();
   const [discountResponseMsg, setDiscountResponseMsg] = useState({
     status: false,

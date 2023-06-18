@@ -114,7 +114,7 @@ export const AppProvider = ({ children }) => {
       orderSummeryResponse,
       setOrderSummeryResponse,
     }),
-    [state, dispatch, orderSummeryResponse]
+    [state, dispatch]
   );
 
   useEffect(() => {
