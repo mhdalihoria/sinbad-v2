@@ -31,26 +31,12 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
 
     const headers = {
       "X-localization": "ar",
-      Authorization: `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
-      // Authorization: `Bearer ${userToken}`,
+      Authorization: `Bearer ${userToken}`,
       "Content-Type": "application/json",
     };
     const body = JSON.stringify({
       coupon_code: discountInput,
-      cart_items: [
-        {
-          id: "4608",
-          price: "235000",
-          qty: "2",
-          product_attribute_id: "",
-        },
-        {
-          id: "7710",
-          price: "1800000",
-          qty: "3",
-          product_attribute_id: "",
-        },
-      ],
+      cart_items: cartList
     });
     const response = await usePostFetch(
       "https://sinbad-store.com/api/v2/check-coupon-code",
