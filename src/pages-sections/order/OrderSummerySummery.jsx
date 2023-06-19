@@ -9,14 +9,22 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 const OrderSummerySummery = ({ setCouponToken, data }) => {
   const [discountInput, setDiscountInput] = useState(0);
-  const { state, setDiscount, discount, setOrderData, userToken, orderSummeryResponse } =
-    useAppContext();
+  const {
+    state,
+    setDiscount,
+    discount,
+    setOrderData,
+    userToken,
+    orderSummeryResponse,
+  } = useAppContext();
   const [discountResponseMsg, setDiscountResponseMsg] = useState({
     status: false,
     message: "",
   });
   const cartList = state.cart;
   const router = useRouter();
+
+  console.log(orderSummeryResponse);
 
   const handleCouponFetch = async () => {
     const discount = Number(discountInput.replace(/\D/g, ""));
@@ -78,7 +86,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
 
   return (
     <Card1>
-      {data && data.cart_items && (
+      {data && data.cart_items ? (
         <>
           <FlexBetween mb={1}>
             <Typography color="grey.600">Subtotal:</Typography>
@@ -103,7 +111,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
           <FlexBetween mb={2}>
             <Typography color="grey.600">Discount:</Typography>
             <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {data.total_discount ? currency(data.total_discount) : "-"}
+              {discount ? currency(discount) : "-"}
             </Typography>
           </FlexBetween>
 
@@ -127,7 +135,60 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
                 0
               ) +
                 (data.shipping_cost ? data.shipping_cost : 0) -
-                (data.total_discount ? data.total_discount : 0)
+                (discount ? discount : 0)
+            )}
+          </Typography>
+        </>
+      ) : (
+        <>
+          <FlexBetween mb={1}>
+            <Typography color="grey.600">Subtotal:</Typography>
+            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+              {currency(
+                cartList.reduce(
+                  (acc, current) =>
+                    acc + Number(current.qty) * Number(current.price),
+                  0
+                )
+              )}
+            </Typography>
+          </FlexBetween>
+
+          <FlexBetween mb={1}>
+            <Typography color="grey.600">Shipping:</Typography>
+            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+              {"-"}
+            </Typography>
+          </FlexBetween>
+
+          <FlexBetween mb={2}>
+            <Typography color="grey.600">Discount:</Typography>
+            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+              {"-"}
+            </Typography>
+          </FlexBetween>
+
+          <Divider
+            sx={{
+              mb: "1rem",
+            }}
+          />
+
+          <Typography
+            fontSize="25px"
+            fontWeight="600"
+            lineHeight="1"
+            textAlign="right"
+            mb={3}
+          >
+            {currency(
+              cartList.reduce(
+                (acc, current) =>
+                  acc + Number(current.qty) * Number(current.price),
+                0
+              ) +
+                (0) -
+                (0)
             )}
           </Typography>
         </>
@@ -135,7 +196,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
 
       {router.pathname === "/delivery" && (
         <>
-         <Divider
+          <Divider
             sx={{
               mb: 2,
               mt: 2,
@@ -161,7 +222,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
           <Button
             variant="outlined"
             color="primary"
-            fullWidth
+            fullWidth={discount ? false : true}
             sx={{
               mt: "1rem",
               mb: "30px",
@@ -171,6 +232,21 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
           >
             Apply Voucher
           </Button>
+          {discount && (
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth={discount ? false : true}
+              sx={{
+                mt: "1rem",
+                mb: "30px",
+                ml: ".8rem"
+              }}
+              onClick={()=>setDiscount(null)}
+            >
+             Remove Voucher
+            </Button>
+          )}
         </>
       )}
     </Card1>
