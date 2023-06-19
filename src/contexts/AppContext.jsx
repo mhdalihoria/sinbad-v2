@@ -99,7 +99,6 @@ export const AppProvider = ({ children }) => {
   const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
 
   console.log("Context", orderData);
-  console.log("orderSummery", orderSummeryResponse);
   const [userToken, setUserToken] = useState(null);
   const contextValue = useMemo(
     () => ({
@@ -114,7 +113,7 @@ export const AppProvider = ({ children }) => {
       orderSummeryResponse,
       setOrderSummeryResponse,
     }),
-    [state, dispatch, orderSummeryResponse]
+    [state, dispatch, orderSummeryResponse, discount]
   );
 
   useEffect(() => {
