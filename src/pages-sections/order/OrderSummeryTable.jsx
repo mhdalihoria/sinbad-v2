@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Card1 from "components/Card1";
 import {
   Button,
@@ -14,9 +14,41 @@ import {
 } from "@mui/material";
 import { currency } from "lib";
 import Link from "next/link";
+import useGetFetch from "components/fetch/useGetFetch";
+import Image from "next/image";
 
 const OrderSummeryTable = ({ data }) => {
   const theme = useTheme();
+  const [prodImgs, setProdImgs] = useState([]);
+
+  const totalPrice = (cartItems, shippingCost, discountPrice) => {
+    const shipping = typeof shippingCost === "undefined" ? 0 : shippingCost;
+    const discount = typeof discountPrice === "undefined" ? 0 : discountPrice;
+    return (
+      cartItems.reduce(
+        (acc, current) => acc + Number(current.qty) * Number(current.price),
+        0
+      ) +
+      shipping -
+      discount
+    );
+  };
+
+console.log(prodImgs)
+  useEffect(() => {
+    data.cart_items.map(async (item) => {
+      console.log(item.id);
+      const response = await useGetFetch(
+        `https://sinbad-store.com/api/v2/product/${item.id}`
+      );
+      const data = await response.data.product;
+      if (typeof data.product_image !== "undefined") {
+        setProdImgs((prevProd) => {
+          return [...prevProd, data.product_image];
+        });
+      }
+    });
+  }, [data]);
 
   return (
     <>
@@ -29,6 +61,24 @@ const OrderSummeryTable = ({ data }) => {
               <Table sx={{ minWidth: 650 }} aria-label="simple table">
                 <TableHead style={{ background: theme.palette.primary.main }}>
                   <TableRow>
+                    <TableCell
+                      style={{
+                        color: theme.palette.primary.contrastText,
+                        fontWeight: "700",
+                      }}
+                      align="center"
+                    >
+                      Prod. Img
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: theme.palette.primary.contrastText,
+                        fontWeight: "700",
+                      }}
+                      align="center"
+                    >
+                      Prod. Name
+                    </TableCell>
                     <TableCell
                       style={{
                         color: theme.palette.primary.contrastText,
@@ -92,6 +142,14 @@ const OrderSummeryTable = ({ data }) => {
                       sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                     >
                       <TableCell style={{ textAlign: "center" }}>
+                        {prodImgs.length > 0 && (
+                          <Image src={prodImgs[idx]} width={50} height={70} />
+                        )}
+                      </TableCell>
+                      <TableCell style={{ textAlign: "center" }}>
+                        {item.name}
+                      </TableCell>
+                      <TableCell style={{ textAlign: "center" }}>
                         {currency(item.price)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
@@ -100,10 +158,14 @@ const OrderSummeryTable = ({ data }) => {
                           : currency(item.discount)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {currency(item.commission)}
+                        {typeof item.discount === "undefined"
+                          ? currency(0)
+                          : currency(item.commission)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {currency(item.delivery_commission)}
+                        {typeof item.discount === "undefined"
+                          ? currency(0)
+                          : currency(item.delivery_commission)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
                         with delivery fee? idk what to do here
@@ -157,17 +219,20 @@ const OrderSummeryTable = ({ data }) => {
                 <TableBody>
                   <TableRow>
                     <TableCell style={{ textAlign: "center" }}>
-                      {currency(data.total_discount)}
+                      {/* {currency(data.total_discount)} */}
+                      {typeof data.total_discount === "undefined"
+                        ? currency(0)
+                        : currency(data.total_discount)}
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
                       {currency(data.shipping_cost)}
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
                       {currency(
-                        data.cart_items.reduce(
-                          (acc, current) =>
-                            acc + Number(current.qty) * Number(current.price),
-                          0
+                        totalPrice(
+                          data.cart_items,
+                          data.shipping_cost,
+                          data.total_discount
                         )
                       )}
                     </TableCell>
