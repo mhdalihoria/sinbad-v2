@@ -6,44 +6,11 @@ import OrderSummeryTable from "pages-sections/order/OrderSummeryTable";
 import OrderSummerySummery from "pages-sections/order/OrderSummerySummery";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
-import usePostFetch from "../src/components/fetch/usePostFetch";
 import useGetFetch from "../src/components/fetch/useGetFetch";
 
 const OrderSummery = ({banks}) => {
-  const { state, orderData, setOrderData, userToken } = useAppContext();
-  const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
-  const [couponToken, setCouponToken] = useState(null);
+  const {orderSummeryResponse } = useAppContext();
 
-  useEffect(() => {
-    const doFetch = async () => {
-      const headers = {
-        "X-localization": "ar",
-        "Authorization": `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      };
-      const body = JSON.stringify({
-        "coupon_code": couponToken,
-        "carrier_id": orderData.carrierId,
-        
-        "cart_items": state.cart,
-      });
-      const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/checkout-cart-summary",
-        headers,
-        body
-      );
-      const data = response.data.data;
-      setOrderSummeryResponse(data);
-    };
-
-    doFetch(state.cart);
-    setOrderData((prevData) => {
-      return {
-        ...prevData,
-        couponCode: couponToken,
-      };
-    });
-  }, [couponToken, state.cart]);
 
   return (
     <CheckoutNavLayout>
@@ -55,7 +22,6 @@ const OrderSummery = ({banks}) => {
 
         <Grid item lg={4} md={4} xs={12}>
           <OrderSummerySummery
-            setCouponToken={setCouponToken}
             data={orderSummeryResponse}
           />
         </Grid>
