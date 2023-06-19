@@ -34,10 +34,9 @@ const OrderSummeryTable = ({ data }) => {
     );
   };
 
-console.log(prodImgs)
   useEffect(() => {
-    data.cart_items.map(async (item) => {
-      console.log(item.id);
+    if(data && typeof data.cart_items !== "undefined") {
+      data.cart_items.map(async (item) => {
       const response = await useGetFetch(
         `https://sinbad-store.com/api/v2/product/${item.id}`
       );
@@ -48,6 +47,7 @@ console.log(prodImgs)
         });
       }
     });
+    }
   }, [data]);
 
   return (
@@ -168,11 +168,11 @@ console.log(prodImgs)
                           : currency(item.delivery_commission)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        with delivery fee? idk what to do here
+                        {/* with delivery fee? idk what to do here */}
+                        we're supposed to remove this column right? 
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
                         {currency(Number(item.qty) * item.price)}{" "}
-                        {`(qty*price)`}
                       </TableCell>
                       {/* // <TableCell scope="row" style={{ textAlign: "center" }}>
             //   {item.delivery_within}
