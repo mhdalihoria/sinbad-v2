@@ -114,7 +114,7 @@ export const AppProvider = ({ children }) => {
       orderSummeryResponse,
       setOrderSummeryResponse,
     }),
-    [state, dispatch]
+    [state, dispatch, orderSummeryResponse]
   );
 
   useEffect(() => {
@@ -171,7 +171,7 @@ export const AppProvider = ({ children }) => {
       });
     };
     doFetch();
-  }, [state.cart, userToken, orderData]);
+  }, [orderData.carrierId]);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
