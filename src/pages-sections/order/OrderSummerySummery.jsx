@@ -218,7 +218,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
           >
             Apply Voucher
           </Button>
-          {discount && (
+          {!!discount && (
             <Button
               variant="outlined"
               color="secondary"
