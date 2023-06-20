@@ -39,6 +39,9 @@ const PaymentForm = ({ banks }) => {
   const [transferDoc, setTransferDoc] = useState(null);
   const { state, orderData, setOrderData, userToken } = useAppContext();
   const cartList = state.cart;
+  const [bankForm, setBankForm] = useState("")
+  const [amountForm, setAmountForm] = useState("")
+  const [transferNumForm, setTransferNumForm] = useState("")
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
   const width = useWindowSize();
@@ -46,12 +49,8 @@ const PaymentForm = ({ banks }) => {
   const handlePaymentMethodChange = ({ target: { name } }) => {
     setPaymentMethod(name);
   };
-  const initialValues = {
-    bank_id: "",
-    amount: getTotalPrice() || "",
-    transferNum: "",
-    transferDoc: "",
-  };
+
+  console.log(bankForm, amountForm, transferNumForm, transferDoc)
 
   useEffect(() => {
     switch (paymentMethod) {
@@ -104,11 +103,15 @@ const PaymentForm = ({ banks }) => {
     }
   }, [bankPaymentForm]);
 
+  useEffect(()=>{
+    setAmountForm(getTotalPrice())
+  }, [state.cart])
+
   const submitOrder = async () => {
     const headers = {
       "X-localization": "ar",
       // "Authorization": `Bearer oUTWx6fGaSVBZLJAseilg9TBk8Il4xLWrD6r7jLuZtOHFhEmS4T2f7nR3Kd5`,
-      "Authorization": `Bearer ${userToken}`,
+      Authorization: `Bearer ${userToken}`,
       "Content-Type": "application/json",
     };
     // const body = JSON.stringify({
@@ -126,22 +129,26 @@ const PaymentForm = ({ banks }) => {
     //   "cart_items": state.cart
     // });
     const body = JSON.stringify({
-      "coupon_code": orderData.couponCode,
-      "carrier_id": orderData.carrierId,
-      "total_price": orderData.totalPrice,
-      "shipping_cost": orderData.shippingCost,
-      "shipped_mobile": orderData.shippedMobile,
-      "shipped_location_id": orderData.shippedLocation_id,
-      "shipped_full_name": orderData.shippedFull_name,
-      "shipped_address": orderData.shippedAddress,
-      "payment_method": orderData.paymentMethod,
-      "notes": orderData.notes,
-      "reference_no": orderData.referenceNo,
-      "cart_items": state.cart
+      coupon_code: orderData.couponCode,
+      carrier_id: orderData.carrierId,
+      total_price: orderData.totalPrice,
+      shipping_cost: orderData.shippingCost,
+      shipped_mobile: orderData.shippedMobile,
+      shipped_location_id: orderData.shippedLocation_id,
+      shipped_full_name: orderData.shippedFull_name,
+      shipped_address: orderData.shippedAddress,
+      payment_method: orderData.paymentMethod,
+      notes: orderData.notes,
+      reference_no: orderData.referenceNo,
+      cart_items: state.cart,
     });
-    const response = await usePostFetch("https://sinbad-store.com/api/v2/add-order", headers, body);
-    console.log(response)
-  }
+    const response = await usePostFetch(
+      "https://sinbad-store.com/api/v2/add-order",
+      headers,
+      body
+    );
+    console.log(response);
+  };
 
   return (
     <Fragment>
@@ -205,129 +212,82 @@ const PaymentForm = ({ banks }) => {
           }
         />
 
-        {paymentMethod === "bank-transfer" && (
-          <Formik
-            initialValues={initialValues}
-            enableReinitialize={true}
-            validationSchema={paymentSchema}
-            onSubmit={(values) => {
-              setBankPaymentForm(values);
-            }}
-          >
-            {({
-              values,
-              errors,
-              touched,
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              setFieldValue,
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box mb={3}>
-                  <Grid container spacing={3}>
-                    <Grid item sm={6} xs={12}>
-                      <Form
-                        data={banks}
-                        label={"Banks"}
-                        selected={values.bank_id}
-                        setSelected={(nextValue) =>
-                          setFieldValue("bank_id", nextValue)
-                        }
-                        style={{ marginBottom: "1rem", width: "100%" }}
+        {paymentMethod === "bank-transfer" &&
+          (
+            <form >
+              <Box mb={3}>
+                <Grid container spacing={3}>
+                  <Grid item sm={6} xs={12}>
+                    <Form
+                      data={banks}
+                      label={"Banks"}
+                      selected={bankForm}
+                      setSelected={(nextValue) =>
+                        setBankForm(nextValue)
+                      }
+                      style={{ marginBottom: "1rem", width: "100%" }}
+                    />
+                    
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    <TextField
+                      fullWidth
+                      name="amount"
+                      label="Money Amount"
+                      placeholder="9874513"
+                      onChange={e=>setAmountForm(e.target.value)}
+                      value={amountForm}
+                    />
+                    
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                    <TextField
+                      fullWidth
+                      name="transferNum"
+                      value={transferNumForm}
+                      label="Transfer Number"
+                      onChange={(e)=> setTransferNumForm(e.target.value)}
+                    />
+                    
+                  </Grid>
+                  <Grid item sm={6} xs={12}>
+                   <div style={{marginTop: "-0.5rem"}}>
+                   <div style={{marginBottom: ".5rem"}}>وصل التحويل البنكي:</div>
+                    <FileButton variant="outlined" component="label">
+                      Choose File
+                      <input
+                        style={{ display: "none" }}
+                        type="file"
+                        onChange={(event) => {
+                          setTransferDoc(event.currentTarget.files[0])
+                        }}
+                        accept=".doc, .docx,.txt,.pdf,.png,.jpg,.jpeg"
+                        name="transferDoc"
                       />
-                      {touched.bank_id && errors.bank_id && (
-                        <p
-                          style={{
-                            color: "red",
-                            margin: "0",
-                            marginTop: "-10px",
-                          }}
-                        >
-                          {touched.bank_id && errors.bank_id}
-                        </p>
-                      )}
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        name="amount"
-                        label="Money Amount"
-                        placeholder="9874513"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        value={values.amount}
-                        // helperText={touched.amount && errors.amount}
-                      />
-                      {touched.amount && errors.amount && (
-                        <p style={{ color: "red", margin: "0" }}>
-                          {touched.amount && errors.amount}
-                        </p>
-                      )}
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        name="transferNum"
-                        onBlur={handleBlur}
-                        value={values.transferNum}
-                        label="Transfer Number"
-                        onChange={handleChange}
-                      />
-                      {touched.transferNum && errors.transferNum && (
-                        <p style={{ color: "red", margin: "0" }}>
-                          {touched.transferNum && errors.transferNum}
-                        </p>
-                      )}
-                    </Grid>
-                    <Grid item sm={6} xs={12}>
-                      <FileButton variant="outlined" component="label">
-                        Choose File
-                        <input
-                          style={{ display: "none" }}
-                          type="file"
-                          onChange={(event) => {
-                            setFieldValue(
-                              "transferDoc",
-                              event.currentTarget.files[0]
-                            );
-                          }}
-                          accept=".doc, .docx,.txt,.pdf,.png,.jpg,.jpeg"
-                          name="transferDoc"
-                        />
-                      </FileButton>
-                      {values.transferDoc && (
+                    </FileButton>
+                    {transferDoc && (
                         <span style={{ marginRight: "1rem" }}>
-                          {values.transferDoc.name} {" - "}(
-                          {(values.transferDoc.size / 1000000).toFixed(2)} MB)
+                          {transferDoc.name} {" - "}(
+                          {(transferDoc.size / 1000000).toFixed(2)} MB)
                         </span>
                       )}
-                      {touched.transferDoc && errors.transferDoc && (
-                        <p style={{ color: "red", margin: "0" }}>
-                          {touched.transferDoc && errors.transferDoc}
-                        </p>
-                      )}
-                    </Grid>
+                   </div>
+                   
                   </Grid>
-                </Box>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  type="submit"
-                  sx={{
-                    mb: 4,
-                  }}
-                >
-                  Submit
-                </Button>
-              </form>
-            )}
-          </Formik>
-        )}
+                </Grid>
+              </Box>
+            </form>
+          )}
 
-          <Button variant="contained" color="primary" type="button" fullWidth onClick={submitOrder}>
-            Submit Order
-          </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          type="button"
+          fullWidth
+          onClick={submitOrder}
+        >
+          Submit Order
+        </Button>
       </Card1>
 
       <Grid container spacing={7}>
