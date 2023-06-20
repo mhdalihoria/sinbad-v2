@@ -36,12 +36,13 @@ const FileButton = styled(Button)(({ theme }) => ({
 const PaymentForm = ({ banks }) => {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [bankPaymentForm, setBankPaymentForm] = useState(null);
-  const [transferDoc, setTransferDoc] = useState(null);
   const { state, orderData, setOrderData, userToken } = useAppContext();
   const cartList = state.cart;
-  const [bankForm, setBankForm] = useState("")
-  const [amountForm, setAmountForm] = useState("")
-  const [transferNumForm, setTransferNumForm] = useState("")
+  const [bankForm, setBankForm] = useState("");
+  const [amountForm, setAmountForm] = useState("");
+  const [transferNumForm, setTransferNumForm] = useState("");
+  const [transferDoc, setTransferDoc] = useState(null);
+  const [bankFormError, setBankFormError] = useState(null);
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
   const width = useWindowSize();
@@ -49,8 +50,6 @@ const PaymentForm = ({ banks }) => {
   const handlePaymentMethodChange = ({ target: { name } }) => {
     setPaymentMethod(name);
   };
-
-  console.log(bankForm, amountForm, transferNumForm, transferDoc)
 
   useEffect(() => {
     switch (paymentMethod) {
@@ -90,6 +89,28 @@ const PaymentForm = ({ banks }) => {
   }, [paymentMethod]);
 
   useEffect(() => {
+    if (
+      bankForm > 0 &&
+      amountForm > 0 &&
+      transferNumForm.length > 0 &&
+      transferDoc
+    ) {
+      setOrderData((prevOrder) => {
+        return {
+          ...prevOrder,
+          bank: bankForm,
+          totalPrice: amountForm,
+          transferDocument: transferDoc,
+          transferNo: transferNumForm,
+        };
+      });
+      setBankFormError(null);
+    } else {
+      setBankFormError("Not All Fields are Full");
+    }
+  }, [bankForm, amountForm, transferNumForm, transferDoc]);
+
+  useEffect(() => {
     if (bankPaymentForm) {
       setOrderData((prevOrder) => {
         return {
@@ -103,9 +124,9 @@ const PaymentForm = ({ banks }) => {
     }
   }, [bankPaymentForm]);
 
-  useEffect(()=>{
-    setAmountForm(getTotalPrice())
-  }, [state.cart])
+  useEffect(() => {
+    setAmountForm(getTotalPrice());
+  }, [state.cart]);
 
   const submitOrder = async () => {
     const headers = {
@@ -212,9 +233,22 @@ const PaymentForm = ({ banks }) => {
           }
         />
 
-        {paymentMethod === "bank-transfer" &&
-          (
-            <form >
+        {paymentMethod === "bank-transfer" && (
+          <>
+            {bankFormError && (
+              <div
+                style={{
+                  textAlign: "center",
+                  marginBottom: "1rem",
+                  color: "red",
+                  fontSize: "1.3rem",
+                  fontWeight: "600",
+                }}
+              >
+                {bankFormError}
+              </div>
+            )}
+            <form>
               <Box mb={3}>
                 <Grid container spacing={3}>
                   <Grid item sm={6} xs={12}>
@@ -222,12 +256,9 @@ const PaymentForm = ({ banks }) => {
                       data={banks}
                       label={"Banks"}
                       selected={bankForm}
-                      setSelected={(nextValue) =>
-                        setBankForm(nextValue)
-                      }
+                      setSelected={(nextValue) => setBankForm(nextValue)}
                       style={{ marginBottom: "1rem", width: "100%" }}
                     />
-                    
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
@@ -235,10 +266,9 @@ const PaymentForm = ({ banks }) => {
                       name="amount"
                       label="Money Amount"
                       placeholder="9874513"
-                      onChange={e=>setAmountForm(e.target.value)}
+                      onChange={(e) => setAmountForm(e.target.value)}
                       value={amountForm}
                     />
-                    
                   </Grid>
                   <Grid item sm={6} xs={12}>
                     <TextField
@@ -246,38 +276,39 @@ const PaymentForm = ({ banks }) => {
                       name="transferNum"
                       value={transferNumForm}
                       label="Transfer Number"
-                      onChange={(e)=> setTransferNumForm(e.target.value)}
+                      onChange={(e) => setTransferNumForm(e.target.value)}
                     />
-                    
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                   <div style={{marginTop: "-0.5rem"}}>
-                   <div style={{marginBottom: ".5rem"}}>وصل التحويل البنكي:</div>
-                    <FileButton variant="outlined" component="label">
-                      Choose File
-                      <input
-                        style={{ display: "none" }}
-                        type="file"
-                        onChange={(event) => {
-                          setTransferDoc(event.currentTarget.files[0])
-                        }}
-                        accept=".doc, .docx,.txt,.pdf,.png,.jpg,.jpeg"
-                        name="transferDoc"
-                      />
-                    </FileButton>
-                    {transferDoc && (
+                    <div style={{ marginTop: "-0.5rem" }}>
+                      <div style={{ marginBottom: ".5rem" }}>
+                        وصل التحويل البنكي:
+                      </div>
+                      <FileButton variant="outlined" component="label">
+                        Choose File
+                        <input
+                          style={{ display: "none" }}
+                          type="file"
+                          onChange={(event) => {
+                            setTransferDoc(event.currentTarget.files[0]);
+                          }}
+                          accept=".doc, .docx,.txt,.pdf,.png,.jpg,.jpeg"
+                          name="transferDoc"
+                        />
+                      </FileButton>
+                      {transferDoc && (
                         <span style={{ marginRight: "1rem" }}>
                           {transferDoc.name} {" - "}(
                           {(transferDoc.size / 1000000).toFixed(2)} MB)
                         </span>
                       )}
-                   </div>
-                   
+                    </div>
                   </Grid>
                 </Grid>
               </Box>
             </form>
-          )}
+          </>
+        )}
 
         <Button
           variant="contained"
