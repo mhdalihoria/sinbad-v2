@@ -113,7 +113,7 @@ export const AppProvider = ({ children }) => {
       orderSummeryResponse,
       setOrderSummeryResponse,
     }),
-    [state, dispatch, orderSummeryResponse, discount]
+    [state, dispatch, orderSummeryResponse, discount, orderData]
   );
 
   useEffect(() => {
@@ -170,7 +170,7 @@ export const AppProvider = ({ children }) => {
       });
     };
     doFetch();
-  }, [orderData.carrierId]);
+  }, []);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
