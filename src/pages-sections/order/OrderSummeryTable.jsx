@@ -50,6 +50,8 @@ const OrderSummeryTable = ({ data }) => {
     }
   }, [data]);
 
+  console.log(data)
+
   return (
     <>
       <Card1>
@@ -95,6 +97,15 @@ const OrderSummeryTable = ({ data }) => {
                       }}
                       align="center"
                     >
+                      qty
+                    </TableCell>
+                    <TableCell
+                      style={{
+                        color: theme.palette.primary.contrastText,
+                        fontWeight: "700",
+                      }}
+                      align="center"
+                    >
                       discount
                     </TableCell>
                     <TableCell
@@ -122,7 +133,7 @@ const OrderSummeryTable = ({ data }) => {
                       }}
                       align="center"
                     >
-                      delivery fee?
+                      Total Comission
                     </TableCell>
                     <TableCell
                       style={{
@@ -143,7 +154,7 @@ const OrderSummeryTable = ({ data }) => {
                     >
                       <TableCell style={{ textAlign: "center" }}>
                         {prodImgs.length > 0 && (
-                          <Image src={prodImgs[idx]} width={50} height={70} />
+                          <Image src={prodImgs[idx]} width={"200px"} height={"400px"} fill={true} />
                         )}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
@@ -153,23 +164,27 @@ const OrderSummeryTable = ({ data }) => {
                         {currency(item.price)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
+                        {item.qty}
+                      </TableCell>
+                      <TableCell style={{ textAlign: "center" }}>
                         {typeof item.discount === "undefined"
                           ? currency(0)
                           : currency(item.discount)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {typeof item.discount === "undefined"
+                        {typeof item.commission === "undefined"
                           ? currency(0)
                           : currency(item.commission)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {typeof item.discount === "undefined"
+                        {typeof item.delivery_commission === "undefined"
                           ? currency(0)
                           : currency(item.delivery_commission)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
-                        {/* with delivery fee? idk what to do here */}
-                        we're supposed to remove this column right? 
+                        {typeof item.total_commission === "undefined"
+                          ? currency(0)
+                          : currency(item.total_commission)}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
                         {currency(Number(item.qty) * item.price)}{" "}
