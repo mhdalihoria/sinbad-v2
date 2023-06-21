@@ -13,6 +13,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
     state,
     setDiscount,
     discount,
+    orderData,
     setOrderData,
     userToken,
     orderSummeryResponse,
@@ -24,7 +25,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
   const cartList = state.cart;
   const router = useRouter();
 
-  console.log(orderSummeryResponse);
+  console.log(orderData.shippingCost);
 
   const handleCouponFetch = async () => {
     const discount = Number(discountInput.replace(/\D/g, ""));
@@ -36,7 +37,7 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
     };
     const body = JSON.stringify({
       coupon_code: discountInput,
-      cart_items: cartList
+      cart_items: cartList,
     });
     const response = await usePostFetch(
       "https://sinbad-store.com/api/v2/check-coupon-code",
@@ -72,114 +73,55 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
 
   return (
     <Card1>
-      {data && data.cart_items ? (
-        <>
-          <FlexBetween mb={1}>
-            <Typography color="grey.600">Subtotal:</Typography>
-            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {currency(
-                data.cart_items.reduce(
-                  (acc, current) =>
-                    acc + Number(current.qty) * Number(current.price),
-                  0
-                )
-              )}
-            </Typography>
-          </FlexBetween>
+      <FlexBetween mb={1}>
+        <Typography color="grey.600">Subtotal:</Typography>
+        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          {currency(
+            cartList.reduce(
+              (acc, current) =>
+                acc + Number(current.qty) * Number(current.price),
+              0
+            )
+          )}
+        </Typography>
+      </FlexBetween>
 
-          <FlexBetween mb={1}>
-            <Typography color="grey.600">Shipping:</Typography>
-            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {data.shipping_cost ? currency(data.shipping_cost) : "-"}
-            </Typography>
-          </FlexBetween>
+      <FlexBetween mb={1}>
+        <Typography color="grey.600">Shipping:</Typography>
+        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          {orderData.shippingCost ? currency(orderData.shippingCost) : "-"}
+        </Typography>
+      </FlexBetween>
 
-          <FlexBetween mb={2}>
-            <Typography color="grey.600">Discount:</Typography>
-            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {discount ? currency(discount) : "-"}
-            </Typography>
-          </FlexBetween>
+      <FlexBetween mb={2}>
+        <Typography color="grey.600">Discount:</Typography>
+        <Typography fontSize="18px" fontWeight="600" lineHeight="1">
+          {discount ? currency(discount) : "-"}
+        </Typography>
+      </FlexBetween>
 
-          <Divider
-            sx={{
-              mb: "1rem",
-            }}
-          />
+      <Divider
+        sx={{
+          mb: "1rem",
+        }}
+      />
 
-          <Typography
-            fontSize="25px"
-            fontWeight="600"
-            lineHeight="1"
-            textAlign="right"
-            mb={3}
-          >
-            {currency(
-              data.cart_items.reduce(
-                (acc, current) =>
-                  acc + Number(current.qty) * Number(current.price),
-                0
-              ) +
-                (data.shipping_cost ? data.shipping_cost : 0) -
-                (discount ? discount : 0)
-            )}
-          </Typography>
-        </>
-      ) : (
-        <>
-          <FlexBetween mb={1}>
-            <Typography color="grey.600">Subtotal:</Typography>
-            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {currency(
-                cartList.reduce(
-                  (acc, current) =>
-                    acc + Number(current.qty) * Number(current.price),
-                  0
-                )
-              )}
-            </Typography>
-          </FlexBetween>
-
-          <FlexBetween mb={1}>
-            <Typography color="grey.600">Shipping:</Typography>
-            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {"-"}
-            </Typography>
-          </FlexBetween>
-
-          <FlexBetween mb={2}>
-            <Typography color="grey.600">Discount:</Typography>
-            <Typography fontSize="18px" fontWeight="600" lineHeight="1">
-              {"-"}
-            </Typography>
-          </FlexBetween>
-
-          <Divider
-            sx={{
-              mb: "1rem",
-            }}
-          />
-
-          <Typography
-            fontSize="25px"
-            fontWeight="600"
-            lineHeight="1"
-            textAlign="right"
-            mb={3}
-          >
-            {currency(
-              cartList.reduce(
-                (acc, current) =>
-                  acc + Number(current.qty) * Number(current.price),
-                0
-              ) +
-                (0) -
-                (0)
-            )}
-          </Typography>
-        </>
-      )}
-
+      <Typography
+        fontSize="25px"
+        fontWeight="600"
+        lineHeight="1"
+        textAlign="right"
+        mb={3}
+      >
+        {currency(
+          cartList.reduce(
+            (acc, current) => acc + Number(current.qty) * Number(current.price),
+            0
+          ) +
+            0 -
+            0
+        )}
+      </Typography>
       {router.pathname === "/delivery" && (
         <>
           <Divider
@@ -226,11 +168,11 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
               sx={{
                 mt: "1rem",
                 mb: "30px",
-                ml: ".8rem"
+                ml: ".8rem",
               }}
-              onClick={()=>setDiscount(null)}
+              onClick={() => setDiscount(null)}
             >
-             Remove Voucher
+              Remove Voucher
             </Button>
           )}
         </>
