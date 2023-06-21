@@ -82,10 +82,10 @@ const DeliveryTable = ({ data, checked, setChecked }) => {
                   >
                     <TableCell style={{ textAlign: "center" }}>
                       <Radio
-                        checked={checked === 0 ? true : false}
+                        checked={checked.id === 0 ? true : false}
                         color="primary"
                         size="small"
-                        onClick={() => setChecked(0)}
+                        onClick={() => setChecked({ id: 0, price: 0 })}
                       />
                     </TableCell>
                     <TableCell style={{ textAlign: "center" }}>
@@ -104,10 +104,16 @@ const DeliveryTable = ({ data, checked, setChecked }) => {
                     >
                       <TableCell style={{ textAlign: "center" }}>
                         <Radio
-                          checked={checked === item.id ? true : false}
+                          checked={checked.id === item.id ? true : false}
                           color="primary"
                           size="small"
-                          onClick={() => setChecked(item.id)}
+                          onClick={() =>
+                            setChecked({
+                              id: item.id,
+                              price:
+                                typeof item.fee !== "undefined" ? item.fee : 0,
+                            })
+                          }
                         />
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
