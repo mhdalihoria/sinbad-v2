@@ -36,7 +36,14 @@ const FileButton = styled(Button)(({ theme }) => ({
 const PaymentForm = ({ banks }) => {
   const [paymentMethod, setPaymentMethod] = useState("cash");
   const [bankPaymentForm, setBankPaymentForm] = useState(null);
-  const { state, orderData, setOrderData, userToken } = useAppContext();
+  const {
+    state,
+    orderData,
+    setOrderData,
+    userToken,
+    discount,
+    orderSummeryResponse,
+  } = useAppContext();
   const cartList = state.cart;
   const [bankForm, setBankForm] = useState("");
   const [amountForm, setAmountForm] = useState("");
@@ -105,8 +112,6 @@ const PaymentForm = ({ banks }) => {
         };
       });
       setBankFormError(null);
-    } else {
-      setBankFormError("Not All Fields are Full");
     }
   }, [bankForm, amountForm, transferNumForm, transferDoc]);
 
@@ -125,8 +130,18 @@ const PaymentForm = ({ banks }) => {
   }, [bankPaymentForm]);
 
   useEffect(() => {
-    setAmountForm(getTotalPrice());
-  }, [state.cart]);
+    const totalPrice = orderSummeryResponse && typeof orderSummeryResponse.cart_items !== "undefined"
+      ? orderSummeryResponse.cart_items.reduce(
+          (acc, current) => acc + Number(current.qty) * Number(current.price),
+          0
+        ) +
+        (orderSummeryResponse.shipping_cost
+          ? orderSummeryResponse.shipping_cost
+          : 0) -
+        (discount ? discount : 0)
+      : getTotalPrice();
+    setAmountForm(totalPrice);
+  }, [orderSummeryResponse]);
 
   const submitOrder = async () => {
     const headers = {
@@ -163,12 +178,24 @@ const PaymentForm = ({ banks }) => {
       reference_no: orderData.referenceNo,
       cart_items: state.cart,
     });
-    const response = await usePostFetch(
-      "https://sinbad-store.com/api/v2/add-order",
-      headers,
-      body
-    );
-    console.log(response);
+
+    if (
+      paymentMethod === "bank-transfer" &&
+      bankForm > 0 &&
+      amountForm > 0 &&
+      transferNumForm.length > 0 &&
+      !!transferDoc
+    ) {
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/add-order",
+        headers,
+        body
+      );
+
+      console.log(response);
+    } else {
+      setBankFormError("الرجاء ملئ كل الحقول");
+    }
   };
 
   return (
