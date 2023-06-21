@@ -17,7 +17,7 @@ const Delivery = () => {
   } = useAppContext();
   // const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
   const [carrier, setCarrier] = useState(null);
-  const [checked, setChecked] = useState(null);
+  const [checked, setChecked] = useState({id: null, price: null});
   const [couponToken, setCouponToken] = useState(null);
 
   useEffect(() => {
@@ -43,7 +43,7 @@ const Delivery = () => {
     if (state.cart.length > 0) {
       doCarrierFetch();
     }
-  }, [state.cart, orderData]);
+  }, [state.cart, orderData.shippedLocation_id]);
 
   useEffect(() => {
     //   const doFetch = async () => {
@@ -79,11 +79,12 @@ const Delivery = () => {
   }, [orderSummeryResponse]);
 
   useEffect(() => {
-    if (checked !== orderData.carrierId) {
+    if (checked.id !== orderData.carrierId) {
       setOrderData((prevData) => {
         return {
           ...prevData,
-          carrierId: checked,
+          carrierId: checked.id,
+          shippingCost: checked.price
         };
       });
     }
