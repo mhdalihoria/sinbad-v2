@@ -9,8 +9,8 @@ import ProductCard7 from "components/product-cards/ProductCard7";
 import MainBlogCard from "../../src/pages-sections/blogs/MainBlogCard";
 import BlogsCategories from "../../src/pages-sections/blogs/BlogsCategories";
 
-import allBlogs from "../../src/utils/__api__/blogsList";
-import allBlogCates from "../../src/utils/__api__/blogCategories";
+// import allBlogs from "../../src/utils/__api__/blogsList";
+// import allBlogCates from "../../src/utils/__api__/blogCategories";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 
 const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
@@ -20,7 +20,7 @@ const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
       <Grid container spacing={3}>
         {/* CART PRODUCT LIST */}
         <Grid item md={9} xs={12}>
-          {allBlogsData.map((blogInfo) => (
+          {allBlogsData.data.map((blogInfo) => (
             <MainBlogCard key={blogInfo.id} {...blogInfo} />
           ))}
         </Grid>
