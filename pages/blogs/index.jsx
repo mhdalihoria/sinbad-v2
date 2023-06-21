@@ -9,8 +9,6 @@ import ProductCard7 from "components/product-cards/ProductCard7";
 import MainBlogCard from "../../src/pages-sections/blogs/MainBlogCard";
 import BlogsCategories from "../../src/pages-sections/blogs/BlogsCategories";
 
-// import allBlogs from "../../src/utils/__api__/blogsList";
-// import allBlogCates from "../../src/utils/__api__/blogCategories";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 
 const BlogList = ({ allBlogsData, allBlogsCatesData }) => {
