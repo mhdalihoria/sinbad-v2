@@ -1,8 +1,6 @@
 import { Box, Card, styled } from "@mui/material";
 import Image from "next/image";
-import allBlogs from "../../src/utils/__api__/blogsList";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
-// import getBlogPost from "../../src/utils/__api__/blogSinglePost";
 
 const Wrapper = styled(Card)(({ theme }) => ({
   display: "flex",
@@ -98,8 +96,16 @@ const SingleBlogPage = ({ urlId, postData }) => {
   );
 };
 
-export const getStaticPaths = (ctx) => {
-  const allBlogIDs = allBlogs.data.map((blog) => ({
+export const getStaticPaths = async (ctx) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "X-localization": "ar" },
+  };
+  const allBlogs = await useGetFetch(
+    "https://sinbad-store.com/api/v2/blog",
+    requestOptions
+  );
+  const allBlogIDs = allBlogs.data.data.map((blog) => ({
     params: { id: blog.id.toString() },
   }));
 
