@@ -1,4 +1,3 @@
-import usePostFetch from "components/fetch/usePostFetch";
 import {
   createContext,
   useContext,
@@ -96,9 +95,6 @@ export const AppProvider = ({ children }) => {
     bank: null,
     transferNo: null,
   });
-  const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
-
-  console.log("Context", orderData);
   const [userToken, setUserToken] = useState(null);
   const contextValue = useMemo(
     () => ({
@@ -110,11 +106,11 @@ export const AppProvider = ({ children }) => {
       setOrderData,
       userToken,
       setUserToken,
-      orderSummeryResponse,
-      setOrderSummeryResponse,
     }),
-    [state, dispatch, orderSummeryResponse, discount, orderData]
+    [state, dispatch, discount, orderData]
   );
+
+  console.log("Context", orderData);
 
   useEffect(() => {
     if (!window) return;
@@ -145,32 +141,6 @@ export const AppProvider = ({ children }) => {
     }
   }, [state]);
 
-  useEffect(() => {
-    const doFetch = async () => {
-      const headers = {
-        "X-localization": "ar",
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      };
-      const body = JSON.stringify({
-        coupon_code: orderData.couponCode,
-        carrier_id: orderData.carrierId,
-        cart_items: state.cart,
-      });
-      const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/checkout-cart-summary",
-        headers,
-        body
-      );
-      const data = response.data.data;
-      setOrderSummeryResponse(prevOrder=> {
-        if(prevOrder !== data) {
-          return data
-        }
-      });
-    };
-    doFetch();
-  }, []);
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
