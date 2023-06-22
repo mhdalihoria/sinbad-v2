@@ -165,10 +165,10 @@ const ProductIntro = ({
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
-        price: product_price,
+        price: sale_price? sale_price : product_price,
         qty: amount,
         name: product_name,
-        imgUrl: thumbnail,
+        imgUrl: productImages[0],
         id: id,
         nanoId: nanoid(),
         slug,
@@ -196,7 +196,7 @@ const ProductIntro = ({
       imgUrl: `${
         typeof thumbnail === "undefined"
           ? "https://placehold.jp/300x300.png"
-          : thumbnail
+          : productImages[0]
       }`,
       rating: 4,
       categoryName: category_name,
