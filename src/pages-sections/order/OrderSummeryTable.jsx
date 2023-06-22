@@ -154,7 +154,7 @@ const OrderSummeryTable = ({ data }) => {
                     >
                       <TableCell style={{ textAlign: "center" }}>
                         {prodImgs.length > 0 && (
-                          <Image src={prodImgs[idx]} width={"200px"} height={"400px"} fill={true} />
+                          <Image src={prodImgs[idx]} width={"200px"} height={"400px"} />
                         )}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
