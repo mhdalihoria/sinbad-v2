@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Box, Container, Grid } from "@mui/material";
 import Stepper from "components/Stepper";
 import ShopLayout1 from "./ShopLayout1";
+import { useAppContext } from "contexts/AppContext";
 
 /**
  *  Used:
@@ -17,6 +18,8 @@ import ShopLayout1 from "./ShopLayout1";
 
 const CheckoutNavLayout = ({ children }) => {
   const [selectedStep, setSelectedStep] = useState(0);
+  const {userToken} = useAppContext()
+  console.log(userToken)
   const router = useRouter();
   const { pathname } = router;
   const handleStepChange = (step) => {
@@ -74,7 +77,7 @@ const CheckoutNavLayout = ({ children }) => {
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Stepper
-                stepperList={stepperList}
+                stepperList={userToken ? stepperList : disabledStepperList}
                 selectedStep={selectedStep}
                 onChange={handleStepChange}
               />
@@ -103,6 +106,24 @@ const stepperList = [
   {
     title: "Summery",
     disabled: false,
+  },
+];
+const disabledStepperList = [
+  {
+    title: "Cart",
+    disabled: false,
+  },
+  {
+    title: "Details",
+    disabled: true,
+  },
+  {
+    title: "Delivery",
+    disabled: true,
+  },
+  {
+    title: "Summery",
+    disabled: true,
   },
 ];
 export default CheckoutNavLayout;
