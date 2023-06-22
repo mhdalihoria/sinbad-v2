@@ -21,6 +21,10 @@ const OrderSummeryTable = ({ data }) => {
   const theme = useTheme();
   const [prodImgs, setProdImgs] = useState([]);
 
+  const isDeliveryComission = data && typeof data.cart_items !== "undefined" && data.cart_items.every(
+    (item) => typeof item.delivery_commission !== "undefined" && item.delivery_commission
+  );
+
   const totalPrice = (cartItems, shippingCost, discountPrice) => {
     const shipping = typeof shippingCost === "undefined" ? 0 : shippingCost;
     const discount = typeof discountPrice === "undefined" ? 0 : discountPrice;
@@ -35,22 +39,20 @@ const OrderSummeryTable = ({ data }) => {
   };
 
   useEffect(() => {
-    if(data && typeof data.cart_items !== "undefined") {
+    if (data && typeof data.cart_items !== "undefined") {
       data.cart_items.map(async (item) => {
-      const response = await useGetFetch(
-        `https://sinbad-store.com/api/v2/product/${item.id}`
-      );
-      const data = await response.data.product;
-      if (typeof data.product_image !== "undefined") {
-        setProdImgs((prevProd) => {
-          return [...prevProd, data.product_image];
-        });
-      }
-    });
+        const response = await useGetFetch(
+          `https://sinbad-store.com/api/v2/product/${item.id}`
+        );
+        const data = await response.data.product;
+        if (typeof data.product_image !== "undefined") {
+          setProdImgs((prevProd) => {
+            return [...prevProd, data.product_image];
+          });
+        }
+      });
     }
   }, [data]);
-
-  console.log(data)
 
   return (
     <>
@@ -117,7 +119,7 @@ const OrderSummeryTable = ({ data }) => {
                     >
                       comission
                     </TableCell>
-                    <TableCell
+                    {isDeliveryComission && <TableCell
                       style={{
                         color: theme.palette.primary.contrastText,
                         fontWeight: "700",
@@ -125,7 +127,7 @@ const OrderSummeryTable = ({ data }) => {
                       align="center"
                     >
                       delivery comisison
-                    </TableCell>
+                    </TableCell>}
                     <TableCell
                       style={{
                         color: theme.palette.primary.contrastText,
@@ -154,7 +156,11 @@ const OrderSummeryTable = ({ data }) => {
                     >
                       <TableCell style={{ textAlign: "center" }}>
                         {prodImgs.length > 0 && (
-                          <Image src={prodImgs[idx]} width={"200px"} height={"400px"} />
+                          <Image
+                            src={prodImgs[idx]}
+                            width={"200px"}
+                            height={"400px"}
+                          />
                         )}
                       </TableCell>
                       <TableCell style={{ textAlign: "center" }}>
@@ -176,11 +182,11 @@ const OrderSummeryTable = ({ data }) => {
                           ? currency(0)
                           : currency(item.commission)}
                       </TableCell>
-                      <TableCell style={{ textAlign: "center" }}>
+                      {isDeliveryComission && <TableCell style={{ textAlign: "center" }}>
                         {typeof item.delivery_commission === "undefined"
                           ? currency(0)
                           : currency(item.delivery_commission)}
-                      </TableCell>
+                      </TableCell>}
                       <TableCell style={{ textAlign: "center" }}>
                         {typeof item.total_commission === "undefined"
                           ? currency(0)
@@ -189,69 +195,8 @@ const OrderSummeryTable = ({ data }) => {
                       <TableCell style={{ textAlign: "center" }}>
                         {currency(Number(item.qty) * item.price)}{" "}
                       </TableCell>
-                      {/* // <TableCell scope="row" style={{ textAlign: "center" }}>
-            //   {item.delivery_within}
-            // </TableCell> */}
                     </TableRow>
                   ))}
-                </TableBody>
-              </Table>
-              <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead style={{ background: theme.palette.primary.main }}>
-                  <TableRow>
-                    <TableCell
-                      style={{
-                        color: theme.palette.primary.contrastText,
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                      align="center"
-                    >
-                      Total Discount
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: theme.palette.primary.contrastText,
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                      align="center"
-                    >
-                      Shipping Cost
-                    </TableCell>
-                    <TableCell
-                      style={{
-                        color: theme.palette.primary.contrastText,
-                        fontWeight: "700",
-                        textAlign: "center",
-                      }}
-                      align="center"
-                    >
-                      Total Price
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell style={{ textAlign: "center" }}>
-                      {/* {currency(data.total_discount)} */}
-                      {typeof data.total_discount === "undefined"
-                        ? currency(0)
-                        : currency(data.total_discount)}
-                    </TableCell>
-                    <TableCell style={{ textAlign: "center" }}>
-                      {currency(data.shipping_cost)}
-                    </TableCell>
-                    <TableCell style={{ textAlign: "center" }}>
-                      {currency(
-                        totalPrice(
-                          data.cart_items,
-                          data.shipping_cost,
-                          data.total_discount
-                        )
-                      )}
-                    </TableCell>
-                  </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
@@ -262,23 +207,6 @@ const OrderSummeryTable = ({ data }) => {
           )}
         </Paper>
       </Card1>
-      {/* <Grid container spacing={6} style={{ marginTop: "0rem" }}>
-        <Grid item sm={6} xs={12}>
-          <Link href="/checkout" passHref>
-            <Button variant="outlined" color="primary" type="button" fullWidth>
-              Back To Checkout
-            </Button>
-          </Link>
-        </Grid>
-
-        <Grid item sm={6} xs={12}>
-          <Link href="/payment" passHref>
-            <Button variant="contained" color="primary" type="button" fullWidth>
-              Proceed
-            </Button>
-          </Link>
-        </Grid>
-      </Grid> */}
     </>
   );
 };
