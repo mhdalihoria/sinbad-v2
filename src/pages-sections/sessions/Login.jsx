@@ -14,6 +14,7 @@ import { SettingsContext } from "contexts/SettingContext";
 import Loading from "../../components/loader-spinner/Loader";
 import { useRouter } from "next/router";
 import ResetPassword from "./ResetPassword";
+import { RouterRounded } from "@mui/icons-material";
 
 const fbStyle = {
   background: "#3B5998",
@@ -67,7 +68,6 @@ const Login = () => {
   const router = useRouter();
   const handleFormSubmit = async (values) => {
     try {
-      console.log(values);
       setLoading(true);
       const { data, response } = await usePostFetch(
         "https://sinbad-store.com/api/v2/login",
@@ -126,6 +126,15 @@ const Login = () => {
     }, 5000);
     return <span>We'll get you to Activate your account now</span>;
   }
+
+  if(stage === 1 && !resetPassword) {
+    if(router.pathname === "/") {
+      router.reload("/")
+    } else {
+      router.push("/")
+    }
+  }
+
   return (
     <Wrapper elevation={3} passwordVisibility={passwordVisibility}>
       {stage === 1 && !resetPassword && (
