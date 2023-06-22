@@ -7,10 +7,40 @@ import OrderSummerySummery from "pages-sections/order/OrderSummerySummery";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
 import useGetFetch from "../src/components/fetch/useGetFetch";
+import usePostFetch from "../src/components/fetch/usePostFetch";
 
 const OrderSummery = ({banks}) => {
-  const {orderSummeryResponse } = useAppContext();
+  const {orderData, userToken, state} = useAppContext();
+  const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
 
+  useEffect(() => {
+    const doFetch = async () => {
+      const headers = {
+        "X-localization": "ar",
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      };
+      const body = JSON.stringify({
+        coupon_code: orderData.couponCode,
+        carrier_id: orderData.carrierId,
+        cart_items: state.cart,
+      });
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/checkout-cart-summary",
+        headers,
+        body
+      );
+      const data = response.data.data;
+      setOrderSummeryResponse(prevOrder=> {
+        if(prevOrder !== data) {
+          return data
+        }
+      });
+    };
+      doFetch()
+  }, [orderData.carrierId]);
+
+  console.log("order page", orderSummeryResponse)
 
   return (
     <CheckoutNavLayout>
@@ -21,9 +51,7 @@ const OrderSummery = ({banks}) => {
         </Grid>
 
         <Grid item lg={4} md={4} xs={12}>
-          <OrderSummerySummery
-            data={orderSummeryResponse}
-          />
+          <OrderSummerySummery />
         </Grid>
       </Grid>
     </CheckoutNavLayout>
