@@ -52,8 +52,6 @@ const PaymentForm = ({ banks }) => {
   const [bankFormError, setBankFormError] = useState(null);
   const getTotalPrice = () =>
     cartList.reduce((accum, item) => accum + item.price * item.qty, 0);
-  const width = useWindowSize();
-  const router = useRouter();
   const handlePaymentMethodChange = ({ target: { name } }) => {
     setPaymentMethod(name);
   };
@@ -130,16 +128,18 @@ const PaymentForm = ({ banks }) => {
   }, [bankPaymentForm]);
 
   useEffect(() => {
-    const totalPrice = orderSummeryResponse && typeof orderSummeryResponse.cart_items !== "undefined"
-      ? orderSummeryResponse.cart_items.reduce(
-          (acc, current) => acc + Number(current.qty) * Number(current.price),
-          0
-        ) +
-        (orderSummeryResponse.shipping_cost
-          ? orderSummeryResponse.shipping_cost
-          : 0) -
-        (discount ? discount : 0)
-      : getTotalPrice();
+    const totalPrice =
+      orderSummeryResponse &&
+      typeof orderSummeryResponse.cart_items !== "undefined"
+        ? orderSummeryResponse.cart_items.reduce(
+            (acc, current) => acc + Number(current.qty) * Number(current.price),
+            0
+          ) +
+          (orderSummeryResponse.shipping_cost
+            ? orderSummeryResponse.shipping_cost
+            : 0) -
+          (discount ? discount : 0)
+        : getTotalPrice();
     setAmountForm(totalPrice);
   }, [orderSummeryResponse]);
 
@@ -307,8 +307,8 @@ const PaymentForm = ({ banks }) => {
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    <div style={{ marginTop: "-0.5rem" }}>
-                      <div style={{ marginBottom: ".5rem" }}>
+                    <div style={{ marginTop: "-0.5rem", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                      <div >
                         وصل التحويل البنكي:
                       </div>
                       <FileButton variant="outlined" component="label">
@@ -350,17 +350,9 @@ const PaymentForm = ({ banks }) => {
 
       <Grid container spacing={7}>
         <Grid item sm={6} xs={12}>
-          <Link href="/checkout" passHref>
+          <Link href="/delivery" passHref>
             <Button variant="outlined" color="primary" type="button" fullWidth>
-              Back to checkout details
-            </Button>
-          </Link>
-        </Grid>
-
-        <Grid item sm={6} xs={12}>
-          <Link href="/orderSummery" passHref>
-            <Button variant="contained" color="primary" type="submit" fullWidth>
-              Review
+              Back to Delivery
             </Button>
           </Link>
         </Grid>
