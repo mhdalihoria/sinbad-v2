@@ -7,7 +7,7 @@ import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-const OrderSummerySummery = ({ setCouponToken, data }) => {
+const OrderSummerySummery = ({ setCouponToken }) => {
   const [discountInput, setDiscountInput] = useState(0);
   const {
     state,
@@ -16,7 +16,6 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
     orderData,
     setOrderData,
     userToken,
-    orderSummeryResponse,
   } = useAppContext();
   const [discountResponseMsg, setDiscountResponseMsg] = useState({
     status: false,
@@ -59,17 +58,6 @@ const OrderSummerySummery = ({ setCouponToken, data }) => {
       }, 3500);
     }
   };
-
-  useEffect(() => {
-    if (data && data.cart_items && data.shipping_cost) {
-      setOrderData((prevData) => {
-        return {
-          ...prevData,
-          shippingCost: data.shipping_cost,
-        };
-      });
-    }
-  }, [data]);
 
   return (
     <Card1>
