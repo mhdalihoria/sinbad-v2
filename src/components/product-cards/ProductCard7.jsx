@@ -8,9 +8,7 @@ import { useAppContext } from "contexts/AppContext";
 import { currency } from "lib";
 
 // styled components
-const Wrapper = styled(Card)(({
-  theme
-}) => ({
+const Wrapper = styled(Card)(({ theme }) => ({
   display: "flex",
   overflow: "hidden",
   alignItems: "center",
@@ -23,87 +21,98 @@ const Wrapper = styled(Card)(({
     flexWrap: "wrap",
     img: {
       height: "auto",
-      minWidth: "100%"
-    }
-  }
+      minWidth: "100%",
+    },
+  },
 }));
 
 // =========================================================
 
 // =========================================================
 
-const ProductCard7 = ({
-  id,
-  name,
-  qty,
-  price,
-  imgUrl,
-  slug
-}) => {
-  const {
-    dispatch
-  } = useAppContext();
+const ProductCard7 = (item) => {
+  const { dispatch } = useAppContext();
   // handle change cart
-  const handleCartAmountChange = amount => () => {
+  console.log(item)
+  const handleCartAmountChange = (amount) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
-        id,
-        name,
-        price,
-        imgUrl,
+        ...item,
         qty: amount,
-        slug
-      }
+      },
     });
   };
-  return <Wrapper>
-      <Image alt={name} width={140} height={140} display="block" src={imgUrl || "/assets/images/products/iphone-xi.png"} />
+  return (
+    <Wrapper>
+      <Image
+        alt={item.name}
+        width={140}
+        height={140}
+        display="block"
+        src={item.imgUrl || "/assets/images/products/iphone-xi.png"}
+      />
 
-      <IconButton size="small" onClick={handleCartAmountChange(0)} sx={{
-      position: "absolute",
-      right: 15,
-      top: 15
-    }}>
+      <IconButton
+        size="small"
+        onClick={handleCartAmountChange(0)}
+        sx={{
+          position: "absolute",
+          right: 15,
+          top: 15,
+        }}
+      >
         <Close fontSize="small" />
       </IconButton>
 
       <FlexBox p={2} rowGap={2} width="100%" flexDirection="column">
-        <Link href={`/product/${slug}`}>
+        <Link href={`/products/${item.id}`}>
           <a>
             <Span ellipsis fontWeight="600" fontSize={18}>
-              {name}
+              {item.name}
             </Span>
           </a>
         </Link>
 
         <FlexBox gap={1} flexWrap="wrap" alignItems="center">
           <Span color="grey.600">
-            {currency(price)} x {qty}
+            {currency(item.price)} x {item.qty}
           </Span>
 
           <Span fontWeight={600} color="primary.main">
-            {currency(price * qty)}
+            {currency(item.price * item.qty)}
           </Span>
         </FlexBox>
 
         <FlexBox alignItems="center">
-          <Button color="primary" sx={{
-          p: "5px"
-        }} variant="outlined" disabled={qty === 1} onClick={handleCartAmountChange(qty - 1)}>
+          <Button
+            color="primary"
+            sx={{
+              p: "5px",
+            }}
+            variant="outlined"
+            disabled={item.qty === 1}
+            onClick={handleCartAmountChange(item.qty - 1)}
+          >
             <Remove fontSize="small" />
           </Button>
 
           <Span mx={1} fontWeight={600} fontSize={15}>
-            {qty}
+            {item.qty}
           </Span>
-          <Button color="primary" sx={{
-          p: "5px"
-        }} variant="outlined" onClick={handleCartAmountChange(qty + 1)}>
+          <Button
+            color="primary"
+            sx={{
+              p: "5px",
+            }}
+            variant="outlined"
+            onClick={handleCartAmountChange(item.qty + 1)}
+          >
             <Add fontSize="small" />
           </Button>
         </FlexBox>
       </FlexBox>
-    </Wrapper>;
+    </Wrapper>
+  );
 };
 export default ProductCard7;
