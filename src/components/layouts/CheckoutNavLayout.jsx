@@ -19,7 +19,6 @@ import { useAppContext } from "contexts/AppContext";
 const CheckoutNavLayout = ({ children }) => {
   const [selectedStep, setSelectedStep] = useState(0);
   const {userToken} = useAppContext()
-  console.log(userToken)
   const router = useRouter();
   const { pathname } = router;
   const handleStepChange = (step) => {
