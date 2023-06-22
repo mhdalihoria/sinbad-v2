@@ -58,9 +58,9 @@ const TopSection = ({ isFixed, className, searchInput }) => {
   const toggleSidenav = () => setSidenavOpen(!sidenavOpen);
   const toggleSearchBar = () => setSearchBarOpen(!searchBarOpen);
   const { siteSettingsData } = useContext(SettingsContext);
+  const { userToken } = useAppContext();
   const [settingsData, setSettingsData] = useState();
   const [categories, setCategories] = useState();
-
   useEffect(() => {
     if (siteSettingsData) {
       setSettingsData(siteSettingsData.settings);
@@ -146,7 +146,6 @@ const TopSection = ({ isFixed, className, searchInput }) => {
                       marginLeft: "1em",
                       borderLeft: "1px solid black",
                       cursor: "pointer",
-                      
                     }}
                   >
                     {settingsData.WebsiteTitle}
@@ -161,11 +160,13 @@ const TopSection = ({ isFixed, className, searchInput }) => {
               {/* <Box component={IconButton} onClick={toggleSearchBar}>
                 <Icon.Search sx={ICON_STYLE} />
               </Box> */}
-
-              <Box component={IconButton} onClick={toggleDialog}>
-                <Icon.User sx={ICON_STYLE} />
-              </Box>
-
+              {userToken ? (
+                "hi there"
+              ) : (
+                <Box component={IconButton} onClick={toggleDialog}>
+                  <Icon.User sx={ICON_STYLE} />
+                </Box>
+              )}
               <Box component={IconButton} onClick={toggleSidenav}>
                 <Badge badgeContent={state.cart.length} color="primary">
                   <Icon.CartBag sx={ICON_STYLE} />
@@ -213,24 +214,23 @@ const TopSection = ({ isFixed, className, searchInput }) => {
       <StyledContainer>
         {/* LEFT CONTENT - LOGO AND CATEGORY */}
         <FlexBox mr={2} minWidth="170px" alignItems="center">
-        {typeof settingsData !== "undefined" && (
-              <div>
-                <Link href="/">
-                  <span
-                    style={{
-                      paddingLeft: "1em",
-                      marginLeft: "1em",
-                      borderLeft: "1px solid black",
-                      cursor: "pointer",
-                      
-                    }}
-                  >
-                    {settingsData.WebsiteTitle}
-                  </span>
-                </Link>
-                <span>اتصل بنا: {settingsData.SupportNumber}</span>
-              </div>
-            )}
+          {typeof settingsData !== "undefined" && (
+            <div>
+              <Link href="/">
+                <span
+                  style={{
+                    paddingLeft: "1em",
+                    marginLeft: "1em",
+                    borderLeft: "1px solid black",
+                    cursor: "pointer",
+                  }}
+                >
+                  {settingsData.WebsiteTitle}
+                </span>
+              </Link>
+              <span>اتصل بنا: {settingsData.SupportNumber}</span>
+            </div>
+          )}
 
           {/* SHOW DROP DOWN CATEGORY BUTTON WHEN HEADER FIXED */}
           {/* {isFixed && (
@@ -252,14 +252,18 @@ const TopSection = ({ isFixed, className, searchInput }) => {
 
         {/* LOGIN AND CART BUTTON */}
         <FlexBox gap={1.5} alignItems="center">
-          <Box
-            component={IconButton}
-            p={1.25}
-            bgcolor="grey.200"
-            onClick={toggleDialog}
-          >
-            <PersonOutline />
-          </Box>
+          {userToken ? (
+            "hi there"
+          ) : (
+            <Box
+              component={IconButton}
+              p={1.25}
+              bgcolor="grey.200"
+              onClick={toggleDialog}
+            >
+              <PersonOutline />
+            </Box>
+          )}
 
           <Badge badgeContent={state.cart.length} color="primary">
             <Box
