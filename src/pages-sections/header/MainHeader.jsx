@@ -148,9 +148,9 @@ const Header = () => {
             {windowSize < breakPointMD && isOpen && (
               <LeftSideSection>
                 <LeftSectionItem
-                  iconClass={"fa-regular fa-comments"}
-                  topText={"Chat"}
-                  bottomText={"with us"}
+                  iconClass={"fa-regular fa-circle-user"}
+                  topText={"signup"}
+                  bottomText={"login"}
                 />
                 <LeftSectionItem
                   iconClass={"fa-regular fa-comments"}
@@ -158,23 +158,23 @@ const Header = () => {
                   bottomText={"with us"}
                 />
                 <LeftSectionItem
-                  iconClass={"fa-regular fa-comments"}
-                  topText={"Chat"}
-                  bottomText={"with us"}
+                  iconClass={"fa-solid fa-hourglass-clock"}
+                  topText={"الوقت المتبقي للمزاد"}
+                  bottomText={"20:20:18"}
                 />
                 <LeftSectionItem
-                  iconClass={"fa-regular fa-comments"}
-                  topText={"Chat"}
-                  bottomText={"with us"}
+                  iconClass={"fa-solid fa-truck-fast"}
+                  topText={"Track"}
+                  bottomText={"Your Shipment"}
                 />
               </LeftSideSection>
             )}
             {windowSize > breakPointMD && (
               <LeftSideSection>
                 <LeftSectionItem
-                  iconClass={"fa-regular fa-comments"}
-                  topText={"Chat"}
-                  bottomText={"with us"}
+                  iconClass={"fa-regular fa-circle-user"}
+                  topText={"signup"}
+                  bottomText={"login"}
                 />
                 <LeftSectionItem
                   iconClass={"fa-regular fa-comments"}
@@ -182,14 +182,14 @@ const Header = () => {
                   bottomText={"with us"}
                 />
                 <LeftSectionItem
-                  iconClass={"fa-regular fa-comments"}
-                  topText={"Chat"}
-                  bottomText={"with us"}
+                  iconClass={"fa-solid fa-gavel"}
+                  topText={"المتبقي للمزاد"}
+                  bottomText={"20:20:18"}
                 />
                 <LeftSectionItem
-                  iconClass={"fa-regular fa-comments"}
-                  topText={"Chat"}
-                  bottomText={"with us"}
+                  iconClass={"fa-solid fa-truck-fast"}
+                  topText={"Track"}
+                  bottomText={"Your Shipment"}
                 />
               </LeftSideSection>
             )}
