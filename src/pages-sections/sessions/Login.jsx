@@ -66,6 +66,10 @@ const Login = ({toggleDialog}) => {
   const [formValues, setFormValues] = useState();
   const [resetPassword, setResetPassword] = useState(false);
   const router = useRouter();
+
+  const goBack = () => {
+    setResetPassword(false)
+  }
   const handleFormSubmit = async (values) => {
     try {
       setLoading(true);
@@ -247,7 +251,7 @@ const Login = ({toggleDialog}) => {
             </FlexRowCenter>
           </>
         ))}
-      {resetPassword && <ResetPassword setToken={setToken} token={token}/>}
+      {resetPassword && <ResetPassword setToken={setToken} token={token} goBack={goBack}/>}
       {/* <FlexBox justifyContent="center" bgcolor="grey.200" borderRadius="4px" py={2.5} mt="1.25rem">
         Forgot your password?
         <Link href="/reset-password" passHref legacyBehavior>
