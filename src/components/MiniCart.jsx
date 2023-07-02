@@ -86,7 +86,7 @@ const MiniCart = ({ toggleSidenav }) => {
           <FlexBox
             py={2}
             px={2.5}
-            key={item.nanoId}
+            key={item.id}
             alignItems="center"
             borderBottom={`1px solid ${palette.divider}`}
           >
@@ -124,7 +124,7 @@ const MiniCart = ({ toggleSidenav }) => {
             </FlexBox>
 
             <Link href={`/products/${item.id}`}>
-              <a>
+              <a onClick={toggleSidenav}>
                 <Avatar
                   alt={item.name}
                   src={item.imgUrl}
@@ -146,7 +146,7 @@ const MiniCart = ({ toggleSidenav }) => {
               }}
             >
               <Link href={`/products/${item.id}`}>
-                <a>
+                <a onClick={toggleSidenav}>
                   <H5 ellipsis fontSize="14px" className="title">
                     {item.name}
                   </H5>
@@ -197,7 +197,7 @@ const MiniCart = ({ toggleSidenav }) => {
 
       {cartList.length > 0 && (
         <Box p={2.5}>
-          <Link href="/checkout-alternative" passHref>
+          <Link href="/checkout" passHref>
             <Button
               fullWidth
               color="primary"
