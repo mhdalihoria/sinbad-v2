@@ -93,7 +93,7 @@ const MainBlogCard = (props) => {
         height={280}
         style={{ objectFit: "cover" }}
         display="block"
-        src={"https://sinbad-store.com" + image}
+        src={image}
       />
 
       {/* <div>{short_description?.replace(/(<([^>]+)>)/ig, '')}</div> */}

@@ -62,7 +62,7 @@ const SingleBlogPage = ({ urlId, postData }) => {
     <Wrapper>
       <BlogTitle>{title}</BlogTitle>
       <Image
-        src={`https://sinbad-store.com${image}`}
+        src={`${image}`}
         height={"400"}
         width={"100%"}
         objectFit="cover"
