@@ -96,7 +96,7 @@ const TopSection = ({ isFixed, className, searchInput }) => {
           zIndex: 9999,
         }}
       >
-        <Login />
+        <Login toggleDialog={toggleDialog}/>
       </Dialog>
 
       <Drawer

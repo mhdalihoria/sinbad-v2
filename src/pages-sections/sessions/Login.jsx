@@ -51,7 +51,7 @@ export const Wrapper = styled(({ children, passwordVisibility, ...rest }) => (
     marginBottom: 24,
   },
 }));
-const Login = () => {
+const Login = ({toggleDialog}) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
     setPasswordVisibility((visible) => !visible);
@@ -225,8 +225,8 @@ const Login = () => {
 
             <FlexRowCenter mt="1.25rem">
               <Box>Don&apos;t have account?</Box>
-              <Link href="/signup" passHref legacyBehavior>
-                <a>
+              <Link href="/signup" passHref legacyBehavior >
+                <a onClick={()=>toggleDialog()}>
                   <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
                     Sign Up
                   </H6>
