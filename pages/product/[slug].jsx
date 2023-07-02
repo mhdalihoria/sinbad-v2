@@ -11,6 +11,7 @@ import FrequentlyBought from "components/products/FrequentlyBought";
 import ProductDescription from "components/products/ProductDescription";
 import { getFrequentlyBought, getRelatedProducts } from "utils/__api__/related-products";
 import api from "utils/__api__/products";
+import Loader from "../../src/components/loader-spinner/Loader";
 
 // styled component
 const StyledTabs = styled(Tabs)(({
@@ -44,14 +45,24 @@ const ProductDetails = props => {
 
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
-    return <h1>Loading...</h1>;
+    return <div
+    style={{
+      width: "100%",
+      height: "100px",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    }}
+  >
+    <Loader loading={router.isFallback} size={20} />
+  </div>
   }
   return <ShopLayout1>
       <Container sx={{
       my: 4
     }}>
         {/* PRODUCT DETAILS INFO AREA */}
-        {product ? <ProductIntro product={product} /> : <H2>Loading...</H2>}
+        {product ? <ProductIntro product={product} /> : <Loader loading={product} size={15} />}
 
         {/* PRODUCT DESCRIPTION AND REVIEW */}
         <StyledTabs textColor="primary" value={selectedOption} indicatorColor="primary" onChange={handleOptionClick}>

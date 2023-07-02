@@ -1,5 +1,6 @@
 import { Box } from "@mui/material";
 import { H3 } from "components/Typography";
+import Loader from "components/loader-spinner/Loader";
 
 // ======================================================
 
@@ -44,7 +45,8 @@ const ProductDescription = ({ product }) => {
             })}
         </Box>
       ) : (
-        <span>Loading...</span>
+        
+    <Loader loading={typeof product !== "undefined"} size={10} />
       )}
     </Box>
   );

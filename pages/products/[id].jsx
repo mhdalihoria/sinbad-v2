@@ -10,10 +10,10 @@ import ProductDescription from "components/products/ProductDescription";
 import ProductFeatures from "components/products/ProductFeatures";
 import { getRelatedProducts } from "utils/__api__/related-products";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
-import {useAppContext} from "../../src/contexts/AppContext";
+import { useAppContext } from "../../src/contexts/AppContext";
 import api from "utils/__api__/products";
 import Link from "next/link";
-import  CountDown from "../../src/components/products-components/CountDown"
+import Loader from "../../src/components/loader-spinner/Loader";
 // styled component
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   minHeight: 0,
@@ -95,7 +95,19 @@ const ProductDetails = ({ productId }) => {
 
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
-    return <h1>Loading...</h1>;
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader loading={router.isFallback} size={20} />
+      </div>
+    );
   }
   return (
     <ShopLayout1>
@@ -150,7 +162,15 @@ const ProductDetails = ({ productId }) => {
                     <p>
                       يجب{" "}
                       <Link href={"/signup"}>
-                        <span style={{color: theme.palette.primary.main, cursor: "pointer"}}> تسجيل الدخول</span>
+                        <span
+                          style={{
+                            color: theme.palette.primary.main,
+                            cursor: "pointer",
+                          }}
+                        >
+                          {" "}
+                          تسجيل الدخول
+                        </span>
                       </Link>{" "}
                       لتقييم هذا المنتج
                     </p>
@@ -169,7 +189,17 @@ const ProductDetails = ({ productId }) => {
             )}
           </>
         ) : (
-          <H2>Loading...</H2>
+          <div
+          style={{
+            width: "100%",
+            height: "100px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Loader loading={product} size={20} />
+        </div>
         )}
       </Container>
     </ShopLayout1>
