@@ -97,7 +97,7 @@ const CategoryCard = ({ product }) => {
               objectFit="cover"
               layout="responsive"
               className="product-img"
-              src={imgSrc}
+              src={imgSrc ? imgSrc : "https://placehold.jp/300x300.png?text=category"}
               onLoadingComplete={(result) => {
                 if (result.naturalWidth === 0) {
                   // If Broken image
