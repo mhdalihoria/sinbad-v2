@@ -58,7 +58,6 @@ const ProductDetails = ({ productId }) => {
       // setPrice(productRequest.data.product.product_price);
     }
   }, [productRequest]);
-
   useEffect(() => {
     if (!window) return;
     let token = JSON.parse(window.localStorage.getItem("user_token"));
@@ -87,8 +86,10 @@ const ProductDetails = ({ productId }) => {
     };
 
     if (token && typeof token !== "undefined") {
+      setProductData()
       productRequest(productId, token);
     } else {
+      setProductData()
       productRequest(productId);
     }
   }, [productId, router.isFallback]); //we're using router.isFallback, so the in our case, we set the state when we have the data and when we display the page
