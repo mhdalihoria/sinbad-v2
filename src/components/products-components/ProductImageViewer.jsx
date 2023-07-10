@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, Grid } from "@mui/material";
+import { Avatar, Grid, Skeleton } from "@mui/material";
 import InnerImageZoom from "react-inner-image-zoom";
 import "react-inner-image-zoom/lib/InnerImageZoom/styles.min.css";
 import LazyImage from "components/LazyImage";
@@ -19,21 +19,29 @@ const ProductImageViewer = ({ productImages, product }) => {
 
   const handleImageClick = (ind) => () => setSelectedImage(ind);
 
-
   return (
-    <Grid item md={6} xs={12} alignItems="center" style={{opacity: product.is_future ? "0.5" : "1"}}>
+    <Grid
+      item
+      md={6}
+      xs={12}
+      alignItems="center"
+      style={{ opacity: product.is_future ? "0.5" : "1" }}
+    >
       <FlexBox justifyContent="center" mb={6}>
-        <InnerImageZoom
-          src={productImages[selectedImage]}
-          zoomSrc={productImages[selectedImage]}
-          hasSpacer={true}
-          width={300}
-          height={300}
-        />
-
+        {productImages[selectedImage] ? (
+          <InnerImageZoom
+            src={productImages[selectedImage]}
+            zoomSrc={productImages[selectedImage]}
+            hasSpacer={true}
+            width={300}
+            height={300}
+          />
+        ) : (
+          <Skeleton variant="rectangular" width={300} height={300} />
+        )}
       </FlexBox>
 
-      <FlexBox overflow="auto" style={{maxWidth: "300px", margin: "0 auto"}}>
+      <FlexBox overflow="auto" style={{ maxWidth: "300px", margin: "0 auto" }}>
         {productImages.map((url, ind) => (
           <FlexRowCenter
             key={ind}

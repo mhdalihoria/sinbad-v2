@@ -1,7 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Box, Button, IconButton, Rating, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  IconButton,
+  Rating,
+  Skeleton,
+  styled,
+} from "@mui/material";
 import { AddShoppingCart, Favorite, FavoriteBorder } from "@mui/icons-material";
 import { currency } from "lib";
 import { FlexRowCenter } from "components/flex-box";
@@ -84,30 +91,36 @@ const CategoryCard = ({ product }) => {
       <Link href={`/categories/${product.category_slug}`}>...المزيد</Link>
     </SubLink>
   );
-
+  {
+    /* */
+  }
   return (
     <Card>
       <CardMedia>
         <Link href={`/categories/${product.category_slug}`}>
           <a>
-            <Image
-              width={1000}
-              height={400}
-              alt="category"
-              objectFit="cover"
-              layout="responsive"
-              className="product-img"
-              src={imgSrc ? imgSrc : "https://placehold.jp/300x300.png?text=category"}
-              onLoadingComplete={(result) => {
-                if (result.naturalWidth === 0) {
-                  // If Broken image
+            {imgSrc ? (
+              <Image
+                width={1000}
+                height={400}
+                alt="category"
+                objectFit="cover"
+                layout="responsive"
+                className="product-img"
+                src={imgSrc}
+                onLoadingComplete={(result) => {
+                  if (result.naturalWidth === 0) {
+                    // If Broken image
+                    setImgSrc(defaultImage);
+                  }
+                }}
+                onError={() => {
                   setImgSrc(defaultImage);
-                }
-              }}
-              onError={() => {
-                setImgSrc(defaultImage);
-              }}
-            />
+                }}
+              />
+            ) : (
+              <Skeleton variant="rectangular" width={260} height={100} />
+            )}
           </a>
         </Link>
         <CardInfoHeight>

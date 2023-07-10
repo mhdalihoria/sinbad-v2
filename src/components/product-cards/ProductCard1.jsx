@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { Add, Favorite, Remove, RemoveRedEye } from "@mui/icons-material";
-import { Box, Button, Chip, IconButton, styled } from "@mui/material";
+import { Box, Button, Chip, IconButton, Skeleton, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import LazyImage from "components/LazyImage";
@@ -163,7 +163,16 @@ const ProductCard1 = ({
   return (
     <>
       {isFuture && isFuture !== 0 ? (
-        <h1 style={{ position: "absolute", top: "70px", right: "50px", color: "red" }}>Coming Soon</h1>
+        <h1
+          style={{
+            position: "absolute",
+            top: "70px",
+            right: "50px",
+            color: "red",
+          }}
+        >
+          Coming Soon
+        </h1>
       ) : (
         <span></span>
       )}
@@ -222,13 +231,17 @@ const ProductCard1 = ({
 
           <Link href={`/products/${slug}`}>
             <a>
-              <LazyImage
-                src={imgUrl}
-                width={0}
-                height={0}
-                layout="responsive"
-                alt={title}
-              />
+              {imgUrl ? (
+                <LazyImage
+                  src={imgUrl}
+                  width={0}
+                  height={0}
+                  layout="responsive"
+                  alt={title}
+                />
+              ) : (
+                <Skeleton variant="rectangular" width={210} height={118} />
+              )}
             </a>
           </Link>
         </ImageWrapper>
@@ -238,9 +251,9 @@ const ProductCard1 = ({
           handleCloseDialog={toggleDialog}
           product={{
             title,
-            price,
+            price: currency(price),
             categoryName,
-            salePrice,
+            salePrice: currency(salePrice),
             description,
             shopName,
             id,
@@ -286,12 +299,12 @@ const ProductCard1 = ({
               <FlexBox alignItems="center" gap={1} mt={0.5}>
                 <Box fontWeight="600" color="primary.main">
                   {/* {calculateDiscount(price, ((price - salePrice) / price) * 100)} */}
-                  {!!salePrice ? salePrice : price}
+                  {!!salePrice ? currency(salePrice) : currency(price)}
                 </Box>
 
                 {!!salePrice && (
                   <Box color="grey.600" fontWeight="600">
-                    <del>{price}</del>
+                    <del>{currency(price)}</del>
                   </Box>
                 )}
               </FlexBox>
@@ -320,7 +333,7 @@ const ProductCard1 = ({
                     imgUrl,
                     name: title,
                     qty: (cartItem?.qty || 0) + 1,
-                    product_attribute_id: ""
+                    product_attribute_id: "",
                   })}
                 >
                   <Add fontSize="small" />
