@@ -34,7 +34,7 @@ export default class Bazaar extends Document {
         />
         </Head>
 
-        <body>
+        <body style={{backgroundColor: "white"}}>
           <Main />
           <NextScript />
         </body>
