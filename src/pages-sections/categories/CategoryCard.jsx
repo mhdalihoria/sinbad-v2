@@ -119,7 +119,7 @@ const CategoryCard = ({ product }) => {
                 }}
               />
             ) : (
-              <Skeleton variant="rectangular" width={260} height={100} />
+              <Skeleton variant="rectangular" width={290} height={100} />
             )}
           </a>
         </Link>
