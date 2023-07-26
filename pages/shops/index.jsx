@@ -1,42 +1,140 @@
-import { Container, Grid, Pagination } from "@mui/material";
-import { H2, Span } from "components/Typography";
-import ShopCard1 from "components/shop/ShopCard1";
-import { FlexBetween } from "components/flex-box";
-import ShopLayout1 from "components/layouts/ShopLayout1";
-import api from "utils/__api__/shop";
-// =============================================
+import { Grid, Pagination, styled } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import useGetFetch from "../../src/components/fetch/useGetFetch";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import Loader from "../../src/components/loader-spinner/Loader";
 
-const ShopList = ({
-  shopList
-}) => {
-  return <ShopLayout1>
-      <Container sx={{
-      mt: 4,
-      mb: 6
-    }}>
-        <H2 mb={3}>All Shops</H2>
+const ShopsContainer = styled("div")({
+  width: "80%",
+  margin: "0 auto",
 
-        {/* ALL SHOP LIST AREA */}
-        <Grid container spacing={3}>
-          {shopList.map(item => <Grid item lg={4} sm={6} xs={12} key={item.id}>
-              <ShopCard1 name={item.name} slug={item.slug} phone={item.phone} address={item.address} rating={item.rating || 5} coverPicture={item.coverPicture} profilePicture={item.profilePicture} />
-            </Grid>)}
-        </Grid>
+  "& h1": {
+    paddingLeft: "3.5rem",
+    marginBottom: "0",
+    marginTop: "3rem",
+  },
+});
 
-        {/* PAGINTAION AREA */}
-        <FlexBetween flexWrap="wrap" mt={4}>
-          <Span color="grey.600">Showing 1-9 of 300 Shops</Span>
-          <Pagination count={shopList.length} variant="outlined" color="primary" />
-        </FlexBetween>
-      </Container>
-    </ShopLayout1>;
+const ShopItem = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  margin: "1rem 0 2rem",
+  cursor: "pointer",
+
+  "&:hover": {
+    opacity: ".8",
+    color: "red",
+    transform: "scale(1.1)",
+  },
+
+  "& .shopName": {
+    margin: "0",
+    fontSize: "1.1rem",
+    fontWeight: "700",
+  },
+});
+
+const Shops = ({ pagination, pageParam }) => {
+  const [allShops, setAllShops] = useState();
+  const router = useRouter();
+  const page = router.query.page || 1;
+
+  const changeHandler = (e) => {
+    console.log(e.target.textContent);
+    router.push(`/shops?page=${e.target.textContent}`);
+  };
+
+  useEffect(() => {
+    const doFetch = async () => {
+      const requestOptions = {
+        method: "GET",
+        headers: { "X-localization": "ar" },
+      };
+      const url = `https://sinbad-store.com/api/v2/shops?page=${page}`;
+      const response = await useGetFetch(url, requestOptions);
+
+      setAllShops();
+      setAllShops((prevShops) => {
+        return (
+          prevShops !== response.data.data.shops && response.data.data.shops
+        );
+      });
+    };
+
+    doFetch();
+  }, [page]);
+
+  return (
+    <ShopsContainer>
+      {typeof allShops !== "undefined" ? (
+        <>
+          <h1>Shops</h1>
+          <Grid container>
+            {allShops.map((shop) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={shop.id}>
+                <Link href={`/shops/${shop.slug}`}>
+                  <ShopItem>
+                    <Image
+                      src={shop.logo || "https://placehold.jp/150x150.png"}
+                      width={200}
+                      height={200}
+                      alt={"brand"}
+                    />
+                    <p className="shopName">{shop.name}</p>
+                  </ShopItem>
+                </Link>
+              </Grid>
+            ))}
+          </Grid>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "2rem",
+            }}
+          >
+            <Pagination
+              count={pagination.last_page}
+              color="primary"
+              onChange={(e) => changeHandler(e)}
+            />
+          </div>
+        </>
+      ) : (
+        <div
+          style={{
+            width: "100%",
+            height: "10vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Loader size={25} loading={true} />
+        </div>
+      )}
+    </ShopsContainer>
+  );
 };
-export const getStaticProps = async () => {
-  const shopList = await api.getShopList();
+
+export const getStaticProps = async (ctx) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "X-localization": "ar" },
+  };
+  const url = `https://sinbad-store.com/api/v2/shops`;
+  const everyShop = await useGetFetch(url, requestOptions);
+
   return {
     props: {
-      shopList
-    }
+      pagination: everyShop.data.pagination,
+    },
   };
 };
-export default ShopList;
+
+export default Shops;
