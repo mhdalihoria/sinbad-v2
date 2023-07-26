@@ -4,6 +4,7 @@ import ProductCard1 from "../../src/components/product-cards/ProductCard1";
 import { Grid, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
+import Loader from "../../src/components/loader-spinner/Loader";
 
 const IntroContainer = styled("div")({
   width: "80%",
@@ -22,26 +23,26 @@ const ContactContainer = styled("div")({
   },
 });
 
-const CategoryContainer = styled("div") ({
+const CategoryContainer = styled("div")({
   "& .categoryTitle": {
-    fontSize: "1rem", 
-    color: "red"
+    fontSize: "1rem",
+    color: "red",
   },
 
   "& ul": {
-    marginTop: "1em"
+    marginTop: "1em",
   },
 
   "& ul li": {
     margin: "1em 0",
     transition: "color .7s ease",
-    cursor: "pointer"
+    cursor: "pointer",
   },
 
   "& ul li:hover": {
-    color: "red"
-  }
-})
+    color: "red",
+  },
+});
 
 const CardsContainer = styled("div")({
   width: "80%",
@@ -49,6 +50,22 @@ const CardsContainer = styled("div")({
 });
 
 const ShopDetails = ({ id, shopData }) => {
+  if (typeof shopData === "undefined") {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "100px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Loader size={25} loading={typeof shopData === "undefined"} />
+      </div>
+    );
+  }
+
   const {
     products,
     profile_setting: profileSetting,
@@ -63,26 +80,38 @@ const ShopDetails = ({ id, shopData }) => {
     <div>
       <IntroContainer>
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={6} md={6} lg={6}>
-            <div
-              style={{
-                width: "100%",
-                height: "300px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: " center",
-              }}
-            >
-              <Image
-                src={`https://sinbad-store.com${profileSetting.logo}`}
-                width={200}
-                height={200}
-              />
-            </div>
-          </Grid>
+          {profileSetting.logo && (
+            <Grid item xs={12} sm={6} md={6} lg={6}>
+              <div
+                style={{
+                  width: "100%",
+                  height: "300px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: " center",
+                }}
+              >
+                <Image
+                  src={`https://sinbad-store.com${profileSetting.logo}`}
+                  width={200}
+                  height={200}
+                />
+              </div>
+            </Grid>
+          )}
           <Grid item xs={12} sm={6} md={6} lg={6}>
             {contacts.length > 0 ? (
-              "something"
+              <ContactContainer>
+                <div>
+                  <h1 className="contactTitle">title</h1>
+                  <div>
+                    <p>Phone: {contacts[0].value}</p>
+                    <p>Customer Support: {contacts[1].value}</p>
+                    <p>Address: {contacts[2].value}</p>
+                    <p>Email: {contacts[3].value}</p>
+                  </div>
+                </div>
+              </ContactContainer>
             ) : (
               <ContactContainer>
                 <h1 className="noContacts">
@@ -149,7 +178,11 @@ const ShopDetails = ({ id, shopData }) => {
               <CategoryContainer>
                 <h1 className="categoryTitle">تصنيفات المتاجر</h1>
                 <ul>
-                  {categories.map(category => <Link href={category.category_url} className="categoryLink"><li>{category.category_name}</li></Link>)}
+                  {categories.map((category) => (
+                    <Link href={category.category_url} className="categoryLink">
+                      <li>{category.category_name}</li>
+                    </Link>
+                  ))}
                 </ul>
               </CategoryContainer>
             </Grid>
