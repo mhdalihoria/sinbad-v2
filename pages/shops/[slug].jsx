@@ -179,7 +179,7 @@ const ShopDetails = ({ id, shopData }) => {
                 <h1 className="categoryTitle">تصنيفات المتاجر</h1>
                 <ul>
                   {categories.map((category) => (
-                    <Link href={category.category_url} className="categoryLink">
+                    <Link href={category.category_url} className="categoryLink" key={category.category_name}>
                       <li>{category.category_name}</li>
                     </Link>
                   ))}
