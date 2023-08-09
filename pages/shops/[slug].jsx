@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import ProductCard1 from "../../src/components/product-cards/ProductCard1";
-import { Grid, styled } from "@mui/material";
+import { Grid, Pagination, styled } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import Loader from "../../src/components/loader-spinner/Loader";
 import { useAppContext } from "../../src/contexts/AppContext";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
+import paginateArray from "../../src/utils/paginateArray"
 
 const IntroContainer = styled("div")({
   width: "80%",
@@ -49,6 +50,7 @@ const CategoryContainer = styled("div")({
     borderRadius: "5px",
     transition: "color .7s ease, background .7s ease",
     cursor: "pointer",
+    maxWidth: "160px",
   },
 
   "& ul li:hover": {
@@ -67,6 +69,22 @@ const CardsContainer = styled("div")({
 });
 
 const ShopDetails = ({ id, shopData }) => {
+  if (typeof shopData === "undefined" || shopData === null) {
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "400px",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "1.4rem",
+        }}
+      >
+        No Items here for now, please try again later
+      </div>
+    );
+  }
   const {
     products,
     profile_setting: profileSetting,
@@ -81,8 +99,6 @@ const ShopDetails = ({ id, shopData }) => {
   const [selectedCategoryProducts, setSelectedCategoryProducts] =
     useState(null);
   const [loading, setLoading] = useState(false);
-  console.log(loading);
-
   if (typeof shopData === "undefined") {
     return (
       <div
@@ -117,12 +133,18 @@ const ShopDetails = ({ id, shopData }) => {
         body
       );
       const data = response.data.data.data.products;
+      const pagination = response.data.data.pagination
 
       setSelectedCategoryProducts(data);
       setLoading(false);
     };
     doFetch();
   }, [selectedCategory]);
+
+  const changeHandler = (e) => {
+    console.log(e.target.textContent)
+    
+  }
 
   return (
     <div>
@@ -222,6 +244,21 @@ const ShopDetails = ({ id, shopData }) => {
                       />
                     </Grid>
                   ))}
+                  {/* <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      marginBottom: "2rem",
+                      marginTop: "2rem"
+                    }}
+                  >
+                    <Pagination
+                      count={selectedCategoryPaginationData.last_page}
+                      color="primary"
+                      onChange={(e) => changeHandler(e)}
+                    />
+                  </div> */}
                 </Grid>
               ) : (
                 <Grid container spacing={2}>
