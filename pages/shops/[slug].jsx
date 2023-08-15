@@ -50,7 +50,8 @@ const CategoryContainer = styled("div")({
     borderRadius: "5px",
     transition: "color .7s ease, background .7s ease",
     cursor: "pointer",
-    maxWidth: "160px",
+    maxWidth: "200px",
+    padding: ".8em"
   },
 
   "& ul li:hover": {
@@ -66,6 +67,7 @@ const CategoryContainer = styled("div")({
 const CardsContainer = styled("div")({
   width: "80%",
   margin: "0 auto",
+  marginBottom: "4rem"
 });
 
 const SpecialProdContainer = styled("div")(({ theme }) => ({
@@ -107,7 +109,17 @@ const ShopDetails = ({ id, shopData }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryProducts, setSelectedCategoryProducts] =
     useState(null);
+  const [selectedCategoryProductsPaginationData, setSelectedCategoryProductsPaginationData] =
+    useState(null);
+
+    const [paginationIndicator, setPaginationIndicator] = useState(1)
   const [loading, setLoading] = useState(false);
+
+
+  // console.log("selectedCategory", selectedCategory)
+  // console.log("selectedCategoryProducts", selectedCategoryProducts)
+  // console.log("selectedCategoryProductsPaginationData", selectedCategoryProductsPaginationData)
+
   if (typeof shopData === "undefined") {
     return (
       <div
@@ -137,7 +149,7 @@ const ShopDetails = ({ id, shopData }) => {
       });
 
       const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/filter-products",
+        `https://sinbad-store.com/api/v2/filter-products?page=${paginationIndicator}`,
         headers,
         body
       );
@@ -145,13 +157,15 @@ const ShopDetails = ({ id, shopData }) => {
       const pagination = response.data.data.pagination;
 
       setSelectedCategoryProducts(data);
+      setSelectedCategoryProductsPaginationData(pagination)
       setLoading(false);
     };
     doFetch();
-  }, [selectedCategory]);
+  }, [selectedCategory, paginationIndicator]);
 
-  const changeHandler = (e) => {
-    console.log(e.target.textContent);
+  const changeHandler = (page) => {
+    setPaginationIndicator(page);
+    setLoading(true)
   };
 
   return (
@@ -370,7 +384,7 @@ const ShopDetails = ({ id, shopData }) => {
                       />
                     </Grid>
                   ))}
-                  {/* <div
+                  <div
                     style={{
                       width: "100%",
                       display: "flex",
@@ -380,11 +394,11 @@ const ShopDetails = ({ id, shopData }) => {
                     }}
                   >
                     <Pagination
-                      count={selectedCategoryPaginationData.last_page}
+                      count={selectedCategoryProductsPaginationData.last_page}
                       color="primary"
-                      onChange={(e) => changeHandler(e)}
+                      onChange={(event, page) => changeHandler(page)}
                     />
-                  </div> */}
+                  </div>
                 </Grid>
               ) : (
                 <Grid container spacing={2}>
