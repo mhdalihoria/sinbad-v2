@@ -5,10 +5,19 @@ import { Grid } from "@mui/material";
 
 const Products = ({ allProducts }) => {
   const [products, setProducts] = useState([]);
-
+  console.log(allProducts);
   const ProductCardElements = products.map((product, idx) => {
     return (
-      <div style={{ width: "300px", margin: "1rem" }} key={idx}>
+      // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
+      <Grid
+        item
+        xs={12}
+        sm={6}
+        md={4}
+        lg={3}
+        key={product.id}
+        // style={loading ? { opacity: "0.5" } : { opacity: "1" }}
+      >
         <ProductCard1
           id={product.id}
           slug={product.id}
@@ -28,7 +37,7 @@ const Products = ({ allProducts }) => {
           hoverEffect
           isFuture={product.is_future}
         />
-      </div>
+      </Grid>
     );
   });
 
@@ -39,16 +48,28 @@ const Products = ({ allProducts }) => {
   }, [products]);
 
   return (
-    <div>
-      <h1>Products</h1>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-        }}
-      >
-        {ProductCardElements}
+    <div
+      style={{
+        maxWidth: "90%",
+        margin: "0 auto",
+        marginTop: "3rem",
+        display: "flex",
+      }}
+    >
+      <div style={{ flex: "1 1 25%" }}>
+        <Grid container spacing={2}>
+          <Grid item xs={3} sm={3} md={3} lg={3}>
+            <h1>Products</h1>
+          </Grid>
+        </Grid>
+      </div>
+      <div style={{ flex: "1 1 75%" }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <h1>Products</h1>
+          </Grid>
+          {ProductCardElements}
+        </Grid>
       </div>
     </div>
   );
@@ -63,7 +84,7 @@ export const getStaticProps = async (ctx) => {
     }
   );
   return {
-    props: { allProducts: allProducts },
+    props: { allProducts: allProducts.data },
   };
 };
 
