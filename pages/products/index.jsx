@@ -5,7 +5,12 @@ import { Grid } from "@mui/material";
 
 const Products = ({ allProducts }) => {
   const [products, setProducts] = useState([]);
-  console.log(allProducts);
+  const { filters } = allProducts.data;
+  console.log(filters);
+  const [categoryFilter, setCategoryFilter] = useState([]);
+  const [brandFilter, setBrandFilter] = useState(0);
+  const [filteredProducts, setFilteredProducts] = useState(null);
+
   const ProductCardElements = products.map((product, idx) => {
     return (
       // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
@@ -47,6 +52,19 @@ const Products = ({ allProducts }) => {
     }
   }, [products]);
 
+  const handleCheckboxChange = (state, stateSetter, id) => {
+    // if (categoryFilter.includes(id)) {
+    if (state.includes(id)) {
+      stateSetter(state.filter((item) => item !== id));
+    } else {
+      stateSetter([...state, id]);
+    }
+  };
+
+  const handleBrandChange = (brandId) => {
+    setBrandFilter(brandId);
+  };
+
   return (
     <div
       style={{
@@ -58,8 +76,41 @@ const Products = ({ allProducts }) => {
     >
       <div style={{ flex: "1 1 25%" }}>
         <Grid container spacing={2}>
-          <Grid item xs={3} sm={3} md={3} lg={3}>
-            <h1>Products</h1>
+          <Grid item xs={12} sm={12} md={12} lg={12}>
+            <h6>التسوق عبر</h6>
+            <div>
+              {filters.category.map((category) => (
+                <div key={category.category_name}>
+                  <input
+                    type="checkbox"
+                    id={category.category_name}
+                    checked={categoryFilter.includes(category.id)}
+                    onChange={(_) =>
+                      handleCheckboxChange(
+                        categoryFilter,
+                        setCategoryFilter,
+                        category.id
+                      )
+                    }
+                  />
+                  <label htmlFor={category.category_name}>
+                    {category.category_name}
+                  </label>
+                </div>
+              ))}
+              <hr />
+              {filters.brand.map((brand) => (
+                <div key={brand.name}>
+                  <input
+                    type="checkbox"
+                    id={brand.name}
+                    checked={brand.id === brandFilter}
+                    onChange={(_) => handleBrandChange(brand.id)}
+                  />
+                  <label htmlFor={brand.name}>{brand.name}</label>
+                </div>
+              ))}
+            </div>
           </Grid>
         </Grid>
       </div>
