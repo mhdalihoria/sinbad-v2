@@ -54,7 +54,7 @@ const CustomFooter = () => {
   } = siteSettingsData;
 
   return (
-    <footer>
+    <footer style={{marginTop: "5rem"}}>
       {siteSettingsData && (
         <Box bgcolor="#222935">
           <Box
