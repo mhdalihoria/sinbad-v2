@@ -17,7 +17,7 @@ const FilterBlock = styled("div")(({ theme }) => ({
 
   "& div": {
     fontSize: ".7rem",
-    padding: ".125rem 0"
+    padding: ".125rem 0",
   },
   "& div input[type='checkbox']": {
     accentColor: theme.palette.primary.main,
@@ -28,11 +28,14 @@ const Products = ({ allProducts }) => {
   const { userToken } = useAppContext();
   const [products, setProducts] = useState([]);
   const { filters } = allProducts.data;
-  console.log(filters);
   const [categoryFilter, setCategoryFilter] = useState([]);
   const [brandFilter, setBrandFilter] = useState(0);
+  const [valuesFilter, setValuesFilter] = useState([]);
+  const [price, setPrice] = useState({ id: 0, min: 0, max: 0 });
+  const [withOffer, setWithOffer] = useState(0);
   const [filteredProducts, setFilteredProducts] = useState(null);
 
+  console.log(filters);
   const ProductCardElements = products.map((product, idx) => {
     return (
       // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
@@ -82,13 +85,13 @@ const Products = ({ allProducts }) => {
         "Content-Type": "application/json",
       };
       const body = JSON.stringify({
-        category: [234, 25],
+        category: categoryFilter,
         // cat_id: 234,
         brand: 1,
-        // min_price: 0,
-        // max_price: 10000000,
-        // with_offer: 1,
-        // values: [1, 2],
+        min_price: price.min,
+        max_price: price.max,
+        with_offer: withOffer,
+        values: valuesFilter,
         // search: "بطارية",
         // shop: [4],
       });
@@ -97,15 +100,15 @@ const Products = ({ allProducts }) => {
         headers,
         body
       );
-      const data = await response.json();
+      // const data = await response.json();
 
-      setFilteredProducts(data);
+      console.log(response);
+      // setFilteredProducts(data);
     };
-    // doFetch()
+    doFetch()
   }, [categoryFilter, brandFilter]);
 
   const handleCheckboxChange = (state, stateSetter, id) => {
-    // if (categoryFilter.includes(id)) {
     if (state.includes(id)) {
       stateSetter(state.filter((item) => item !== id));
     } else {
@@ -113,8 +116,12 @@ const Products = ({ allProducts }) => {
     }
   };
 
-  const handleBrandChange = (brandId) => {
-    setBrandFilter(brandId);
+  const handleSingleOfGroupCheckboxChange = (stateSetter, value) => {
+    stateSetter(value);
+  };
+
+  const handlePriceChange = (id, min, max) => {
+    setPrice({ id: id, min: min, max: max });
   };
 
   return (
@@ -160,11 +167,72 @@ const Products = ({ allProducts }) => {
                       type="checkbox"
                       id={brand.name}
                       checked={brand.id === brandFilter}
-                      onChange={(_) => handleBrandChange(brand.id)}
+                      onChange={(_) =>
+                        handleSingleOfGroupCheckboxChange(
+                          setBrandFilter,
+                          brand.id
+                        )
+                      }
                     />
                     <label htmlFor={brand.name}>{brand.name}</label>
                   </div>
                 ))}
+              </FilterBlock>
+              <FilterBlock>
+                <h5>السعر</h5>
+                <div>
+                  <input
+                    type="checkbox"
+                    id={"withoffer"}
+                    checked={price.id === 1}
+                    onChange={(_) => handlePriceChange(1, 0, 500000)}
+                  />
+                  <label htmlFor={"withoffer"}>اقل من نصف مليون</label>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    id={"withoffer"}
+                    checked={price.id === 2}
+                    onChange={(_) => handlePriceChange(2, 500000, 1500000)}
+                  />
+                  <label htmlFor={"withoffer"}>500,000 - 1,500,000</label>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    id={"withoffer"}
+                    checked={price.id === 3}
+                    onChange={(_) => handlePriceChange(3, 1500000, 3000000)}
+                  />
+                  <label htmlFor={"withoffer"}>1,500,000 - 3,000,000</label>
+                </div>
+                <div>
+                  <input
+                    type="checkbox"
+                    id={"withoffer"}
+                    checked={price.id === 4}
+                    onChange={(_) => handlePriceChange(4, 3000000, 1000000000000)}
+                  />
+                  <label htmlFor={"withoffer"}>اكثر من 3 مليون</label>
+                </div>
+              </FilterBlock>
+              <FilterBlock>
+                <h5>مع عرض</h5>
+                <div>
+                  <input
+                    type="checkbox"
+                    id={"withoffer"}
+                    checked={withOffer === 1 ? true : false}
+                    onChange={(_) =>
+                      handleSingleOfGroupCheckboxChange(
+                        setWithOffer,
+                        withOffer === 1 ? 0 : 1
+                      )
+                    }
+                  />
+                  <label htmlFor={"withoffer"}>مع عرض</label>
+                </div>
               </FilterBlock>
               {filters.product_filters.map((filter) => {
                 return (
@@ -175,8 +243,14 @@ const Products = ({ allProducts }) => {
                         <input
                           type="checkbox"
                           id={filterValue.id}
-                          checked={false}
-                          //  onChange={(_) => handleBrandChange(brand.id)}
+                          checked={valuesFilter.includes(filterValue.id)}
+                          onChange={(_) =>
+                            handleCheckboxChange(
+                              valuesFilter,
+                              setValuesFilter,
+                              filterValue.id
+                            )
+                          }
                         />
                         <label htmlFor={filterValue.id}>
                           {filterValue.value}
