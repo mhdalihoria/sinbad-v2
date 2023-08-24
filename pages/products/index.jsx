@@ -85,15 +85,27 @@ const Products = ({ allProducts }) => {
         "Content-Type": "application/json",
       };
       const body = JSON.stringify({
-        category: categoryFilter,
-        // cat_id: 234,
-        brand: 1,
-        min_price: price.min,
-        max_price: price.max,
-        with_offer: withOffer,
-        values: valuesFilter,
-        // search: "بطارية",
-        // shop: [4],
+        
+
+        // Making sure we're filtering out falsy values before doing the fetch
+        ...Object.entries({ 
+          category: categoryFilter,
+          brand: brandFilter,
+          min_price: price.min,
+          max_price: price.max,
+          with_offer: withOffer,
+          values: valuesFilter,
+          // search: "بطارية",
+          // shop: [4],
+        }).reduce((acc, [key, value]) => {
+          if (Array.isArray(value) && value.length === 0) {
+            return acc;
+          }
+          if (value) {
+            acc[key] = value;
+          }
+          return acc;
+        }, {}),
       });
       const response = await usePostFetch(
         "https://sinbad-store.com/api/v2/filter-products",
@@ -105,8 +117,8 @@ const Products = ({ allProducts }) => {
       console.log(response);
       // setFilteredProducts(data);
     };
-    doFetch()
-  }, [categoryFilter, brandFilter]);
+    doFetch();
+  }, [categoryFilter, brandFilter, price, valuesFilter, withOffer]);
 
   const handleCheckboxChange = (state, stateSetter, id) => {
     if (state.includes(id)) {
@@ -116,12 +128,20 @@ const Products = ({ allProducts }) => {
     }
   };
 
-  const handleSingleOfGroupCheckboxChange = (stateSetter, value) => {
-    stateSetter(value);
+  const handleSingleOfGroupCheckboxChange = (state, stateSetter, value) => {
+    if (state === value) {
+      stateSetter(0);
+    } else {
+      stateSetter(value);
+    }
   };
 
   const handlePriceChange = (id, min, max) => {
-    setPrice({ id: id, min: min, max: max });
+    if (price.id === id) {
+      setPrice({ id: 0, min: 0, max: 0 });
+    } else {
+      setPrice({ id: id, min: min, max: max });
+    }
   };
 
   return (
@@ -169,6 +189,7 @@ const Products = ({ allProducts }) => {
                       checked={brand.id === brandFilter}
                       onChange={(_) =>
                         handleSingleOfGroupCheckboxChange(
+                          brandFilter,
                           setBrandFilter,
                           brand.id
                         )
@@ -212,7 +233,9 @@ const Products = ({ allProducts }) => {
                     type="checkbox"
                     id={"withoffer"}
                     checked={price.id === 4}
-                    onChange={(_) => handlePriceChange(4, 3000000, 1000000000000)}
+                    onChange={(_) =>
+                      handlePriceChange(4, 3000000, 1000000000000)
+                    }
                   />
                   <label htmlFor={"withoffer"}>اكثر من 3 مليون</label>
                 </div>
@@ -226,6 +249,7 @@ const Products = ({ allProducts }) => {
                     checked={withOffer === 1 ? true : false}
                     onChange={(_) =>
                       handleSingleOfGroupCheckboxChange(
+                        withOffer,
                         setWithOffer,
                         withOffer === 1 ? 0 : 1
                       )
