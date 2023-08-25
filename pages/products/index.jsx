@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
 import ProductCard1 from "../../src/components/product-cards/ProductCard1";
-import { Grid, styled } from "@mui/material";
+import { Grid, Pagination, styled } from "@mui/material";
 import { useAppContext } from "../../src/contexts/AppContext";
 
 const FilterBlock = styled("div")(({ theme }) => ({
@@ -34,8 +34,11 @@ const Products = ({ allProducts }) => {
   const [price, setPrice] = useState({ id: 0, min: 0, max: 0 });
   const [withOffer, setWithOffer] = useState(0);
   const [filteredProducts, setFilteredProducts] = useState(null);
+  const [showFilteredProducts, setShowFilteredProducts] = useState(false);
+  const [paginationIndicator, setPaginationIndicator] = useState(1);
+  const [loading, setLoading] = useState(false);
 
-  console.log(filters);
+  console.log(filteredProducts);
   const ProductCardElements = products.map((product, idx) => {
     return (
       // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
@@ -85,10 +88,8 @@ const Products = ({ allProducts }) => {
         "Content-Type": "application/json",
       };
       const body = JSON.stringify({
-        
-
         // Making sure we're filtering out falsy values before doing the fetch
-        ...Object.entries({ 
+        ...Object.entries({
           category: categoryFilter,
           brand: brandFilter,
           min_price: price.min,
@@ -108,19 +109,29 @@ const Products = ({ allProducts }) => {
         }, {}),
       });
       const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/filter-products",
+        `https://sinbad-store.com/api/v2/filter-products?page=${paginationIndicator}`,
         headers,
         body
       );
-      // const data = await response.json();
+      const data = await response.data;
 
-      console.log(response);
-      // setFilteredProducts(data);
+      setLoading(false);
+      setFilteredProducts(data.data);
+      if (
+        categoryFilter.length > 0 ||
+        brandFilter > 0 ||
+        price.id > 0 ||
+        valuesFilter.length > 0 ||
+        withOffer !== 0
+      ) {
+        setShowFilteredProducts(true);
+      }
     };
     doFetch();
-  }, [categoryFilter, brandFilter, price, valuesFilter, withOffer]);
+  }, [categoryFilter, brandFilter, price, valuesFilter, withOffer, paginationIndicator]);
 
   const handleCheckboxChange = (state, stateSetter, id) => {
+    setLoading(true);
     if (state.includes(id)) {
       stateSetter(state.filter((item) => item !== id));
     } else {
@@ -129,6 +140,7 @@ const Products = ({ allProducts }) => {
   };
 
   const handleSingleOfGroupCheckboxChange = (state, stateSetter, value) => {
+    setLoading(true);
     if (state === value) {
       stateSetter(0);
     } else {
@@ -137,11 +149,18 @@ const Products = ({ allProducts }) => {
   };
 
   const handlePriceChange = (id, min, max) => {
+    setLoading(true);
+
     if (price.id === id) {
       setPrice({ id: 0, min: 0, max: 0 });
     } else {
       setPrice({ id: id, min: min, max: max });
     }
+  };
+
+  const changeHandler = (page) => {
+    setPaginationIndicator(page);
+    setLoading(true)
   };
 
   return (
@@ -289,12 +308,74 @@ const Products = ({ allProducts }) => {
         </Grid>
       </div>
       <div style={{ flex: "1 1 75%" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={12} md={12} lg={12}>
-            <h1>Products</h1>
+        {showFilteredProducts ? (
+          <Grid container spacing={2}>
+            {filteredProducts.data.products.length > 0 ? (
+              filteredProducts.data.products.map((product) => (
+                <Grid
+                  item
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  key={product.id}
+                  style={loading ? { opacity: "0.5" } : { opacity: "1" }}
+                >
+                  <ProductCard1
+                    id={product.id}
+                    slug={product.id}
+                    title={product.product_name}
+                    price={product.product_price}
+                    rating={product.rating}
+                    imgUrl={`${product.thumb}`}
+                    salePrice={product.sale_price}
+                    description={product.product_description?.replace(
+                      /(<([^>]+)>)/gi,
+                      ""
+                    )}
+                    categoryName={product.category_name}
+                    isNew={product.is_new}
+                    isExternal={product.is_external}
+                    shopName={product.shop_name}
+                    hoverEffect
+                    // isFavorited={
+                    //   favItemsLocalStorage.length > 0 &&
+                    //   favItemsLocalStorage.find(
+                    //     (favItem) => favItem.id === item.id
+                    //   ) ?
+                    //   true : false
+                    // }
+                    isFuture={product.is_future}
+                  />
+                </Grid>
+              ))
+            ) : (
+              <div>nothing here</div>
+            )}
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "2rem",
+                marginTop: "2rem",
+              }}
+            >
+              <Pagination
+                count={filteredProducts.pagination.last_page}
+                color="primary"
+                onChange={(event, page) => changeHandler(page)}
+              />
+            </div>
           </Grid>
-          {ProductCardElements}
-        </Grid>
+        ) : (
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <h1>Products</h1>
+            </Grid>
+            {ProductCardElements}
+          </Grid>
+        )}
       </div>
     </div>
   );
