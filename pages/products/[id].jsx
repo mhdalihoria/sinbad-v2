@@ -215,7 +215,7 @@ export const getStaticPaths = async () => {
     }
   );
 
-  const productsParams = allProducts.data.products.map((product) => {
+  const productsParams = allProducts.data.data.products.map((product) => {
     return { params: { id: product.id.toString() } };
   });
   return {
