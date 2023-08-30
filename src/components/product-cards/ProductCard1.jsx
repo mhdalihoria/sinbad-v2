@@ -280,9 +280,14 @@ const ProductCard1 = ({
                 </a>
               </Link>
 
-              {!!shopName && (
+              {!!shopName ? (
                 <>
                   <Span>المتجر: {shopName} </Span> <br />
+                  <br />
+                </>
+              ) : (
+                <>
+                  <Span></Span> <br />
                   <br />
                 </>
               )}
