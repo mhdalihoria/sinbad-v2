@@ -15,6 +15,7 @@ import "simplebar/dist/simplebar.min.css";
 import "../src/__server__";
 import MainHeader from "../src/pages-sections/header/MainHeader"
 import CustomFooter from "../src/pages-sections/footer/CustomFooter"
+import Overlay from "../src/components/overlay/Overlay";
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
@@ -46,6 +47,7 @@ const App = ({ Component, pageProps }) => {
           <MuiTheme>
             <SnackbarProvider>
               <RTL>
+                <Overlay/>
                 <MainHeader />
                 {getLayout(<AnyComponent {...pageProps} />)}
                 <CustomFooter />
