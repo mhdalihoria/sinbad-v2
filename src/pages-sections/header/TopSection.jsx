@@ -34,12 +34,15 @@ export const HeaderWrapper = styled(Box)(({ theme }) => ({
     height: layoutConstant.mobileHeaderHeight,
   },
 }));
-const StyledContainer = styled(Container)({
+const StyledContainer = styled("div")({
   gap: 2,
   height: "100%",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+  width: "90%",
+  margin: "0 auto"
+
 });
 
 // ==============================================================
