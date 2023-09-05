@@ -128,6 +128,7 @@ const StyledArrowNextButton = styled(ButtonNext)(({
   }
 }));
 const carouselStyled = {
+  width: "100%",
   overflow: "hidden",
   // ":hover": {
   //   "& .carousel__back-button, & .carousel__next-button": { opacity: 1 },
