@@ -9,6 +9,9 @@ import { useAppContext } from "../../src/contexts/AppContext";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
 import paginateArray from "../../src/utils/paginateArray";
 import ShopIntroCard from "components/shop/ShopIntroCard";
+import useWindowSize from "../../src/hooks/useWindowSize";
+import Carousel from "../../src/components/carousel/Carousel";
+import { carouselStyled } from "../../src/components/carousel/styles";
 
 const IntroContainer = styled("div")({
   width: "80%",
@@ -32,7 +35,6 @@ const CategoryContainer = styled("div")({
   boxShadow: "0px 0px 5px 4px rgba(0,0,0,0.05)",
   padding: "10px",
   borderRadius: "5px",
-
 
   "& .categoryTitle": {
     fontSize: "1rem",
@@ -113,6 +115,15 @@ const ShopDetails = ({ id, shopData }) => {
     mazad,
   } = shopData;
   const { state, orderData, setOrderData, userToken } = useAppContext();
+  const width = useWindowSize();
+  const [visibleSlides, setVisibleSlides] = useState(4);
+  useEffect(() => {
+    if (width < 426) setVisibleSlides(1);
+    else if (width < 650) setVisibleSlides(2);
+    else if (width < 1024) setVisibleSlides(3);
+    else if (width < 1200) setVisibleSlides(4);
+    else setVisibleSlides(5);
+  }, [width]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryProducts, setSelectedCategoryProducts] =
     useState(null);
@@ -120,7 +131,6 @@ const ShopDetails = ({ id, shopData }) => {
     selectedCategoryProductsPaginationData,
     setSelectedCategoryProductsPaginationData,
   ] = useState(null);
-
   const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
 
@@ -241,36 +251,49 @@ const ShopDetails = ({ id, shopData }) => {
               <SpecialProdContainer>
                 <h1>عروض منتجات</h1>
                 <Grid container spacing={2}>
-                  {offer.map((product) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                      <ProductCard1
-                        id={product.id}
-                        slug={product.id}
-                        title={product.product_name}
-                        price={product.product_price}
-                        rating={product.rating}
-                        imgUrl={`${product.thumb}`}
-                        salePrice={product.sale_price}
-                        description={product.product_description?.replace(
-                          /(<([^>]+)>)/gi,
-                          ""
-                        )}
-                        categoryName={product.category_name}
-                        isNew={product.is_new}
-                        isExternal={product.is_external}
-                        shopName={product.shop_name}
-                        hoverEffect
-                        // isFavorited={
-                        //   favItemsLocalStorage.length > 0 &&
-                        //   favItemsLocalStorage.find(
-                        //     (favItem) => favItem.id === item.id
-                        //   ) ?
-                        //   true : false
-                        // }
-                        isFuture={product.is_future}
-                      />
-                    </Grid>
-                  ))}
+                  <Carousel
+                    totalSlides={offer.length}
+                    visibleSlides={visibleSlides}
+                    sx={carouselStyled}
+                  >
+                    {offer.map((product) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        key={product.id}
+                      >
+                        <ProductCard1
+                          id={product.id}
+                          slug={product.id}
+                          title={product.product_name}
+                          price={product.product_price}
+                          rating={product.rating}
+                          imgUrl={`${product.thumb}`}
+                          salePrice={product.sale_price}
+                          description={product.product_description?.replace(
+                            /(<([^>]+)>)/gi,
+                            ""
+                          )}
+                          categoryName={product.category_name}
+                          isNew={product.is_new}
+                          isExternal={product.is_external}
+                          shopName={product.shop_name}
+                          hoverEffect
+                          // isFavorited={
+                          //   favItemsLocalStorage.length > 0 &&
+                          //   favItemsLocalStorage.find(
+                          //     (favItem) => favItem.id === item.id
+                          //   ) ?
+                          //   true : false
+                          // }
+                          isFuture={product.is_future}
+                        />
+                      </Grid>
+                    ))}
+                  </Carousel>
                 </Grid>
               </SpecialProdContainer>
             </Grid>
@@ -281,36 +304,49 @@ const ShopDetails = ({ id, shopData }) => {
               <SpecialProdContainer>
                 <h1>منتجات خاصة</h1>
                 <Grid container spacing={2}>
-                  {featuredProducts.map((product) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                      <ProductCard1
-                        id={product.id}
-                        slug={product.id}
-                        title={product.product_name}
-                        price={product.product_price}
-                        rating={product.rating}
-                        imgUrl={`${product.thumb}`}
-                        salePrice={product.sale_price}
-                        description={product.product_description?.replace(
-                          /(<([^>]+)>)/gi,
-                          ""
-                        )}
-                        categoryName={product.category_name}
-                        isNew={product.is_new}
-                        isExternal={product.is_external}
-                        shopName={product.shop_name}
-                        hoverEffect
-                        // isFavorited={
-                        //   favItemsLocalStorage.length > 0 &&
-                        //   favItemsLocalStorage.find(
-                        //     (favItem) => favItem.id === item.id
-                        //   ) ?
-                        //   true : false
-                        // }
-                        isFuture={product.is_future}
-                      />
-                    </Grid>
-                  ))}
+                  <Carousel
+                    totalSlides={offer.length}
+                    visibleSlides={visibleSlides}
+                    sx={carouselStyled}
+                  >
+                    {featuredProducts.map((product) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        key={product.id}
+                      >
+                        <ProductCard1
+                          id={product.id}
+                          slug={product.id}
+                          title={product.product_name}
+                          price={product.product_price}
+                          rating={product.rating}
+                          imgUrl={`${product.thumb}`}
+                          salePrice={product.sale_price}
+                          description={product.product_description?.replace(
+                            /(<([^>]+)>)/gi,
+                            ""
+                          )}
+                          categoryName={product.category_name}
+                          isNew={product.is_new}
+                          isExternal={product.is_external}
+                          shopName={product.shop_name}
+                          hoverEffect
+                          // isFavorited={
+                          //   favItemsLocalStorage.length > 0 &&
+                          //   favItemsLocalStorage.find(
+                          //     (favItem) => favItem.id === item.id
+                          //   ) ?
+                          //   true : false
+                          // }
+                          isFuture={product.is_future}
+                        />
+                      </Grid>
+                    ))}
+                  </Carousel>
                 </Grid>
               </SpecialProdContainer>
             </Grid>
@@ -321,36 +357,49 @@ const ShopDetails = ({ id, shopData }) => {
               <SpecialProdContainer>
                 <h1> مزاد منتجات </h1>
                 <Grid container spacing={2}>
-                  {offer.map((product) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={product.id}>
-                      <ProductCard1
-                        id={product.id}
-                        slug={product.id}
-                        title={product.product_name}
-                        price={product.product_price}
-                        rating={product.rating}
-                        imgUrl={`${product.thumb}`}
-                        salePrice={product.sale_price}
-                        description={product.product_description?.replace(
-                          /(<([^>]+)>)/gi,
-                          ""
-                        )}
-                        categoryName={product.category_name}
-                        isNew={product.is_new}
-                        isExternal={product.is_external}
-                        shopName={product.shop_name}
-                        hoverEffect
-                        // isFavorited={
-                        //   favItemsLocalStorage.length > 0 &&
-                        //   favItemsLocalStorage.find(
-                        //     (favItem) => favItem.id === item.id
-                        //   ) ?
-                        //   true : false
-                        // }
-                        isFuture={product.is_future}
-                      />
-                    </Grid>
-                  ))}
+                  <Carousel
+                    totalSlides={offer.length}
+                    visibleSlides={visibleSlides}
+                    sx={carouselStyled}
+                  >
+                    {offer.map((product) => (
+                      <Grid
+                        item
+                        xs={12}
+                        sm={12}
+                        md={12}
+                        lg={12}
+                        key={product.id}
+                      >
+                        <ProductCard1
+                          id={product.id}
+                          slug={product.id}
+                          title={product.product_name}
+                          price={product.product_price}
+                          rating={product.rating}
+                          imgUrl={`${product.thumb}`}
+                          salePrice={product.sale_price}
+                          description={product.product_description?.replace(
+                            /(<([^>]+)>)/gi,
+                            ""
+                          )}
+                          categoryName={product.category_name}
+                          isNew={product.is_new}
+                          isExternal={product.is_external}
+                          shopName={product.shop_name}
+                          hoverEffect
+                          // isFavorited={
+                          //   favItemsLocalStorage.length > 0 &&
+                          //   favItemsLocalStorage.find(
+                          //     (favItem) => favItem.id === item.id
+                          //   ) ?
+                          //   true : false
+                          // }
+                          isFuture={product.is_future}
+                        />
+                      </Grid>
+                    ))}
+                  </Carousel>
                 </Grid>
               </SpecialProdContainer>
             </Grid>
