@@ -8,6 +8,7 @@ import Loader from "../../src/components/loader-spinner/Loader";
 import { useAppContext } from "../../src/contexts/AppContext";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
 import paginateArray from "../../src/utils/paginateArray";
+import ShopIntroCard from "components/shop/ShopIntroCard";
 
 const IntroContainer = styled("div")({
   width: "80%",
@@ -27,6 +28,12 @@ const ContactContainer = styled("div")({
 });
 
 const CategoryContainer = styled("div")({
+  background: "white",
+  boxShadow: "0px 0px 5px 4px rgba(0,0,0,0.05)",
+  padding: "10px",
+  borderRadius: "5px",
+
+
   "& .categoryTitle": {
     fontSize: "1rem",
     color: "red",
@@ -51,7 +58,7 @@ const CategoryContainer = styled("div")({
     transition: "color .7s ease, background .7s ease",
     cursor: "pointer",
     maxWidth: "200px",
-    padding: ".8em"
+    padding: ".8em",
   },
 
   "& ul li:hover": {
@@ -67,7 +74,7 @@ const CategoryContainer = styled("div")({
 const CardsContainer = styled("div")({
   width: "80%",
   margin: "0 auto",
-  marginBottom: "4rem"
+  marginBottom: "4rem",
 });
 
 const SpecialProdContainer = styled("div")(({ theme }) => ({
@@ -109,14 +116,14 @@ const ShopDetails = ({ id, shopData }) => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryProducts, setSelectedCategoryProducts] =
     useState(null);
-  const [selectedCategoryProductsPaginationData, setSelectedCategoryProductsPaginationData] =
-    useState(null);
+  const [
+    selectedCategoryProductsPaginationData,
+    setSelectedCategoryProductsPaginationData,
+  ] = useState(null);
 
-    const [paginationIndicator, setPaginationIndicator] = useState(1)
+  const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
 
-
-  // console.log("selectedCategory", selectedCategory)
   // console.log("selectedCategoryProducts", selectedCategoryProducts)
   // console.log("selectedCategoryProductsPaginationData", selectedCategoryProductsPaginationData)
 
@@ -157,7 +164,7 @@ const ShopDetails = ({ id, shopData }) => {
       const pagination = response.data.data.pagination;
 
       setSelectedCategoryProducts(data);
-      setSelectedCategoryProductsPaginationData(pagination)
+      setSelectedCategoryProductsPaginationData(pagination);
       setLoading(false);
     };
     doFetch();
@@ -165,12 +172,13 @@ const ShopDetails = ({ id, shopData }) => {
 
   const changeHandler = (page) => {
     setPaginationIndicator(page);
-    setLoading(true)
+    setLoading(true);
   };
 
   return (
     <div>
-      <IntroContainer>
+      {/* Old Header Shape */}
+      {/* <IntroContainer>
         <Grid container spacing={2}>
           {profileSetting.logo && (
             <Grid item xs={12} sm={6} md={6} lg={6}>
@@ -213,7 +221,19 @@ const ShopDetails = ({ id, shopData }) => {
             )}
           </Grid>
         </Grid>
+      </IntroContainer> */}
+      <IntroContainer>
+        <ShopIntroCard
+          name={"shop.name"}
+          phone={contacts.length > 0 ? contacts[0].value : null}
+          supportNum={contacts.length > 0 ? contacts[1].value : null}
+          address={contacts.length > 0 ? contacts[2].value : null}
+          email={contacts.length > 0 ? contacts[3].value : null}
+          coverPicture={`https://sinbad-store.com${profileSetting.logo}`}
+          profilePicture={`https://sinbad-store.com${profileSetting.logo}`}
+        />
       </IntroContainer>
+
       <CardsContainer>
         <Grid container spacing={5}>
           {offer.length > 0 && (
@@ -390,7 +410,7 @@ const ShopDetails = ({ id, shopData }) => {
                       display: "flex",
                       justifyContent: "center",
                       marginBottom: "2rem",
-                      marginTop: "2rem"
+                      marginTop: "2rem",
                     }}
                   >
                     <Pagination
