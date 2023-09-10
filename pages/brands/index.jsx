@@ -43,6 +43,7 @@ const Brands = ({ pagination, pageParam }) => {
   const router = useRouter();
   const page = router.query.page || 1;
 
+
   const changeHandler = (e) => {
     console.log(e.target.textContent);
     router.push(`/brands?page=${e.target.textContent}`);
@@ -71,13 +72,13 @@ const Brands = ({ pagination, pageParam }) => {
 
   return (
     <ShopsContainer>
-      {typeof allBrands !== "undefined" ? (
+      {allBrands && typeof allBrands !== "undefined" ? (
         <>
           <h1>Brands</h1>
           <Grid container>
             {allBrands.map((shop) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={shop.id}>
-                <Link href={`/shops/${shop.slug}`}>
+                <Link href={`/brands/${shop.slug}`}>
                   <ShopItem>
                     <Image
                       src={shop.logo || "https://placehold.jp/150x150.png"}
