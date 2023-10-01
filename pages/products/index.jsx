@@ -39,11 +39,12 @@ const LoaderOverlay = styled("div")(({ theme }) => ({
   paddingTop: "4rem",
 }));
 
-const Products = ({ allProducts }) => {
+const Products = ({}) => {
   const { userToken } = useAppContext();
+  const [allProducts, setAllProducts] = useState({});
   const [products, setProducts] = useState([]);
   const [paginationData, setPaginationData] = useState(null);
-  const { filters } = allProducts.data;
+  const { filters } = allProducts.data || {};
   const [categoryFilter, setCategoryFilter] = useState([]);
   const [brandFilter, setBrandFilter] = useState(0);
   const [valuesFilter, setValuesFilter] = useState([]);
@@ -55,7 +56,6 @@ const Products = ({ allProducts }) => {
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  console.log(paginationData);
   const ProductCardElements = products.map((product, idx) => {
     return (
       // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
@@ -88,16 +88,18 @@ const Products = ({ allProducts }) => {
           isFuture={product.is_future}
         />
       </Grid>
-      
     );
   });
 
   useEffect(() => {
-    if (typeof allProducts.data.products !== "undefined") {
+    if (
+      typeof allProducts.data !== "undefined" &&
+      typeof allProducts.data.products !== "undefined"
+    ) {
       setProducts(allProducts.data.products);
       setPaginationData(allProducts.pagination);
     }
-  }, [products, paginationData]);
+  }, [allProducts, products, paginationData]);
 
   useEffect(() => {
     const doFetch = async () => {
@@ -156,6 +158,24 @@ const Products = ({ allProducts }) => {
     paginationIndicator,
   ]);
 
+  useEffect(() => {
+    const doFetch = async () => {
+      const response = await useGetFetch(
+        `https://sinbad-store.com/api/v2/products?page=${paginationIndicator}`,
+        {
+          method: "GET",
+          headers: { "X-localization": "ar" },
+        }
+      );
+
+      const data = await response.data;
+
+      setAllProducts(data);
+    };
+
+    doFetch();
+  }, [paginationIndicator]);
+
   const handleCheckboxChange = (state, stateSetter, id) => {
     setLoading(true);
     if (state.includes(id)) {
@@ -192,7 +212,7 @@ const Products = ({ allProducts }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setInitialLoad(false);
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -218,45 +238,47 @@ const Products = ({ allProducts }) => {
                 <div>
                   <FilterBlock>
                     <h5>التسوق عبر</h5>
-                    {filters.category.map((category) => (
-                      <div key={category.category_name}>
-                        <input
-                          type="checkbox"
-                          id={category.category_name}
-                          checked={categoryFilter.includes(category.id)}
-                          onChange={(_) =>
-                            handleCheckboxChange(
-                              categoryFilter,
-                              setCategoryFilter,
-                              category.id
-                            )
-                          }
-                        />
-                        <label htmlFor={category.category_name}>
-                          {category.category_name}
-                        </label>
-                      </div>
-                    ))}
+                    {typeof filters !== "undefined" &&
+                      filters.category.map((category) => (
+                        <div key={category.category_name}>
+                          <input
+                            type="checkbox"
+                            id={category.category_name}
+                            checked={categoryFilter.includes(category.id)}
+                            onChange={(_) =>
+                              handleCheckboxChange(
+                                categoryFilter,
+                                setCategoryFilter,
+                                category.id
+                              )
+                            }
+                          />
+                          <label htmlFor={category.category_name}>
+                            {category.category_name}
+                          </label>
+                        </div>
+                      ))}
                   </FilterBlock>
                   <FilterBlock>
                     <h5>الماركات</h5>
-                    {filters.brand.map((brand) => (
-                      <div key={brand.name}>
-                        <input
-                          type="checkbox"
-                          id={brand.name}
-                          checked={brand.id === brandFilter}
-                          onChange={(_) =>
-                            handleSingleOfGroupCheckboxChange(
-                              brandFilter,
-                              setBrandFilter,
-                              brand.id
-                            )
-                          }
-                        />
-                        <label htmlFor={brand.name}>{brand.name}</label>
-                      </div>
-                    ))}
+                    {typeof filters !== "undefined" &&
+                      filters.brand.map((brand) => (
+                        <div key={brand.name}>
+                          <input
+                            type="checkbox"
+                            id={brand.name}
+                            checked={brand.id === brandFilter}
+                            onChange={(_) =>
+                              handleSingleOfGroupCheckboxChange(
+                                brandFilter,
+                                setBrandFilter,
+                                brand.id
+                              )
+                            }
+                          />
+                          <label htmlFor={brand.name}>{brand.name}</label>
+                        </div>
+                      ))}
                   </FilterBlock>
                   <FilterBlock>
                     <h5>السعر</h5>
@@ -317,32 +339,33 @@ const Products = ({ allProducts }) => {
                       <label htmlFor={"withoffer"}>مع عرض</label>
                     </div>
                   </FilterBlock>
-                  {filters.product_filters.map((filter) => {
-                    return (
-                      <FilterBlock key={filter.title}>
-                        <h5>{filter.title}</h5>
-                        {filter.filter_values.map((filterValue) => (
-                          <div key={filterValue.id}>
-                            <input
-                              type="checkbox"
-                              id={filterValue.id}
-                              checked={valuesFilter.includes(filterValue.id)}
-                              onChange={(_) =>
-                                handleCheckboxChange(
-                                  valuesFilter,
-                                  setValuesFilter,
-                                  filterValue.id
-                                )
-                              }
-                            />
-                            <label htmlFor={filterValue.id}>
-                              {filterValue.value}
-                            </label>
-                          </div>
-                        ))}
-                      </FilterBlock>
-                    );
-                  })}
+                  {typeof filters !== "undefined" &&
+                    filters.product_filters.map((filter) => {
+                      return (
+                        <FilterBlock key={filter.title}>
+                          <h5>{filter.title}</h5>
+                          {filter.filter_values.map((filterValue) => (
+                            <div key={filterValue.id}>
+                              <input
+                                type="checkbox"
+                                id={filterValue.id}
+                                checked={valuesFilter.includes(filterValue.id)}
+                                onChange={(_) =>
+                                  handleCheckboxChange(
+                                    valuesFilter,
+                                    setValuesFilter,
+                                    filterValue.id
+                                  )
+                                }
+                              />
+                              <label htmlFor={filterValue.id}>
+                                {filterValue.value}
+                              </label>
+                            </div>
+                          ))}
+                        </FilterBlock>
+                      );
+                    })}
                 </div>
               </Grid>
             </Grid>
@@ -435,11 +458,13 @@ const Products = ({ allProducts }) => {
                     marginTop: "4rem",
                   }}
                 >
-                  <Pagination
-                    count={paginationData.last_page}
-                    color="primary"
-                    onChange={(event, page) => changeHandler(page)}
-                  />
+                  {paginationData && (
+                    <Pagination
+                      count={paginationData.last_page}
+                      color="primary"
+                      onChange={(event, page) => changeHandler(page)}
+                    />
+                  )}
                 </div>
               </Grid>
             )}
@@ -450,17 +475,17 @@ const Products = ({ allProducts }) => {
   );
 };
 
-export const getStaticProps = async (ctx) => {
-  const allProducts = await useGetFetch(
-    "https://sinbad-store.com/api/v2/products?page=2",
-    {
-      method: "GET",
-      headers: { "X-localization": "ar" },
-    }
-  );
-  return {
-    props: { allProducts: allProducts.data },
-  };
-};
+// export const getStaticProps = async (ctx) => {
+//   const allProducts = await useGetFetch(
+//     "https://sinbad-store.com/api/v2/products",
+//     {
+//       method: "GET",
+//       headers: { "X-localization": "ar" },
+//     }
+//   );
+//   return {
+//     props: { allProducts: allProducts.data },
+//   };
+// };
 
 export default Products;
