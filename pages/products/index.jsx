@@ -5,6 +5,7 @@ import ProductCard1 from "../../src/components/product-cards/ProductCard1";
 import { Grid, Pagination, styled } from "@mui/material";
 import { useAppContext } from "../../src/contexts/AppContext";
 import Loader from "../../src/components/loader-spinner/Loader";
+import PageLoader from "../../src/components/loader-spinner/PageLoader";
 
 const FilterBlock = styled("div")(({ theme }) => ({
   paddingRight: "10px",
@@ -219,258 +220,253 @@ const Products = ({}) => {
 
   return (
     <>
-      {initialLoad ? (
-        <LoaderOverlay>
-          <Loader size={15} loading={initialLoad} />
-        </LoaderOverlay>
-      ) : (
-        <div
-          style={{
-            maxWidth: "90%",
-            margin: "0 auto",
-            marginTop: "3rem",
-            display: "flex",
-          }}
-        >
-          <div style={{ flex: "1 1 25%" }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={12} md={12} lg={12}>
-                <div>
-                  <FilterBlock>
-                    <h5>التسوق عبر</h5>
-                    {typeof filters !== "undefined" &&
-                      filters.category.map((category) => (
-                        <div key={category.category_name}>
-                          <input
-                            type="checkbox"
-                            id={category.category_name}
-                            checked={categoryFilter.includes(category.id)}
-                            onChange={(_) =>
-                              handleCheckboxChange(
-                                categoryFilter,
-                                setCategoryFilter,
-                                category.id
-                              )
-                            }
-                          />
-                          <label htmlFor={category.category_name}>
-                            {category.category_name}
-                          </label>
-                        </div>
-                      ))}
-                  </FilterBlock>
-                  <FilterBlock>
-                    <h5>الماركات</h5>
-                    {typeof filters !== "undefined" &&
-                      filters.brand.map((brand) => (
-                        <div key={brand.name}>
-                          <input
-                            type="checkbox"
-                            id={brand.name}
-                            checked={brand.id === brandFilter}
-                            onChange={(_) =>
-                              handleSingleOfGroupCheckboxChange(
-                                brandFilter,
-                                setBrandFilter,
-                                brand.id
-                              )
-                            }
-                          />
-                          <label htmlFor={brand.name}>{brand.name}</label>
-                        </div>
-                      ))}
-                  </FilterBlock>
-                  <FilterBlock>
-                    <h5>السعر</h5>
-                    <div>
-                      <input
-                        type="checkbox"
-                        id={"withoffer"}
-                        checked={price.id === 1}
-                        onChange={(_) => handlePriceChange(1, 0, 500000)}
-                      />
-                      <label htmlFor={"withoffer"}>اقل من نصف مليون</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        id={"withoffer"}
-                        checked={price.id === 2}
-                        onChange={(_) => handlePriceChange(2, 500000, 1500000)}
-                      />
-                      <label htmlFor={"withoffer"}>500,000 - 1,500,000</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        id={"withoffer"}
-                        checked={price.id === 3}
-                        onChange={(_) => handlePriceChange(3, 1500000, 3000000)}
-                      />
-                      <label htmlFor={"withoffer"}>1,500,000 - 3,000,000</label>
-                    </div>
-                    <div>
-                      <input
-                        type="checkbox"
-                        id={"withoffer"}
-                        checked={price.id === 4}
-                        onChange={(_) =>
-                          handlePriceChange(4, 3000000, 1000000000000)
-                        }
-                      />
-                      <label htmlFor={"withoffer"}>اكثر من 3 مليون</label>
-                    </div>
-                  </FilterBlock>
-                  <FilterBlock>
-                    <h5>مع عرض</h5>
-                    <div>
-                      <input
-                        type="checkbox"
-                        id={"withoffer"}
-                        checked={withOffer === 1 ? true : false}
-                        onChange={(_) =>
-                          handleSingleOfGroupCheckboxChange(
-                            withOffer,
-                            setWithOffer,
-                            withOffer === 1 ? 0 : 1
-                          )
-                        }
-                      />
-                      <label htmlFor={"withoffer"}>مع عرض</label>
-                    </div>
-                  </FilterBlock>
+      <PageLoader />
+      <div
+        style={{
+          maxWidth: "90%",
+          margin: "0 auto",
+          marginTop: "3rem",
+          display: "flex",
+        }}
+      >
+        <div style={{ flex: "1 1 25%" }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
+              <div>
+                <FilterBlock>
+                  <h5>التسوق عبر</h5>
                   {typeof filters !== "undefined" &&
-                    filters.product_filters.map((filter) => {
-                      return (
-                        <FilterBlock key={filter.title}>
-                          <h5>{filter.title}</h5>
-                          {filter.filter_values.map((filterValue) => (
-                            <div key={filterValue.id}>
-                              <input
-                                type="checkbox"
-                                id={filterValue.id}
-                                checked={valuesFilter.includes(filterValue.id)}
-                                onChange={(_) =>
-                                  handleCheckboxChange(
-                                    valuesFilter,
-                                    setValuesFilter,
-                                    filterValue.id
-                                  )
-                                }
-                              />
-                              <label htmlFor={filterValue.id}>
-                                {filterValue.value}
-                              </label>
-                            </div>
-                          ))}
-                        </FilterBlock>
-                      );
-                    })}
-                </div>
-              </Grid>
-            </Grid>
-          </div>
-          <div style={{ flex: "1 1 75%" }}>
-            {showFilteredProducts ? (
-              <Grid container spacing={2}>
-                {filteredProducts.data.products.length > 0 ? (
-                  filteredProducts.data.products.map((product) => (
-                    <Grid
-                      item
-                      xs={12}
-                      sm={6}
-                      md={4}
-                      lg={3}
-                      key={product.id}
-                      style={loading ? { opacity: "0.5" } : { opacity: "1" }}
-                    >
-                      <ProductCard1
-                        id={product.id}
-                        slug={product.id}
-                        title={product.product_name}
-                        price={product.product_price}
-                        rating={product.rating}
-                        imgUrl={`${product.thumb}`}
-                        salePrice={product.sale_price}
-                        description={product.product_description?.replace(
-                          /(<([^>]+)>)/gi,
-                          ""
-                        )}
-                        categoryName={product.category_name}
-                        isNew={product.is_new}
-                        isExternal={product.is_external}
-                        shopName={product.shop_name}
-                        hoverEffect
-                        // isFavorited={
-                        //   favItemsLocalStorage.length > 0 &&
-                        //   favItemsLocalStorage.find(
-                        //     (favItem) => favItem.id === item.id
-                        //   ) ?
-                        //   true : false
-                        // }
-                        isFuture={product.is_future}
-                      />
-                    </Grid>
-                  ))
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "2rem",
-                      color: "red",
-                    }}
-                  >
-                    No Products Here, Try Again Later
+                    filters.category.map((category) => (
+                      <div key={category.category_name}>
+                        <input
+                          type="checkbox"
+                          id={category.category_name}
+                          checked={categoryFilter.includes(category.id)}
+                          onChange={(_) =>
+                            handleCheckboxChange(
+                              categoryFilter,
+                              setCategoryFilter,
+                              category.id
+                            )
+                          }
+                        />
+                        <label htmlFor={category.category_name}>
+                          {category.category_name}
+                        </label>
+                      </div>
+                    ))}
+                </FilterBlock>
+                <FilterBlock>
+                  <h5>الماركات</h5>
+                  {typeof filters !== "undefined" &&
+                    filters.brand.map((brand) => (
+                      <div key={brand.name}>
+                        <input
+                          type="checkbox"
+                          id={brand.name}
+                          checked={brand.id === brandFilter}
+                          onChange={(_) =>
+                            handleSingleOfGroupCheckboxChange(
+                              brandFilter,
+                              setBrandFilter,
+                              brand.id
+                            )
+                          }
+                        />
+                        <label htmlFor={brand.name}>{brand.name}</label>
+                      </div>
+                    ))}
+                </FilterBlock>
+                <FilterBlock>
+                  <h5>السعر</h5>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={"withoffer"}
+                      checked={price.id === 1}
+                      onChange={(_) => handlePriceChange(1, 0, 500000)}
+                    />
+                    <label htmlFor={"withoffer"}>اقل من نصف مليون</label>
                   </div>
-                )}
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={"withoffer"}
+                      checked={price.id === 2}
+                      onChange={(_) => handlePriceChange(2, 500000, 1500000)}
+                    />
+                    <label htmlFor={"withoffer"}>500,000 - 1,500,000</label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={"withoffer"}
+                      checked={price.id === 3}
+                      onChange={(_) => handlePriceChange(3, 1500000, 3000000)}
+                    />
+                    <label htmlFor={"withoffer"}>1,500,000 - 3,000,000</label>
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={"withoffer"}
+                      checked={price.id === 4}
+                      onChange={(_) =>
+                        handlePriceChange(4, 3000000, 1000000000000)
+                      }
+                    />
+                    <label htmlFor={"withoffer"}>اكثر من 3 مليون</label>
+                  </div>
+                </FilterBlock>
+                <FilterBlock>
+                  <h5>مع عرض</h5>
+                  <div>
+                    <input
+                      type="checkbox"
+                      id={"withoffer"}
+                      checked={withOffer === 1 ? true : false}
+                      onChange={(_) =>
+                        handleSingleOfGroupCheckboxChange(
+                          withOffer,
+                          setWithOffer,
+                          withOffer === 1 ? 0 : 1
+                        )
+                      }
+                    />
+                    <label htmlFor={"withoffer"}>مع عرض</label>
+                  </div>
+                </FilterBlock>
+                {typeof filters !== "undefined" &&
+                  filters.product_filters.map((filter) => {
+                    return (
+                      <FilterBlock key={filter.title}>
+                        <h5>{filter.title}</h5>
+                        {filter.filter_values.map((filterValue) => (
+                          <div key={filterValue.id}>
+                            <input
+                              type="checkbox"
+                              id={filterValue.id}
+                              checked={valuesFilter.includes(filterValue.id)}
+                              onChange={(_) =>
+                                handleCheckboxChange(
+                                  valuesFilter,
+                                  setValuesFilter,
+                                  filterValue.id
+                                )
+                              }
+                            />
+                            <label htmlFor={filterValue.id}>
+                              {filterValue.value}
+                            </label>
+                          </div>
+                        ))}
+                      </FilterBlock>
+                    );
+                  })}
+              </div>
+            </Grid>
+          </Grid>
+        </div>
+        <div style={{ flex: "1 1 75%" }}>
+          {showFilteredProducts ? (
+            <Grid container spacing={2}>
+              {filteredProducts.data.products.length > 0 ? (
+                filteredProducts.data.products.map((product) => (
+                  <Grid
+                    item
+                    xs={12}
+                    sm={6}
+                    md={4}
+                    lg={3}
+                    key={product.id}
+                    style={loading ? { opacity: "0.5" } : { opacity: "1" }}
+                  >
+                    <ProductCard1
+                      id={product.id}
+                      slug={product.id}
+                      title={product.product_name}
+                      price={product.product_price}
+                      rating={product.rating}
+                      imgUrl={`${product.thumb}`}
+                      salePrice={product.sale_price}
+                      description={product.product_description?.replace(
+                        /(<([^>]+)>)/gi,
+                        ""
+                      )}
+                      categoryName={product.category_name}
+                      isNew={product.is_new}
+                      isExternal={product.is_external}
+                      shopName={product.shop_name}
+                      hoverEffect
+                      // isFavorited={
+                      //   favItemsLocalStorage.length > 0 &&
+                      //   favItemsLocalStorage.find(
+                      //     (favItem) => favItem.id === item.id
+                      //   ) ?
+                      //   true : false
+                      // }
+                      isFuture={product.is_future}
+                    />
+                  </Grid>
+                ))
+              ) : (
                 <div
                   style={{
                     width: "100%",
+                    height: "100%",
                     display: "flex",
+                    alignItems: "center",
                     justifyContent: "center",
-                    marginBottom: "2rem",
-                    marginTop: "2rem",
+                    fontSize: "2rem",
+                    color: "red",
                   }}
                 >
+                  No Products Here, Try Again Later
+                </div>
+              )}
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: "2rem",
+                  marginTop: "2rem",
+                }}
+              >
+                <Pagination
+                  count={filteredProducts.pagination.last_page}
+                  color="primary"
+                  onChange={(event, page) => changeHandler(page)}
+                />
+              </div>
+            </Grid>
+          ) : (
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12} md={12} lg={12}>
+                <h1>Products</h1>
+              </Grid>
+              {ProductCardElements}
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  marginBottom: "2rem",
+                  marginTop: "4rem",
+                }}
+              >
+                {paginationData && (
                   <Pagination
-                    count={filteredProducts.pagination.last_page}
+                    count={paginationData.last_page}
                     color="primary"
                     onChange={(event, page) => changeHandler(page)}
                   />
-                </div>
-              </Grid>
-            ) : (
-              <Grid container spacing={2}>
-                <Grid item xs={12} sm={12} md={12} lg={12}>
-                  <h1>Products</h1>
-                </Grid>
-                {ProductCardElements}
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                    marginBottom: "2rem",
-                    marginTop: "4rem",
-                  }}
-                >
-                  {paginationData && (
-                    <Pagination
-                      count={paginationData.last_page}
-                      color="primary"
-                      onChange={(event, page) => changeHandler(page)}
-                    />
-                  )}
-                </div>
-              </Grid>
-            )}
-          </div>
+                )}
+              </div>
+            </Grid>
+          )}
         </div>
-      )}
+      </div>
     </>
   );
 };

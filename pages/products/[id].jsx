@@ -14,6 +14,7 @@ import { useAppContext } from "../../src/contexts/AppContext";
 import api from "utils/__api__/products";
 import Link from "next/link";
 import Loader from "../../src/components/loader-spinner/Loader";
+import PageLoader from "../../src/components/loader-spinner/PageLoader";
 // styled component
 const StyledTabs = styled(Tabs)(({ theme }) => ({
   minHeight: 0,
@@ -97,17 +98,7 @@ const ProductDetails = ({ productId }) => {
   // Show a loading state when the fallback is rendered
   if (router.isFallback) {
     return (
-      <div
-        style={{
-          width: "100%",
-          height: "100px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Loader loading={router.isFallback} size={20} />
-      </div>
+      <PageLoader />
     );
   }
   return (
@@ -190,17 +181,18 @@ const ProductDetails = ({ productId }) => {
             )}
           </>
         ) : (
-          <div
-          style={{
-            width: "100%",
-            height: "100px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Loader loading={product} size={20} />
-        </div>
+        //   <div
+        //   style={{
+        //     width: "100%",
+        //     height: "100px",
+        //     display: "flex",
+        //     justifyContent: "center",
+        //     alignItems: "center",
+        //   }}
+        // >
+        //   <Loader loading={product} size={20} />
+        // </div>
+        <PageLoader />
         )}
       </Container>
     </ShopLayout1>

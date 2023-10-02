@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Loader from "../../src/components/loader-spinner/Loader";
+import PageLoader from "../../src/components/loader-spinner/PageLoader";
 
 const ShopsContainer = styled("div")({
   width: "80%",
@@ -106,17 +107,7 @@ const Shops = ({ pagination, pageParam }) => {
           </div>
         </>
       ) : (
-        <div
-          style={{
-            width: "100%",
-            height: "10vh",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Loader size={25} loading={true} />
-        </div>
+        <PageLoader />
       )}
     </ShopsContainer>
   );
