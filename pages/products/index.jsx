@@ -6,6 +6,10 @@ import { Grid, Pagination, styled } from "@mui/material";
 import { useAppContext } from "../../src/contexts/AppContext";
 import Loader from "../../src/components/loader-spinner/Loader";
 import PageLoader from "../../src/components/loader-spinner/PageLoader";
+import { useTranslation } from "react-i18next";
+import { i18n } from "next-i18next";
+import { useRouter } from "next/router";
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 const FilterBlock = styled("div")(({ theme }) => ({
   paddingRight: "10px",
@@ -56,7 +60,15 @@ const Products = ({}) => {
   const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
-
+  const {t} = useTranslation()
+  const {locale, locales, push} = useRouter()
+  
+    const changeLanguage = (language) => {
+      i18n.changeLanguage(language)
+      console.log(i18n.changeLanguage(language))
+      // push("/products", undefined, {locale: language})
+    };
+  
   const ProductCardElements = products.map((product, idx) => {
     return (
       // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
@@ -233,6 +245,10 @@ const Products = ({}) => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12} md={12} lg={12}>
               <div>
+
+
+            <button onClick={() => changeLanguage('ar')}>{t('welcome')}</button>
+
                 <FilterBlock>
                   <h5>التسوق عبر</h5>
                   {typeof filters !== "undefined" &&
@@ -471,16 +487,10 @@ const Products = ({}) => {
   );
 };
 
-// export const getStaticProps = async (ctx) => {
-//   const allProducts = await useGetFetch(
-//     "https://sinbad-store.com/api/v2/products",
-//     {
-//       method: "GET",
-//       headers: { "X-localization": "ar" },
-//     }
-//   );
+// export const getStaticProps = async ({locale}) => {
+  
 //   return {
-//     props: { allProducts: allProducts.data },
+//     props: { ...(await serverSideTranslations(locale, ["common"])) },
 //   };
 // };
 
