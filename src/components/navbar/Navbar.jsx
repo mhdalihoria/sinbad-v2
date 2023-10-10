@@ -80,7 +80,7 @@ const NavBarWrapper = styled(BazaarCard)(({ theme, border }) => ({
 const InnerContainer = styled(Box)({
   height: "100%",
   margin: "0 2rem",
-  maxWidth: "1200px",
+  maxWidth: "1600px",
   display: "flex",
   alignItems: "center",
   justifyContent: "start",
