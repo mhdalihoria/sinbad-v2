@@ -2,11 +2,13 @@ import Link from "next/link";
 import { format } from "date-fns";
 import { Person } from "@mui/icons-material";
 import {
+  Alert,
   Avatar,
   Box,
   Button,
   Card,
   Grid,
+  Snackbar,
   TextField,
   Typography,
   styled,
@@ -48,7 +50,7 @@ const LoginSection = styled(Card)(({ theme }) => ({
     border: "none",
     borderRadius: "5px",
     marginTop: "1em",
-    cursor: "pointer"
+    cursor: "pointer",
   },
 }));
 
@@ -58,6 +60,7 @@ const MyAccount = ({ userInfo }) => {
   const { userToken } = useAppContext();
   const router = useRouter();
   const [isLogged, setIsLogged] = useState(false);
+  const [profileStateResponse, setProfileStateResponse] = useState(null);
   const downMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
   // SECTION TITLE HEADER LINK
   //   const HEADER_LINK = (
@@ -107,33 +110,44 @@ const MyAccount = ({ userInfo }) => {
       .min(8, "Password must be at least 8 characters")
       .required("Password is required"),
     new_password: yup
-    .string()
-    .min(8, "Password must be at least 8 characters")
-    .required("Password is required"),
+      .string()
+      .min(8, "Password must be at least 8 characters")
+      .required("Password is required"),
   });
 
   const handleFormSubmit = async (values) => {
     const headers = {
-        "X-localization": "ar",
-        Authorization: `Bearer ${userToken}`,
-        "Content-Type": "application/json",
-      };
-      const body = JSON.stringify({
-        "full_name": values.full_name,
-        "nickname": values.nickname,
-        "address": values.address,
-        "old_password": values.old_password,
-        "new_password": values.new_password
-      });
-      const response = await usePostFetch(
-        "https://sinbad-store.com/api/v2/update-profile",
-        headers,
-        body
-      );
-    console.log(values, response);
+      "X-localization": "ar",
+      Authorization: `Bearer ${userToken}`,
+      "Content-Type": "application/json",
+    };
+    const body = JSON.stringify({
+      full_name: values.full_name,
+      nickname: values.nickname,
+      address: values.address,
+      old_password: values.old_password,
+      new_password: values.new_password,
+    });
+    const response = await usePostFetch(
+      "https://sinbad-store.com/api/v2/update-profile",
+      headers,
+      body
+    );
 
+    if (response) {
+      setProfileStateResponse(response.data);
+      console.log(response.data);
+    }
   };
 
+  console.log("something", profileStateResponse);
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setProfileStateResponse(null);
+  };
   return (
     <>
       <PageLoader />
@@ -255,8 +269,12 @@ const MyAccount = ({ userInfo }) => {
                               onBlur={handleBlur}
                               value={values.old_password}
                               onChange={handleChange}
-                              error={!!touched.old_password && !!errors.old_password}
-                              helperText={touched.old_password && errors.old_password}
+                              error={
+                                !!touched.old_password && !!errors.old_password
+                              }
+                              helperText={
+                                touched.old_password && errors.old_password
+                              }
                             />
                           </Grid>
 
@@ -270,12 +288,10 @@ const MyAccount = ({ userInfo }) => {
                               value={values.new_password}
                               onChange={handleChange}
                               error={
-                                !!touched.new_password &&
-                                !!errors.new_password
+                                !!touched.new_password && !!errors.new_password
                               }
                               helperText={
-                                touched.new_password &&
-                                errors.new_password
+                                touched.new_password && errors.new_password
                               }
                             />
                           </Grid>
@@ -312,6 +328,23 @@ const MyAccount = ({ userInfo }) => {
               </Grid>
             </Grid>
           </Box>
+          {profileStateResponse && (
+            <div>
+              <Snackbar
+                open={profileStateResponse?.status !== null}
+                autoHideDuration={3000}
+                onClose={handleCloseSnackbar}
+                anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              >
+                <Alert
+                  onClose={handleCloseSnackbar}
+                  severity={profileStateResponse?.status ? "success" : "error"}
+                >
+                  {profileStateResponse?.message}
+                </Alert>
+              </Snackbar>
+            </div>
+          )}
         </CustomerDashboardLayout>
       ) : (
         <LoginSection>
