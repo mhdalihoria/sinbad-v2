@@ -32,6 +32,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PageLoader from "../../src/components/loader-spinner/PageLoader";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
+import SEO from "../../src/components/SEO"
 
 // ============================================================
 
@@ -153,6 +154,7 @@ const MyAccount = ({ userInfo }) => {
       <PageLoader />
       {isLogged ? (
         <CustomerDashboardLayout>
+          <SEO title="Dashboard" />
           {/* TITLE HEADER AREA */}
           <UserDashboardHeader
             icon={Person}
@@ -171,7 +173,7 @@ const MyAccount = ({ userInfo }) => {
                   validationSchema={checkoutSchema}
                 >
                   {({
-                    values,
+                    values, 
                     errors,
                     touched,
                     handleChange,
