@@ -85,7 +85,7 @@ const linkList = [
         icon: ShoppingBagOutlined,
       },
       {
-        href: "/something",
+        href: "/wishlist",
         title: "Favorite Categories",
         icon: FavoriteBorder,
       },
