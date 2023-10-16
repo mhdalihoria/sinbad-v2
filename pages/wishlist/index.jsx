@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Favorite } from "@mui/icons-material";
 import { Button, Card, Grid, Pagination, styled } from "@mui/material";
@@ -51,7 +51,7 @@ const WishList = () => {
       };
 
       const response = await useGetFetch(
-        "https://sinbad-store.com/api/v2/get-my-wishlist",
+        `https://sinbad-store.com/api/v2/get-my-wishlist?page=${currentPage}`,
         requestOptions
       );
       const data = await response.data;
@@ -66,7 +66,7 @@ const WishList = () => {
     if (userToken) {
       doFetch();
     }
-  }, [userToken]);
+  }, [userToken, currentPage]);
 
   // HANDLE CHANGE PAGINATION
   const handleChangePage = (page) => {
@@ -103,7 +103,7 @@ const WishList = () => {
             {/* PRODUCT LIST AREA */}
             <Grid container spacing={3}>
               {products.data.map((item) => (
-                <>
+                <React.Fragment key={item.id}>
                   {item.product && (
                     <Grid item lg={4} sm={4} xs={6} key={item.id}>
                       <ProductCard1
@@ -127,7 +127,7 @@ const WishList = () => {
                       />
                     </Grid>
                   )}
-                </>
+                </React.Fragment>
               ))}
             </Grid>
 
