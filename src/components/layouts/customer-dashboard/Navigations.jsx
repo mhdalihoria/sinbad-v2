@@ -95,7 +95,7 @@ const linkList = [
         icon: CategoryIcon,
       },
       {
-        href: "/something",
+        href: "/payments",
         title: "Payments",
         icon: CreditCard,
       },
