@@ -19,10 +19,10 @@ import { useRouter } from "next/router";
 
 const Payments = ({ orderList }) => {
   const { userToken } = useAppContext();
-   const router = useRouter()
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const [orderData, setOrderData] = useState(null);
-
+  console.log(orderData);
   const handleChangePage = (page) => {
     setCurrentPage(page);
     router.push(`?page=${page}`);
@@ -40,18 +40,22 @@ const Payments = ({ orderList }) => {
       };
 
       const response = await useGetFetch(
-        "https://sinbad-store.com/api/v2/get-my-payments",
+        `https://sinbad-store.com/api/v2/get-my-payments?page=${currentPage}`,
         requestOptions
       );
 
       const data = await response.data;
-      setOrderData({ data: data.data.payments, status: response.status });
+      setOrderData({
+        data: data.data.payments,
+        status: response.status,
+        pagination: data.pagination,
+      });
     };
 
     if (userToken) {
       doFetch();
     }
-  }, [userToken]);
+  }, [userToken, currentPage]);
 
   return (
     <>
@@ -116,7 +120,7 @@ const Payments = ({ orderList }) => {
               {/* PAGINATION AREA */}
               <FlexBox justifyContent="center" mt={5}>
                 <Pagination
-                  count={products.pagination.last_page}
+                  count={orderData.pagination.last_page}
                   color="primary"
                   page={currentPage}
                   onChange={(event, page) => handleChangePage(page)}
