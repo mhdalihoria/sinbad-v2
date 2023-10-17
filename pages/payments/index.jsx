@@ -1,7 +1,7 @@
 import { Button, Pagination } from "@mui/material";
 import { CreditCard, ShoppingBag } from "@mui/icons-material";
 import TableRow from "components/TableRow";
-import { H5 } from "components/Typography";
+import { H5, H2 } from "components/Typography";
 import { FlexBox } from "components/flex-box";
 import OrderRow from "pages-sections/orders/OrderRow";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
@@ -14,7 +14,6 @@ import { useAppContext } from "../../src/contexts/AppContext";
 import { useRouter } from "next/router";
 import DialogPrompt from "../../src/components/dialog-prompt/DialogPrompt";
 
-
 // ====================================================
 
 const Payments = () => {
@@ -23,6 +22,7 @@ const Payments = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [orderData, setOrderData] = useState(null);
   console.log(orderData);
+
   const handleChangePage = (page) => {
     setCurrentPage(page);
     router.push(`?page=${page}`);
@@ -57,6 +57,20 @@ const Payments = () => {
     }
   }, [userToken, currentPage]);
 
+  const totalBalance = (data) => {
+    let balance = 0;
+    data.map((order) => {
+      if (order.debit === "Credit") {
+        balance = balance + parseInt(order.amount);
+        console.log(totalBalance);
+      } else if (order.debit === "Debit") {
+        balance = balance - parseInt(order.amount);
+      }
+    });
+
+    return balance;
+  };
+
   return (
     <>
       {userToken ? (
@@ -70,6 +84,13 @@ const Payments = () => {
 
           {orderData ? (
             <>
+              <H2 color="primary.main" my={3} mx={0.75}>
+                Balance:{" "}
+                <span style={{ color: "black" }}>
+                  {totalBalance(orderData.data)}
+                </span>
+              </H2>
+
               <TableRow
                 elevation={0}
                 sx={{
@@ -129,34 +150,39 @@ const Payments = () => {
             </>
           ) : (
             <DialogPrompt
-            title={"No Orders"}
-            description={
-              "There's no orders here, visit store page to order products"
-            }
-            buttons={
-              <Button onClick={()=> router.push("/")} variant="contained" color="primary">
-                Store
-              </Button>
-            }
-          />
+              title={"No Orders"}
+              description={
+                "There's no orders here, visit store page to order products"
+              }
+              buttons={
+                <Button
+                  onClick={() => router.push("/")}
+                  variant="contained"
+                  color="primary"
+                >
+                  Store
+                </Button>
+              }
+            />
           )}
         </CustomerDashboardLayout>
       ) : (
         <DialogPrompt
-        title={"You Are Not Logged In"}
-        description={
-          "To view this Page, you need to be logged in"
-        }
-        buttons={
-          <Button onClick={()=> router.push("/login")} variant="contained" color="primary">
-            Login
-          </Button>
-        }
-      />
+          title={"You Are Not Logged In"}
+          description={"To view this Page, you need to be logged in"}
+          buttons={
+            <Button
+              onClick={() => router.push("/login")}
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+          }
+        />
       )}
     </>
   );
 };
-
 
 export default Payments;
