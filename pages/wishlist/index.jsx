@@ -10,34 +10,15 @@ import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
 import { useAppContext } from "../../src/contexts/AppContext";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
+import DialogPrompt from "../../src/components/dialog-prompt/DialogPrompt";
 // ==================================================================
 
-const PromptSection = styled(Card)(({ theme }) => ({
-  maxWidth: "350px",
-  margin: "4rem auto",
-  padding: "2rem",
-  display: "flex",
-  justifyContent: "center",
-  alignContent: "center",
-  flexDirection: "column",
-
-  "& .loginBtn": {
-    background: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    border: "none",
-    borderRadius: "5px",
-    marginTop: "1em",
-    cursor: "pointer",
-  },
-}));
-
-// ============================================================
 const WishList = () => {
   const { userToken } = useAppContext();
   const router = useRouter();
   const [products, setProducts] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  console.log(products && products.data);
+  console.log(products && typeof products.data);
 
   useEffect(() => {
     const doFetch = async () => {
@@ -98,7 +79,10 @@ const WishList = () => {
       />
 
       {userToken ? (
-        products && products.status && products.data ? (
+        products &&
+        products.status &&
+        products.data &&
+        products.data.length !== 0 ? (
           <>
             {/* PRODUCT LIST AREA */}
             <Grid container spacing={3}>
@@ -142,30 +126,32 @@ const WishList = () => {
             </FlexBox>
           </>
         ) : (
-          <PromptSection>
-            <p>There is no products here...</p>
-            <button
-              className="loginBtn"
-              onClick={() => {
-                router.push("/");
-              }}
-            >
-              Browse Products
-            </button>
-          </PromptSection>
+          
+          <DialogPrompt
+            title={"No Products"}
+            description={
+              "There's no products here, visit store page to get some..."
+            }
+            buttons={
+              <Button onClick={()=> router.push("/")} variant="contained" color="primary">
+                Store
+              </Button>
+            }
+          />
         )
       ) : (
-        <PromptSection>
-          <p>You should be logged in...</p>
-          <button
-            className="loginBtn"
-            onClick={() => {
-              router.push("/login");
-            }}
-          >
-            Log In
-          </button>
-        </PromptSection>
+        
+        <DialogPrompt
+        title={"You Are Not Logged In"}
+        description={
+          "To view this Page, you need to be logged in"
+        }
+        buttons={
+          <Button onClick={()=> router.push("/login")} variant="contained" color="primary">
+            Login
+          </Button>
+        }
+      />
       )}
     </CustomerDashboardLayout>
   );

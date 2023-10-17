@@ -1,4 +1,4 @@
-import { Pagination } from "@mui/material";
+import { Button, Pagination } from "@mui/material";
 import { CreditCard, ShoppingBag } from "@mui/icons-material";
 import TableRow from "components/TableRow";
 import { H5 } from "components/Typography";
@@ -12,12 +12,12 @@ import React, { useEffect, useState } from "react";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import { useAppContext } from "../../src/contexts/AppContext";
 import { useRouter } from "next/router";
+import DialogPrompt from "../../src/components/dialog-prompt/DialogPrompt";
+
 
 // ====================================================
 
-// ====================================================
-
-const Payments = ({ orderList }) => {
+const Payments = () => {
   const { userToken } = useAppContext();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -128,21 +128,35 @@ const Payments = ({ orderList }) => {
               </FlexBox>
             </>
           ) : (
-            <div>no orders so far</div>
+            <DialogPrompt
+            title={"No Orders"}
+            description={
+              "There's no orders here, visit store page to order products"
+            }
+            buttons={
+              <Button onClick={()=> router.push("/")} variant="contained" color="primary">
+                Store
+              </Button>
+            }
+          />
           )}
         </CustomerDashboardLayout>
       ) : (
-        <div>You need to log in</div>
+        <DialogPrompt
+        title={"You Are Not Logged In"}
+        description={
+          "To view this Page, you need to be logged in"
+        }
+        buttons={
+          <Button onClick={()=> router.push("/login")} variant="contained" color="primary">
+            Login
+          </Button>
+        }
+      />
       )}
     </>
   );
 };
-export const getStaticProps = async () => {
-  const orderList = await api.getOrders();
-  return {
-    props: {
-      orderList,
-    },
-  };
-};
+
+
 export default Payments;
