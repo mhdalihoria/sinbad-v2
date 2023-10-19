@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"; // Import useState and useEffect
 import { Fragment } from "react";
 import Head from "next/head";
 import Router from "next/router";
@@ -13,10 +14,10 @@ import nextI18NextConfig from "../next-i18next.config";
 import "nprogress/nprogress.css";
 import "simplebar/dist/simplebar.min.css";
 import "../src/__server__";
-import MainHeader from "../src/pages-sections/header/MainHeader"
-import CustomFooter from "../src/pages-sections/footer/CustomFooter"
+import MainHeader from "../src/pages-sections/header/MainHeader";
+import CustomFooter from "../src/pages-sections/footer/CustomFooter";
 import Overlay from "../src/components/overlay/Overlay";
-import PageLoader from "../src/components/loader-spinner/PageLoader"
+import PageLoader from "../src/components/loader-spinner/PageLoader";
 //Binding events.
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
@@ -25,9 +26,19 @@ Router.events.on("routeChangeError", () => nProgress.done());
 nProgress.configure({
   showSpinner: false,
 });
+
 const App = ({ Component, pageProps }) => {
   const AnyComponent = Component;
   const getLayout = AnyComponent.getLayout ?? ((page) => page);
+
+  const [stylesReady, setStylesReady] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setStylesReady(true);
+    }, 3000); // 3 seconds
+  }, []);
+
   return (
     <Fragment>
       <Head>
@@ -48,10 +59,10 @@ const App = ({ Component, pageProps }) => {
           <MuiTheme>
             <SnackbarProvider>
               <RTL>
-                <PageLoader/>
-                <MainHeader />
+                <PageLoader />
+                <MainHeader style={stylesReady ? {} : { display: "none" }} />
                 {getLayout(<AnyComponent {...pageProps} />)}
-                <CustomFooter />
+                <CustomFooter style={stylesReady ? {} : { display: "none" }} />
               </RTL>
             </SnackbarProvider>
           </MuiTheme>
@@ -60,17 +71,5 @@ const App = ({ Component, pageProps }) => {
     </Fragment>
   );
 };
-
-// Only uncomment this method if you have blocking data requirements for
-// every single page in your application. This disables the ability to
-// perform automatic static optimization, causing every page in your app to
-// be server-side rendered.
-//
-// App.getInitialProps = async (appContext) => {
-//   // calls page's `getInitialProps` and fills `appProps.pageProps`
-//   const appProps = await App.getInitialProps(appContext);
-
-//   return { ...appProps };
-// };
 
 export default appWithTranslation(App, nextI18NextConfig);
