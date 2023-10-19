@@ -86,7 +86,7 @@ const linkList = [
       },
       {
         href: "/wishlist",
-        title: "Favorite Categories",
+        title: "My Wishlist",
         icon: FavoriteBorder,
       },
       {
