@@ -22,8 +22,9 @@ import {
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CloseIcon from "@mui/icons-material/Close";
+import usePostFetch from "../../src/components/fetch/usePostFetch";
 
-const BankPayments = () => {
+const BankPayments = ({ banks }) => {
   const { userToken } = useAppContext();
   const router = useRouter();
   const theme = useTheme();
@@ -98,14 +99,15 @@ const BankPayments = () => {
       {openPaymentForm && (
         <AddPaymentForm
           setOpenPaymentForm={setOpenPaymentForm}
-          openPaymentForm={openPaymentForm}
+          banks={banks}
+          userToken={userToken}
         />
       )}
     </CustomerDashboardLayout>
   );
 };
 
-const AddPaymentForm = ({ openPaymentForm, setOpenPaymentForm }) => {
+const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken }) => {
   const theme = useTheme();
 
   return (
@@ -132,8 +134,29 @@ const AddPaymentForm = ({ openPaymentForm, setOpenPaymentForm }) => {
           transferNo: Yup.string().required("Transfer No. is required"),
           file: Yup.mixed().required("File is required"),
         })}
-        onSubmit={(values) => {
+        onSubmit={async (values) => {
           console.log("Form Values:", values);
+          try {
+            const headers = {
+              "X-localization": "ar",
+              Authorization: `Bearer ${userToken}`,
+              "Content-Type": "multipart/form-data",
+            };
+            const body = {
+              transfer_document: values.file,
+              bank_id: `${values.bank}`,
+              transfer_no: values.transferNo,
+              amount: values.balance,
+            };
+            const response = await usePostFetch(
+              "https://sinbad-store.com/api/v2/add-bank-payment",
+              headers,
+              body
+            );
+            console.log(values.file, body);
+          } catch (err) {
+            console.error(err);
+          }
         }}
       >
         <Form>
@@ -146,7 +169,7 @@ const AddPaymentForm = ({ openPaymentForm, setOpenPaymentForm }) => {
                     <em>Select a Bank</em>
                   </MenuItem>
                   {banks.map((bank) => (
-                    <MenuItem key={bank.value} value={bank.value}>
+                    <MenuItem key={bank.id} value={bank.id}>
                       {bank.name}
                     </MenuItem>
                   ))}
@@ -158,49 +181,64 @@ const AddPaymentForm = ({ openPaymentForm, setOpenPaymentForm }) => {
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="balance"
-                name="balance"
-                label="Balance"
-                type="number"
-                InputProps={{
-                  inputProps: { min: 0 },
-                }}
-              />
+              <Field name="balance">
+                {({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    variant="outlined"
+                    label="Balance"
+                    type="number"
+                    InputProps={{
+                      inputProps: { min: 0 },
+                    }}
+                  />
+                )}
+              </Field>
               <div style={{ color: theme.palette.error.main }}>
                 <ErrorMessage name="balance" />
               </div>
             </Grid>
 
             <Grid item xs={12} md={6}>
-              <TextField
-                fullWidth
-                variant="outlined"
-                id="transferNo"
-                name="transferNo"
-                label="Transfer No."
-              />
-
+              <Field name="transferNo">
+                {({ field }) => (
+                  <TextField
+                    {...field}
+                    fullWidth
+                    variant="outlined"
+                    label="Transfer No."
+                  />
+                )}
+              </Field>
               <div style={{ color: theme.palette.error.main }}>
                 <ErrorMessage name="transferNo" />
               </div>
             </Grid>
-
             <Grid item xs={12} md={6}>
-              <input
-                accept=".pdf, .jpg, .jpeg, .png"
-                id="file"
-                name="file"
-                type="file"
-                style={{ display: "none" }}
-              />
-              <label htmlFor="file">
-                <Button variant="outlined" component="span">
-                  Upload File (PDF or Image)
-                </Button>
-              </label>
+              <Field name="file">
+                {({ field, form }) => (
+                  <div>
+                    <label htmlFor="file">
+                      <Button variant="outlined" component="span">
+                        Upload File (PDF or Image)
+                      </Button>
+                      <input
+                        accept=".pdf, .jpg, .jpeg, .png"
+                        id="file"
+                        type="file"
+                        style={{ display: "none" }}
+                        onChange={(event) => {
+                          form.setFieldValue(
+                            "file",
+                            event.currentTarget.files[0]
+                          );
+                        }}
+                      />
+                    </label>
+                  </div>
+                )}
+              </Field>
               <div style={{ color: theme.palette.error.main }}>
                 <ErrorMessage name="file" />
               </div>
@@ -223,16 +261,23 @@ const AddPaymentForm = ({ openPaymentForm, setOpenPaymentForm }) => {
   );
 };
 
-const banks = [
-  { value: "3", name: "مصرف بنك سورية الدولي الاسلامي" },
-  { value: "4", name: "مصرف البنك العربي" },
-  { value: "5", name: "بنك المصرف الدولي للتجارة و التمويل" },
-  { value: "6", name: "مصرف بنك عودة" },
-  { value: "7", name: "حساب بنك سورية الدولي الإسلامي" },
-  { value: "8", name: "حساب بنك بيمو السعودي الفرنسي" },
-  { value: "9", name: "حساب بنك البركة" },
-  { value: "10", name: "الهرم" },
-  { value: "11", name: "الأهلية" },
-];
+export const getStaticProps = async (ctx) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "X-localization": "ar" },
+    redirect: "follow",
+  };
+
+  const response = await useGetFetch(
+    "https://sinbad-store.com/api/v2/get-banks",
+    requestOptions
+  );
+
+  return {
+    props: {
+      banks: response.data.banks,
+    },
+  };
+};
 
 export default BankPayments;
