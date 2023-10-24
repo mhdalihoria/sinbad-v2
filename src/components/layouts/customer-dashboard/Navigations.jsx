@@ -100,7 +100,7 @@ const linkList = [
         icon: CreditCard,
       },
       {
-        href: "/something",
+        href: "/bank-payments",
         title: "Bank Payments",
         icon: AccountBalanceIcon,
       },
