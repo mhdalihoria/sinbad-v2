@@ -107,7 +107,7 @@ export const AppProvider = ({ children }) => {
       userToken,
       setUserToken,
     }),
-    [state, dispatch, discount, orderData]
+    [state, dispatch, discount, orderData, userToken]
   );
 
   console.log("Context", orderData);
