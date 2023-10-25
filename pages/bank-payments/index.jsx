@@ -18,11 +18,20 @@ import {
   Select,
   TextField,
   Divider,
+  TableRow,
+  Typography,
+  Chip,
+  Pagination,
+  TableHead,
 } from "@mui/material";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import CloseIcon from "@mui/icons-material/Close";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
+import { currency } from "../../src/lib";
+import { format } from "date-fns";
+import { FlexBox } from "../../src/components/flex-box";
+import Table from "../../src/pages-sections/bank-payment/Table"
 
 const BankPayments = ({ banks }) => {
   const { userToken } = useAppContext();
@@ -31,6 +40,7 @@ const BankPayments = ({ banks }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [bankPaymentData, setBankPaymentData] = useState(null);
   const [openPaymentForm, setOpenPaymentForm] = useState(false);
+  const [isNewPaymentAdded, setIsNewPaymentAdded] = useState(false);
 
   console.log(bankPaymentData);
 
@@ -61,12 +71,13 @@ const BankPayments = ({ banks }) => {
         status: response.status,
         pagination: data.pagination,
       });
+      setIsNewPaymentAdded(false)
     };
 
     if (userToken) {
       doFetch();
     }
-  }, [userToken, currentPage]);
+  }, [userToken, currentPage, isNewPaymentAdded]);
 
   return (
     <CustomerDashboardLayout>
@@ -82,7 +93,22 @@ const BankPayments = ({ banks }) => {
           Bank Payments:
         </H2>
 
-        <p>No payment records so far</p>
+        {bankPaymentData && bankPaymentData.data.length > 0 ? (
+          <>
+            <Table bankPaymentData={bankPaymentData}/>
+
+            <FlexBox justifyContent="center" mt={5}>
+              <Pagination
+                count={bankPaymentData.pagination.last_page}
+                color="primary"
+                page={currentPage}
+                onChange={(event, page) => handleChangePage(page)}
+              />
+            </FlexBox>
+          </>
+        ) : (
+          <p>No payment records so far</p>
+        )}
 
         <Button
           onClick={() => setOpenPaymentForm(true)}
@@ -101,13 +127,14 @@ const BankPayments = ({ banks }) => {
           setOpenPaymentForm={setOpenPaymentForm}
           banks={banks}
           userToken={userToken}
+          setIsNewPaymentAdded={setIsNewPaymentAdded}
         />
       )}
     </CustomerDashboardLayout>
   );
 };
 
-const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken }) => {
+const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken, setIsNewPaymentAdded }) => {
   const theme = useTheme();
 
   return (
@@ -140,20 +167,21 @@ const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken }) => {
             const headers = {
               "X-localization": "ar",
               Authorization: `Bearer ${userToken}`,
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/json",
             };
-            const body = {
+            const body = JSON.stringify({
               transfer_document: values.file,
               bank_id: `${values.bank}`,
               transfer_no: values.transferNo,
               amount: values.balance,
-            };
+            });
             const response = await usePostFetch(
               "https://sinbad-store.com/api/v2/add-bank-payment",
               headers,
               body
             );
-            console.log(values.file, body);
+            console.log(values.file, body, response);
+            setIsNewPaymentAdded(true)
           } catch (err) {
             console.error(err);
           }
