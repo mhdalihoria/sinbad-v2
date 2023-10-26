@@ -85,9 +85,7 @@ export default function BasicTable({ bankPaymentData }) {
               <TableCell>{currency(order.amount)}</TableCell>
               <TableCell>{order.bank_name}</TableCell>
               <TableCell>
-                {order.order_date === "N/A"
-                  ? ""
-                  : format(new Date(order.order_date), "MMM dd, yyyy")}
+                {order.payment_date}
               </TableCell>
               <TableCell>{order.transfer_no}</TableCell>
               <TableCell> {order.transfer_document}</TableCell>
