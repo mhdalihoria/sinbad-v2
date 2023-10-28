@@ -1,69 +1,116 @@
-import { Pagination } from "@mui/material";
-import { ShoppingBag } from "@mui/icons-material";
-import TableRow from "components/TableRow";
-import { H5 } from "components/Typography";
-import { FlexBox } from "components/flex-box";
-import OrderRow from "pages-sections/orders/OrderRow";
+import React, { useEffect, useState } from "react";
 import UserDashboardHeader from "components/header/UserDashboardHeader";
 import CustomerDashboardLayout from "components/layouts/customer-dashboard";
 import CustomerDashboardNavigation from "components/layouts/customer-dashboard/Navigations";
-import api from "utils/__api__/orders";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import { H5, H2 } from "../../src/components/Typography";
+import { useRouter } from "next/router";
+import { useAppContext } from "../../src/contexts/AppContext";
+import useGetFetch from "../../src/components/fetch/useGetFetch";
+import {
+  useTheme,
+  Box,
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Divider,
+  TableRow,
+  Typography,
+  Chip,
+  Pagination,
+  TableHead,
+} from "@mui/material";
+import { Field, Form, Formik, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import CloseIcon from "@mui/icons-material/Close";
+import usePostFetch from "../../src/components/fetch/usePostFetch";
+import { currency } from "../../src/lib";
+import { format } from "date-fns";
+import { FlexBox } from "../../src/components/flex-box";
+import Table from "../../src/pages-sections/orders-sinbad/Table"
 
-// ====================================================
+const Orders = () => {
+  const { userToken } = useAppContext();
+  const router = useRouter();
+  const theme = useTheme();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [ordersData, setOrdersData] = useState(null);
 
-// ====================================================
+  console.log(ordersData);
 
-const Orders = ({
-  orderList
-}) => {
-  return <CustomerDashboardLayout>
-      {/* TITLE HEADER AREA */}
-      <UserDashboardHeader title="My Orders" icon={ShoppingBag} navigation={<CustomerDashboardNavigation />} />
-
-      {/* ORDER LIST AREA */}
-      <TableRow elevation={0} sx={{
-      padding: "0px 18px",
-      background: "none",
-      display: {
-        xs: "none",
-        md: "flex"
-      }
-    }}>
-        <H5 color="grey.600" my={0} mx={0.75} textAlign="left">
-          Order #
-        </H5>
-
-        <H5 color="grey.600" my={0} mx={0.75} textAlign="left">
-          Status
-        </H5>
-
-        <H5 color="grey.600" my={0} mx={0.75} textAlign="left">
-          Date purchased
-        </H5>
-
-        <H5 color="grey.600" my={0} mx={0.75} textAlign="left">
-          Total
-        </H5>
-
-        <H5 my={0} px={2.75} color="grey.600" flex="0 0 0 !important" display={{
-        xs: "none",
-        md: "block"
-      }} />
-      </TableRow>
-
-      {orderList.map(order => <OrderRow order={order} key={order.id} />)}
-
-      <FlexBox justifyContent="center" mt={5}>
-        <Pagination count={5} color="primary" variant="outlined" onChange={data => console.log(data)} />
-      </FlexBox>
-    </CustomerDashboardLayout>;
-};
-export const getStaticProps = async () => {
-  const orderList = await api.getOrders();
-  return {
-    props: {
-      orderList
-    }
+  const handleChangePage = (page) => {
+    setCurrentPage(page);
+    router.push(`?page=${page}`);
   };
+
+  useEffect(() => {
+    const doFetch = async () => {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "X-localization": "ar",
+          Authorization: `Bearer ${userToken}`,
+        },
+        redirect: "follow",
+      };
+
+      const response = await useGetFetch(
+        `https://sinbad-store.com/api/v2/get-my-orders?page=${currentPage}`,
+        requestOptions
+      );
+
+      const data = await response.data;
+      setOrdersData({
+        data: data.data.orders,
+        status: response.status,
+        pagination: data.pagination,
+      });
+    };
+
+    if (userToken) {
+      doFetch();
+    }
+  }, [userToken, currentPage]);
+
+  return (
+    <CustomerDashboardLayout>
+      {/* TITLE HEADER AREA */}
+      <UserDashboardHeader
+        title="Bank Payments"
+        icon={AccountBalanceIcon}
+        navigation={<CustomerDashboardNavigation />}
+      />
+
+      <Box>
+        <H2 color="primary.main" my={3} mx={0.75}>
+          Orders:
+        </H2>
+
+        {ordersData && ordersData.data.length > 0 ? (
+          <>
+            <Table ordersData={ordersData}/>
+
+            <FlexBox justifyContent="center" mt={5}>
+              <Pagination
+                count={ordersData.pagination.last_page}
+                color="primary"
+                page={currentPage}
+                onChange={(event, page) => handleChangePage(page)}
+              />
+            </FlexBox>
+          </>
+        ) : (
+          <p>No Orders</p>
+        )}
+
+      </Box>
+
+    </CustomerDashboardLayout>
+  );
 };
-export default Orders;
+
+export default Orders
