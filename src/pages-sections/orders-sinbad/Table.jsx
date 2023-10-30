@@ -236,7 +236,7 @@ const SubTable = ({ order }) => {
             <TableRow key={data.id}>
               <TableCell align="center">{data.product_name}</TableCell>
               <TableCell align="center">{data.quantity}</TableCell>
-              <TableCell align="center">{data.price}</TableCell>
+              <TableCell align="center">{currency(data.price)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
