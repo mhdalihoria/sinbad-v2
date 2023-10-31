@@ -59,6 +59,7 @@ const Login = ({toggleDialog}) => {
   const { siteSettingsData } = useContext(SettingsContext);
 
   const [token, setToken] = useState(null);
+  const [isMarketer, setIsMarketer] = useState(null);
   const [loginError, setLoginError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [stage, setStage] = useState(0);
@@ -84,6 +85,8 @@ const Login = ({toggleDialog}) => {
       console.log(data, response.status);
       if (data.data.length > 0) {
         setToken(data.data[0].token);
+        setIsMarketer(data.data[0].marketer);
+        console.log(data.data[0].marketer);
         setStage(1);
         setLoading(false);
       } else {
@@ -113,6 +116,12 @@ const Login = ({toggleDialog}) => {
       window.localStorage.setItem("user_token", JSON.stringify(token));
     }
   }, [token]);
+
+  useEffect(() => {
+    if (isMarketer) {
+      window.localStorage.setItem("isMarketer", JSON.stringify(isMarketer));
+    }
+  }, [isMarketer]);
 
   if (!isActive) {
     console.log(formValues, token);
