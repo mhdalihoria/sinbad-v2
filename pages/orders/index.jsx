@@ -34,7 +34,7 @@ import { FlexBox } from "../../src/components/flex-box";
 import Table from "../../src/pages-sections/orders-sinbad/Table"
 
 const Orders = () => {
-  const { userToken } = useAppContext();
+  const { userToken, isMarketer } = useAppContext();
   const router = useRouter();
   const theme = useTheme();
   const [currentPage, setCurrentPage] = useState(1);
@@ -92,7 +92,7 @@ const Orders = () => {
 
         {ordersData && ordersData.data.length > 0 ? (
           <>
-            <Table ordersData={ordersData}/>
+            <Table ordersData={ordersData} isMarketer={isMarketer}/>
 
             <FlexBox justifyContent="center" mt={5}>
               <Pagination

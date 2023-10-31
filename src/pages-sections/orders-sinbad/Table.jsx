@@ -10,10 +10,10 @@ import { Box, Button, useTheme } from "@mui/material";
 import { currency } from "lib";
 import { format } from "date-fns";
 
-export default function BasicTable({ ordersData }) {
+export default function BasicTable({ ordersData, isMarketer }) {
   const { data } = ordersData;
   const theme = useTheme();
-
+  console.log("isMarketer", isMarketer);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -113,7 +113,7 @@ export default function BasicTable({ ordersData }) {
 
 const Row = ({ order }) => {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
 
   const handleSubTableOpen = () => {
     setOpen(!open);
@@ -229,6 +229,24 @@ const SubTable = ({ order }) => {
             >
               Price
             </TableCell>
+            <TableCell
+              style={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: "700",
+              }}
+              align="center"
+            >
+              Comission
+            </TableCell>
+            <TableCell
+              style={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: "700",
+              }}
+              align="center"
+            >
+              Delivery Comission
+            </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -237,6 +255,8 @@ const SubTable = ({ order }) => {
               <TableCell align="center">{data.product_name}</TableCell>
               <TableCell align="center">{data.quantity}</TableCell>
               <TableCell align="center">{currency(data.price)}</TableCell>
+              <TableCell align="center">{currency(data.commission)}</TableCell>
+              <TableCell align="center">{currency(data.delivery_commission)}</TableCell>
             </TableRow>
           ))}
         </TableBody>
