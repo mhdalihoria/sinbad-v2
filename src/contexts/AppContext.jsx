@@ -96,6 +96,7 @@ export const AppProvider = ({ children }) => {
     transferNo: null,
   });
   const [userToken, setUserToken] = useState(null);
+  const [isMarketer, setIsMarketer] = useState(null);
   const contextValue = useMemo(
     () => ({
       state,
@@ -106,8 +107,10 @@ export const AppProvider = ({ children }) => {
       setOrderData,
       userToken,
       setUserToken,
+      isMarketer,
+      setIsMarketer,
     }),
-    [state, dispatch, discount, orderData, userToken]
+    [state, dispatch, discount, orderData, userToken, isMarketer]
   );
 
   console.log("Context", orderData);
@@ -115,7 +118,9 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (!window) return;
     let token = JSON.parse(window.localStorage.getItem("user_token"));
+    let isMarketer = JSON.parse(window.localStorage.getItem("isMarketer"));
     if (token && token.length > 0) setUserToken(token);
+    if (isMarketer) setIsMarketer(isMarketer);
   }, []);
 
   useEffect(() => {
@@ -140,7 +145,6 @@ export const AppProvider = ({ children }) => {
       window.localStorage.setItem("cart", JSON.stringify(state));
     }
   }, [state]);
-
 
   return (
     <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>
