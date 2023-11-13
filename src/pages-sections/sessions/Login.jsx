@@ -15,6 +15,7 @@ import Loading from "../../components/loader-spinner/Loader";
 import { useRouter } from "next/router";
 import ResetPassword from "./ResetPassword";
 import { RouterRounded } from "@mui/icons-material";
+import { useAppContext } from "contexts/AppContext";
 
 const fbStyle = {
   background: "#3B5998",
@@ -51,13 +52,13 @@ export const Wrapper = styled(({ children, passwordVisibility, ...rest }) => (
     marginBottom: 24,
   },
 }));
-const Login = ({toggleDialog}) => {
+const Login = ({ toggleDialog }) => {
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
     setPasswordVisibility((visible) => !visible);
   }, []);
   const { siteSettingsData } = useContext(SettingsContext);
-
+  const { setUserToken } = useAppContext();
   const [token, setToken] = useState(null);
   const [isMarketer, setIsMarketer] = useState(null);
   const [loginError, setLoginError] = useState(null);
@@ -69,8 +70,8 @@ const Login = ({toggleDialog}) => {
   const router = useRouter();
 
   const goBack = () => {
-    setResetPassword(false)
-  }
+    setResetPassword(false);
+  };
   const handleFormSubmit = async (values) => {
     try {
       setLoading(true);
@@ -85,6 +86,7 @@ const Login = ({toggleDialog}) => {
       console.log(data, response.status);
       if (data.data.length > 0) {
         setToken(data.data[0].token);
+        setUserToken(data.data[0].token)
         setIsMarketer(data.data[0].marketer);
         console.log(data.data[0].marketer);
         setStage(1);
@@ -131,7 +133,7 @@ const Login = ({toggleDialog}) => {
           pathname: "/signup",
           query: {
             code: 203,
-            number: formValues.username
+            number: formValues.username,
           },
         },
         "/signup"
@@ -140,11 +142,11 @@ const Login = ({toggleDialog}) => {
     return <span>We'll get you to Activate your account now</span>;
   }
 
-  if(stage === 1 && !resetPassword) {
-    if(router.pathname === "/") {
-      router.reload("/")
+  if (stage === 1 && !resetPassword) {
+    if (router.pathname === "/") {
+      router.reload("/");
     } else {
-      router.push("/")
+      router.push("/");
     }
   }
 
@@ -238,8 +240,8 @@ const Login = ({toggleDialog}) => {
 
             <FlexRowCenter mt="1.25rem">
               <Box>Don&apos;t have account?</Box>
-              <Link href="/signup" passHref legacyBehavior >
-                <a onClick={()=>toggleDialog()}>
+              <Link href="/signup" passHref legacyBehavior>
+                <a onClick={() => toggleDialog()}>
                   <H6 ml={1} borderBottom="1px solid" borderColor="grey.900">
                     Sign Up
                   </H6>
@@ -260,7 +262,9 @@ const Login = ({toggleDialog}) => {
             </FlexRowCenter>
           </>
         ))}
-      {resetPassword && <ResetPassword setToken={setToken} token={token} goBack={goBack}/>}
+      {resetPassword && (
+        <ResetPassword setToken={setToken} token={token} goBack={goBack} />
+      )}
       {/* <FlexBox justifyContent="center" bgcolor="grey.200" borderRadius="4px" py={2.5} mt="1.25rem">
         Forgot your password?
         <Link href="/reset-password" passHref legacyBehavior>
