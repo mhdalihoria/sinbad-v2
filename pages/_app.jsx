@@ -36,7 +36,7 @@ const App = ({ Component, pageProps }) => {
   useEffect(() => {
     setTimeout(() => {
       setStylesReady(true);
-    }, 3000); // 3 seconds
+    }, 2500); // 2.5 seconds
   }, []);
 
   return (
@@ -60,9 +60,9 @@ const App = ({ Component, pageProps }) => {
             <SnackbarProvider>
               <RTL>
                 <PageLoader />
-                <MainHeader style={stylesReady ? {} : { display: "none" }} />
+                {stylesReady && <MainHeader />}
                 {getLayout(<AnyComponent {...pageProps} />)}
-                <CustomFooter style={stylesReady ? {} : { display: "none" }} />
+                {stylesReady && <CustomFooter />}
               </RTL>
             </SnackbarProvider>
           </MuiTheme>
