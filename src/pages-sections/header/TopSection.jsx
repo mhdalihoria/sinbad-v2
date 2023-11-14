@@ -186,7 +186,42 @@ const TopSection = ({ isFixed, className, searchInput }) => {
                 <Icon.Search sx={ICON_STYLE} />
               </Box> */}
               {userToken ? (
-                "hi there"
+                <div>
+                <Box
+                  component={IconButton}
+                  p={.75}
+                  onClick={(e) => handlePopoverOpen(e)}
+                >
+                  <AccountCircleIcon />
+                </Box>
+                <Popover
+                  open={popoverOpen}
+                  onClose={handlePopoverClose}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "center",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                >
+                  {/* Content of the popover */}
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "1rem",
+                    }}
+                  >
+                    <Button onClick={handleProfileBtn}>Profile</Button>
+                    <Button onClick={handleLogoutBtn}>Logout</Button>
+                  </Box>
+                </Popover>
+              </div>
               ) : (
                 <Box component={IconButton} onClick={toggleDialog}>
                   <Icon.User sx={ICON_STYLE} />
