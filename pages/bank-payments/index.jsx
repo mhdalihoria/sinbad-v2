@@ -23,6 +23,8 @@ import {
   Chip,
   Pagination,
   TableHead,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { Field, Form, Formik, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -31,7 +33,7 @@ import usePostFetch from "../../src/components/fetch/usePostFetch";
 import { currency } from "../../src/lib";
 import { format } from "date-fns";
 import { FlexBox } from "../../src/components/flex-box";
-import Table from "../../src/pages-sections/bank-payment/Table"
+import Table from "../../src/pages-sections/bank-payment/Table";
 
 const BankPayments = ({ banks }) => {
   const { userToken } = useAppContext();
@@ -41,7 +43,6 @@ const BankPayments = ({ banks }) => {
   const [bankPaymentData, setBankPaymentData] = useState(null);
   const [openPaymentForm, setOpenPaymentForm] = useState(false);
   const [isNewPaymentAdded, setIsNewPaymentAdded] = useState(false);
-
   console.log(bankPaymentData);
 
   const handleChangePage = (page) => {
@@ -71,7 +72,7 @@ const BankPayments = ({ banks }) => {
         status: response.status,
         pagination: data.pagination,
       });
-      setIsNewPaymentAdded(false)
+      setIsNewPaymentAdded(false);
     };
 
     if (userToken) {
@@ -95,7 +96,7 @@ const BankPayments = ({ banks }) => {
 
         {bankPaymentData && bankPaymentData.data.length > 0 ? (
           <>
-            <Table bankPaymentData={bankPaymentData}/>
+            <Table bankPaymentData={bankPaymentData} />
 
             <FlexBox justifyContent="center" mt={5}>
               <Pagination
@@ -134,8 +135,20 @@ const BankPayments = ({ banks }) => {
   );
 };
 
-const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken, setIsNewPaymentAdded }) => {
+const AddPaymentForm = ({
+  banks,
+  setOpenPaymentForm,
+  userToken,
+  setIsNewPaymentAdded,
+}) => {
   const theme = useTheme();
+  const [snackbarObj, setSnackbarObj] = useState({ open: false, status: null });
+
+  const handleCloseSnackbar = () => {
+    setSnackbarObj((prevObj) => {
+      return { ...prevObj, open: false };
+    });
+  };
 
   return (
     <Box mt={4}>
@@ -180,8 +193,9 @@ const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken, setIsNewPaymentA
               headers,
               body
             );
-            console.log(values.file, body, response);
-            setIsNewPaymentAdded(true)
+            const data = await response.data;
+            setSnackbarObj({ open: true, status: data.status });
+            setIsNewPaymentAdded(true);
           } catch (err) {
             console.error(err);
           }
@@ -285,6 +299,19 @@ const AddPaymentForm = ({ banks, setOpenPaymentForm, userToken, setIsNewPaymentA
           </Button>
         </Form>
       </Formik>
+      <Snackbar
+        open={snackbarObj.open}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbarObj.status ? "success" : "error"}
+          sx={{ width: "100%" }}
+        >
+          {snackbarObj.status ? "Submitted Successfully" : "Error. Try again later." }
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
