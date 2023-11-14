@@ -48,7 +48,7 @@ const ShopLayout1 = ({
       </div>
 
       {/* SMALL DEVICE BOTTOM NAVIGATION */}
-      <MobileNavigationBar />
+      {/* <MobileNavigationBar /> */}
 
       {/* FOOTER */}
       {/* <Footer1 /> */}
