@@ -1,6 +1,15 @@
 import Link from "next/link";
 import { Fragment, useState, useContext, useEffect } from "react";
-import { Badge, Box, Button, Dialog, Drawer, styled } from "@mui/material";
+import {
+  Badge,
+  Box,
+  Button,
+  Dialog,
+  Drawer,
+  Popover,
+  Typography,
+  styled,
+} from "@mui/material";
 import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
@@ -22,7 +31,8 @@ import ShoppingBagOutlined from "components/icons/ShoppingBagOutlined";
 
 import { SettingsContext } from "contexts/SettingContext";
 import useGetFetch from "components/fetch/useGetFetch";
-
+import { useRouter } from "next/router";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 // styled component
 export const HeaderWrapper = styled(Box)(({ theme }) => ({
   zIndex: 3,
@@ -41,8 +51,7 @@ const StyledContainer = styled("div")({
   alignItems: "center",
   justifyContent: "space-between",
   width: "90%",
-  margin: "0 auto"
-
+  margin: "0 auto",
 });
 
 // ==============================================================
@@ -51,7 +60,8 @@ const StyledContainer = styled("div")({
 
 const TopSection = ({ isFixed, className, searchInput }) => {
   const theme = useTheme();
-  const { state } = useAppContext();
+  const { state, setUserToken } = useAppContext();
+  const router = useRouter();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [sidenavOpen, setSidenavOpen] = useState(false);
   const [searchBarOpen, setSearchBarOpen] = useState(false);
@@ -64,6 +74,30 @@ const TopSection = ({ isFixed, className, searchInput }) => {
   const { userToken } = useAppContext();
   const [settingsData, setSettingsData] = useState();
   const [categories, setCategories] = useState();
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handlePopoverOpen = (e) => {
+    setAnchorEl(e.currentTarget);
+    setPopoverOpen(true);
+  };
+  const handlePopoverClose = () => {
+    setPopoverOpen(false);
+    setAnchorEl(null);
+  };
+
+  const handleProfileBtn = () => {
+    router.push("/my-account");
+    setPopoverOpen(false);
+  };
+
+  const handleLogoutBtn = () => {
+    window.localStorage.removeItem("user_token")
+    setUserToken(null)
+    router.reload()
+    setPopoverOpen(false);
+  };
+
   useEffect(() => {
     if (siteSettingsData) {
       setSettingsData(siteSettingsData.settings);
@@ -90,18 +124,6 @@ const TopSection = ({ isFixed, className, searchInput }) => {
   // LOGIN AND MINICART DRAWER
   const DIALOG_DRAWER = (
     <Fragment>
-      <Dialog
-        scroll="body"
-        open={dialogOpen}
-        fullWidth={isMobile}
-        onClose={toggleDialog}
-        sx={{
-          zIndex: 9999,
-        }}
-      >
-        <Login toggleDialog={toggleDialog}/>
-      </Dialog>
-
       <Drawer
         open={sidenavOpen}
         anchor="right"
@@ -256,13 +278,51 @@ const TopSection = ({ isFixed, className, searchInput }) => {
         {/* LOGIN AND CART BUTTON */}
         <FlexBox gap={1.5} alignItems="center">
           {userToken ? (
-            "hi there"
+            <div>
+              <Box
+                component={IconButton}
+                p={1.25}
+                bgcolor="grey.200"
+                onClick={(e) => handlePopoverOpen(e)}
+              >
+                <AccountCircleIcon />
+              </Box>
+              <Popover
+                open={popoverOpen}
+                onClose={handlePopoverClose}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "center",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "center",
+                }}
+              >
+                {/* Content of the popover */}
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: "1rem",
+                  }}
+                >
+                  <Button onClick={handleProfileBtn}>Profile</Button>
+                  <Button onClick={handleLogoutBtn}>Logout</Button>
+                </Box>
+              </Popover>
+            </div>
           ) : (
             <Box
               component={IconButton}
               p={1.25}
               bgcolor="grey.200"
-              onClick={toggleDialog}
+              onClick={() => {
+                router.push("/login");
+              }}
             >
               <PersonOutline />
             </Box>
