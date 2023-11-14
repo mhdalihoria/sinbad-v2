@@ -80,7 +80,7 @@ const Orders = () => {
     <CustomerDashboardLayout>
       {/* TITLE HEADER AREA */}
       <UserDashboardHeader
-        title="Bank Payments"
+        title="Orders"
         icon={AccountBalanceIcon}
         navigation={<CustomerDashboardNavigation />}
       />
