@@ -32,7 +32,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import PageLoader from "../../src/components/loader-spinner/PageLoader";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
-import SEO from "../../src/components/SEO"
+import SEO from "../../src/components/SEO";
 
 // ============================================================
 
@@ -57,11 +57,12 @@ const LoginSection = styled(Card)(({ theme }) => ({
 
 // ============================================================
 
-const MyAccount = ({ userInfo }) => {
-  const { userToken } = useAppContext();
+const MyAccount = () => {
+  const { userToken, isMarketer } = useAppContext();
   const router = useRouter();
   const [isLogged, setIsLogged] = useState(false);
   const [profileStateResponse, setProfileStateResponse] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
   const downMd = useMediaQuery((theme) => theme.breakpoints.down("md"));
   // SECTION TITLE HEADER LINK
   //   const HEADER_LINK = (
@@ -79,6 +80,26 @@ const MyAccount = ({ userInfo }) => {
   //   );
 
   useEffect(() => {
+    const fetchData = async () => {
+      const requestOptions = {
+        method: "GET",
+        headers: {
+          "X-localization": "ar",
+          Authorization: `Bearer ${userToken}`,
+        },
+      };
+      const response = await useGetFetch(
+        "https://sinbad-store.com/api/v2/get-profile-info",
+        requestOptions
+      );
+
+      if (response) {
+        setUserInfo(response.data.profile);
+      }
+    };
+
+    fetchData();
+
     setTimeout(() => {
       if (!userToken) {
         setIsLogged(false);
@@ -89,12 +110,12 @@ const MyAccount = ({ userInfo }) => {
   }, [userToken]);
 
   const INITIAL_VALUES = {
-    full_name: userInfo.full_name || "",
-    nickname: userInfo.nickname || "",
-    code: userInfo.code || "",
-    username: userInfo.username || "",
-    mobile: userInfo.mobile || "",
-    address: userInfo.address || "",
+    full_name: userInfo?.full_name || "",
+    nickname: userInfo?.nickname || "",
+    code: userInfo?.code || "",
+    username: userInfo?.username || "",
+    mobile: userInfo?.mobile || "",
+    address: userInfo?.address || "",
     old_password: "",
     new_password: "",
   };
@@ -173,7 +194,7 @@ const MyAccount = ({ userInfo }) => {
                   validationSchema={checkoutSchema}
                 >
                   {({
-                    values, 
+                    values,
                     errors,
                     touched,
                     handleChange,
@@ -249,18 +270,20 @@ const MyAccount = ({ userInfo }) => {
                             />
                           </Grid>
 
-                          <Grid item md={6} xs={12}>
-                            <TextField
-                              fullWidth
-                              label="Code"
-                              name="code"
-                              onBlur={handleBlur}
-                              value={values.code}
-                              onChange={handleChange}
-                              error={!!touched.code && !!errors.code}
-                              helperText={touched.code && errors.code}
-                            />
-                          </Grid>
+                          {isMarketer && (
+                            <Grid item md={6} xs={12}>
+                              <TextField
+                                fullWidth
+                                label="Code"
+                                name="code"
+                                onBlur={handleBlur}
+                                value={values.code}
+                                onChange={handleChange}
+                                error={!!touched.code && !!errors.code}
+                                helperText={touched.code && errors.code}
+                              />
+                            </Grid>
+                          )}
 
                           <Grid item md={6} xs={12}>
                             <TextField
@@ -365,20 +388,4 @@ const MyAccount = ({ userInfo }) => {
   );
 };
 
-export const getStaticProps = async () => {
-  const requestOptions = {
-    method: "GET",
-    headers: { "X-localization": "ar" },
-  };
-  const response = await useGetFetch(
-    "https://sinbad-store.com/api/v2/get-profile-info",
-    requestOptions
-  );
-
-  return {
-    props: {
-      userInfo: response.data.profile,
-    },
-  };
-};
 export default MyAccount;
