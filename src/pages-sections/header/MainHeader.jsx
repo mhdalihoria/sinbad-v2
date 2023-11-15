@@ -3,11 +3,12 @@ import AppStore from "components/AppStore";
 import Image from "next/image";
 import LeftSectionItem from "./LeftSectionItem";
 import Logo from "../../../public/assets/images/header/logo.jpg";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import NewsTicker from "./NewsTicker";
 import PageHeaderUpper from "./PageHeaderUpper";
 import Navbar from "components/navbar/Navbar";
 import TopSection from "./TopSection";
+import { SettingsContext } from "contexts/SettingContext";
 const AppStoreSection = styled(Box)({
   width: "145px",
   display: "flex",
@@ -45,6 +46,9 @@ const OptionsButton = styled(Button)(({ theme }) => ({
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [windowSize, setWindowSize] = useState();
+  const { siteSettingsData } = useContext(SettingsContext);
+  const { settings } = siteSettingsData;
+
   const breakPointMD = 960;
 
   useEffect(() => {
@@ -90,7 +94,7 @@ const Header = () => {
             )}
             {windowSize > breakPointMD && (
               <AppStoreSection>
-                <AppStore />
+                <AppStore android={settings.AndroidApp}/>
               </AppStoreSection>
             )}
           </Grid>
