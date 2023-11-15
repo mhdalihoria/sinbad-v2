@@ -6,6 +6,7 @@ import { Grid, Pagination, styled } from "@mui/material";
 import { useAppContext } from "../../src/contexts/AppContext";
 import Loader from "../../src/components/loader-spinner/Loader";
 import PageLoader from "../../src/components/loader-spinner/PageLoader";
+import CardLoader from "../../src/components/loader-spinner/CardLoader";
 
 const FilterBlock = styled("div")(({ theme }) => ({
   paddingRight: "10px",
@@ -56,7 +57,7 @@ const Products = ({}) => {
   const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
   const [initialLoad, setInitialLoad] = useState(true);
-  
+
   const ProductCardElements = products.map((product, idx) => {
     return (
       // <div style={{ width: "300px", margin: "1rem" }} key={idx}>
@@ -67,8 +68,9 @@ const Products = ({}) => {
         md={4}
         lg={3}
         key={product.id}
-        style={loading ? { opacity: "0.5" } : { opacity: "1" }}
+        style={{position: "relative"}}
       >
+        {loading && <CardLoader />}
         <ProductCard1
           id={product.id}
           slug={product.id}
@@ -233,8 +235,6 @@ const Products = ({}) => {
           <Grid container spacing={2}>
             <Grid item xs={12} sm={12} md={12} lg={12}>
               <div>
-
-
                 <FilterBlock>
                   <h5>التسوق عبر</h5>
                   {typeof filters !== "undefined" &&
@@ -381,7 +381,7 @@ const Products = ({}) => {
                     md={4}
                     lg={3}
                     key={product.id}
-                    style={loading ? { opacity: "0.5" } : { opacity: "1" }}
+                    style={{ position: "relative" }}
                   >
                     <ProductCard1
                       id={product.id}
@@ -409,6 +409,7 @@ const Products = ({}) => {
                       // }
                       isFuture={product.is_future}
                     />
+                    {loading && <CardLoader />}
                   </Grid>
                 ))
               ) : (
@@ -474,7 +475,7 @@ const Products = ({}) => {
 };
 
 // export const getStaticProps = async ({locale}) => {
-  
+
 //   return {
 //     props: { ...(await serverSideTranslations(locale, ["common"])) },
 //   };
