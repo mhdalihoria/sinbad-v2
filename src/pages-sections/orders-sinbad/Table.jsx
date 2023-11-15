@@ -35,6 +35,24 @@ export default function BasicTable({ ordersData, isMarketer }) {
               }}
               align="center"
             >
+              Name
+            </TableCell>
+            <TableCell
+              style={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: "700",
+              }}
+              align="center"
+            >
+              Number
+            </TableCell>
+            <TableCell
+              style={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: "700",
+              }}
+              align="center"
+            >
               Address
             </TableCell>
             <TableCell
@@ -44,7 +62,7 @@ export default function BasicTable({ ordersData, isMarketer }) {
               }}
               align="center"
             >
-              Order Data
+              Order Date
             </TableCell>
             <TableCell
               style={{
@@ -54,6 +72,24 @@ export default function BasicTable({ ordersData, isMarketer }) {
               align="center"
             >
               Amount
+            </TableCell>
+            <TableCell
+              style={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: "700",
+              }}
+              align="center"
+            >
+              Bill No.
+            </TableCell>
+            <TableCell
+              style={{
+                color: theme.palette.primary.contrastText,
+                fontWeight: "700",
+              }}
+              align="center"
+            >
+              Transfer Doc
             </TableCell>
             <TableCell
               style={{
@@ -102,7 +138,7 @@ export default function BasicTable({ ordersData, isMarketer }) {
         <TableBody>
           {data.map((order) => (
             <React.Fragment key={order.id}>
-              <Row order={order} />
+              <Row order={order} isMarketer={isMarketer} />
             </React.Fragment>
           ))}
         </TableBody>
@@ -111,7 +147,7 @@ export default function BasicTable({ ordersData, isMarketer }) {
   );
 }
 
-const Row = ({ order }) => {
+const Row = ({ order, isMarketer }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -132,6 +168,18 @@ const Row = ({ order }) => {
           onClick={() => handleSubTableOpen()}
           sx={{ cursor: "pointer" }}
         >
+          {order.shipped_full_name}
+        </TableCell>
+        <TableCell
+          onClick={() => handleSubTableOpen()}
+          sx={{ cursor: "pointer" }}
+        >
+          {order.shipped_mobile}
+        </TableCell>
+        <TableCell
+          onClick={() => handleSubTableOpen()}
+          sx={{ cursor: "pointer" }}
+        >
           {order.carrier}
         </TableCell>
         <TableCell
@@ -145,6 +193,18 @@ const Row = ({ order }) => {
           sx={{ cursor: "pointer" }}
         >
           {currency(order.total_price)}
+        </TableCell>
+        <TableCell
+          onClick={() => handleSubTableOpen()}
+          sx={{ cursor: "pointer" }}
+        >
+          {order.bill_no}
+        </TableCell>
+        <TableCell
+          onClick={() => handleSubTableOpen()}
+          sx={{ cursor: "pointer" }}
+        >
+          {order.transfer_document}
         </TableCell>
         <TableCell
           onClick={() => handleSubTableOpen()}
@@ -186,7 +246,7 @@ const Row = ({ order }) => {
       {open && (
         <TableRow>
           <TableCell colSpan={8}>
-            <SubTable order={order} />
+            <SubTable order={order} isMarketer={isMarketer} />
           </TableCell>
         </TableRow>
       )}
@@ -194,7 +254,7 @@ const Row = ({ order }) => {
   );
 };
 
-const SubTable = ({ order }) => {
+const SubTable = ({ order, isMarketer }) => {
   const theme = useTheme();
 
   return (
@@ -229,24 +289,28 @@ const SubTable = ({ order }) => {
             >
               Price
             </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Comission
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Delivery Comission
-            </TableCell>
+            {isMarketer && (
+              <>
+                <TableCell
+                  style={{
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: "700",
+                  }}
+                  align="center"
+                >
+                  Comission
+                </TableCell>
+                <TableCell
+                  style={{
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: "700",
+                  }}
+                  align="center"
+                >
+                  Delivery Comission
+                </TableCell>
+              </>
+            )}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -255,8 +319,16 @@ const SubTable = ({ order }) => {
               <TableCell align="center">{data.product_name}</TableCell>
               <TableCell align="center">{data.quantity}</TableCell>
               <TableCell align="center">{currency(data.price)}</TableCell>
-              <TableCell align="center">{currency(data.commission)}</TableCell>
-              <TableCell align="center">{currency(data.delivery_commission)}</TableCell>
+              {isMarketer && (
+                <>
+                  <TableCell align="center">
+                    {currency(data.commission)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {currency(data.delivery_commission)}
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           ))}
         </TableBody>
