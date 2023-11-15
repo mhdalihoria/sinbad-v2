@@ -92,9 +92,9 @@ const TopSection = ({ isFixed, className, searchInput }) => {
   };
 
   const handleLogoutBtn = () => {
-    window.localStorage.removeItem("user_token")
-    setUserToken(null)
-    router.reload()
+    window.localStorage.removeItem("user_token");
+    setUserToken(null);
+    router.reload();
     setPopoverOpen(false);
   };
 
@@ -187,43 +187,48 @@ const TopSection = ({ isFixed, className, searchInput }) => {
               </Box> */}
               {userToken ? (
                 <div>
-                <Box
-                  component={IconButton}
-                  p={.75}
-                  onClick={(e) => handlePopoverOpen(e)}
-                >
-                  <AccountCircleIcon />
-                </Box>
-                <Popover
-                  open={popoverOpen}
-                  onClose={handlePopoverClose}
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "center",
-                  }}
-                  transformOrigin={{
-                    vertical: "top",
-                    horizontal: "center",
-                  }}
-                >
-                  {/* Content of the popover */}
                   <Box
-                    sx={{
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      padding: "1rem",
+                    component={IconButton}
+                    p={0.75}
+                    onClick={(e) => handlePopoverOpen(e)}
+                  >
+                    <AccountCircleIcon />
+                  </Box>
+                  <Popover
+                    open={popoverOpen}
+                    onClose={handlePopoverClose}
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
                     }}
                   >
-                    <Button onClick={handleProfileBtn}>Profile</Button>
-                    <Button onClick={handleLogoutBtn}>Logout</Button>
-                  </Box>
-                </Popover>
-              </div>
+                    {/* Content of the popover */}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "1rem",
+                      }}
+                    >
+                      <Button onClick={handleProfileBtn}>Profile</Button>
+                      <Button onClick={handleLogoutBtn}>Logout</Button>
+                    </Box>
+                  </Popover>
+                </div>
               ) : (
-                <Box component={IconButton} onClick={toggleDialog}>
+                <Box
+                  component={IconButton}
+                  onClick={() => {
+                    router.push("/login");
+                  }}
+                >
                   <Icon.User sx={ICON_STYLE} />
                 </Box>
               )}
