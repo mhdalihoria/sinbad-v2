@@ -61,7 +61,7 @@ const App = ({ Component, pageProps }) => {
               <RTL>
                 <PageLoader />
                 {stylesReady && <MainHeader />}
-                {getLayout(<AnyComponent {...pageProps} />)}
+                {stylesReady && getLayout(<AnyComponent {...pageProps} />)}
                 {stylesReady && <CustomFooter />}
               </RTL>
             </SnackbarProvider>
