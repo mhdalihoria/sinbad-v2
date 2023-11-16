@@ -73,6 +73,17 @@ export default function BasicTable({ ordersData, isMarketer }) {
             >
               Amount
             </TableCell>
+            {isMarketer && (
+              <TableCell
+                style={{
+                  color: theme.palette.primary.contrastText,
+                  fontWeight: "700",
+                }}
+                align="center"
+              >
+                Comission
+              </TableCell>
+            )}
             <TableCell
               style={{
                 color: theme.palette.primary.contrastText,
@@ -155,6 +166,13 @@ const Row = ({ order, isMarketer }) => {
     setOpen(!open);
   };
 
+  const orderCommissionSum = order.order_details.reduce(
+    (orderSum, orderDetail) => {
+      return orderSum + orderDetail.commission;
+    },
+    0
+  );
+
   return (
     <>
       <TableRow>
@@ -194,6 +212,14 @@ const Row = ({ order, isMarketer }) => {
         >
           {currency(order.total_price)}
         </TableCell>
+        {isMarketer && (
+          <TableCell
+            onClick={() => handleSubTableOpen()}
+            sx={{ cursor: "pointer" }}
+          >
+            {currency(orderCommissionSum)}
+          </TableCell>
+        )}
         <TableCell
           onClick={() => handleSubTableOpen()}
           sx={{ cursor: "pointer" }}
