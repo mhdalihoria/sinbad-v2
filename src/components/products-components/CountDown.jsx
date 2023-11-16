@@ -16,7 +16,7 @@ const TimerCard = styled("div")({
 const CountDown = ({ direction = "column", offer, endDate="2023-6-1 "}) => {
   const calculateTimeLeft = () => {
     let year = new Date().getFullYear();
-    const difference = +new Date(endDate) - +new Date();
+    const difference = +new Date(offer.offer_end_at) - +new Date();
     let timeLeft = {};
 
     if (difference > 0) {
