@@ -205,10 +205,12 @@ const ProductCard1 = ({
             {!!isExternal && (
               <StyledChip color="secondary" size="small" label={`أصلي`} />
             )}
-            {offer && typeof offer !== undefined && (
+            {typeof offer !== undefined && offer && offer.offer_end_at ? (
               <div style={{ marginRight: ".1rem", marginTop: ".5rem" }}>
                 <CountDown direction="column" offer={offer} />
               </div>
+            ) : (
+              <StyledChip color="success" size="small" label={`عرض`} />
             )}
           </div>
 

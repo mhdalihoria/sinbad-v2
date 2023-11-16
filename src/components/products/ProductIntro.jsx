@@ -165,7 +165,7 @@ const ProductIntro = ({
     dispatch({
       type: "CHANGE_CART_AMOUNT",
       payload: {
-        price: sale_price? sale_price : product_price,
+        price: sale_price ? sale_price : product_price,
         qty: amount,
         name: product_name,
         imgUrl: productImages[0],
@@ -173,7 +173,7 @@ const ProductIntro = ({
         nanoId: nanoid(),
         slug,
         attributes: selectAttributes,
-        product_attribute_id: ""
+        product_attribute_id: "",
       },
     });
     setItemAmount(1);
@@ -562,12 +562,17 @@ const ProductIntro = ({
                     }}
                   ></i>
                 </div>
-                {offer && typeof offer !== undefined && (
+                {typeof offer !== undefined && offer && (
                   <div style={{ marginTop: "2rem" }}>
                     <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
-                      مدة العرض:
+                      العرض:
                     </div>
-                    <CountDown direction="row" offer={offer} />
+                    <div>
+                      سعر العرض: <span>{offer.offer_price}</span>
+                    </div>
+                    {has_offer && offer.offer_end_at && (
+                      <CountDown direction="row" offer={offer} />
+                    )}
                   </div>
                 )}
                 {mazad.id && (
