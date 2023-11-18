@@ -6,7 +6,14 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Box, Button, useTheme } from "@mui/material";
+import {
+  Box,
+  Button,
+  Modal,
+  TextField,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { currency } from "lib";
 import { format } from "date-fns";
 
@@ -161,9 +168,41 @@ export default function BasicTable({ ordersData, isMarketer }) {
 const Row = ({ order, isMarketer }) => {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [modalData, setModalData] = React.useState({
+    title: null,
+    body: null,
+    buttons: null,
+  });
 
   const handleSubTableOpen = () => {
     setOpen(!open);
+  };
+
+  const handleCancel = () => {
+    const buttons = (
+      <Box sx={{ display: "flex", justifyContent: "end", width: "100%" }}>
+        <Button>Submit</Button>
+        <Button>Submit</Button>
+      </Box>
+    );
+    setOpenModal(true);
+    setModalData({
+      title: (
+        <Typography id="modal-modal-title" variant="h6" component="h2">
+          You're about to cancel your order.
+        </Typography>
+      ),
+      body: (
+        <Box>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            Please Let Us Know Why
+          </Typography>
+          
+        </Box>
+      ),
+      buttons,
+    });
   };
 
   const orderCommissionSum = order.order_details.reduce(
@@ -175,6 +214,11 @@ const Row = ({ order, isMarketer }) => {
 
   return (
     <>
+      <ModalComponent
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        modalData={modalData}
+      />
       <TableRow>
         <TableCell
           onClick={() => handleSubTableOpen()}
@@ -248,7 +292,7 @@ const Row = ({ order, isMarketer }) => {
           {order.can_cancel ? (
             <Button
               sx={{ color: theme.palette.primary.main }}
-              onClick={() => console.log("cancel")}
+              onClick={handleCancel}
             >
               cancel
             </Button>
@@ -360,5 +404,44 @@ const SubTable = ({ order, isMarketer }) => {
         </TableBody>
       </Table>
     </TableContainer>
+  );
+};
+
+const ModalComponent = ({ openModal, setOpenModal, modalData }) => {
+  const { title, body, buttons } = modalData;
+  const modalStyle = {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: 400,
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 3,
+    borderRadius: 1,
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+  return (
+    <Modal
+      open={openModal}
+      onClose={handleCloseModal}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={modalStyle}>
+        {/* <Typography id="modal-modal-title" variant="h6" component="h2">
+          Text in a modal
+        </Typography> */}
+        {title}
+        {body}
+        {buttons}
+        {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+        </Typography> */}
+      </Box>
+    </Modal>
   );
 };
