@@ -13,74 +13,48 @@ import {
   TextField,
   Typography,
   useTheme,
+  Alert,
+  Snackbar,
 } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { currency } from "lib";
 import { format } from "date-fns";
+import usePostFetch from "components/fetch/usePostFetch";
+import { useAppContext } from "contexts/AppContext";
 
 export default function BasicTable({ ordersData, isMarketer }) {
   const { data } = ordersData;
   const theme = useTheme();
+  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const [snackbarData, setSnackbarData] = React.useState({
+    variation: null,
+    body: null,
+  });
   console.log("isMarketer", isMarketer);
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead style={{ background: theme.palette.primary.main }}>
-          <TableRow>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              #
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Name
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Number
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Address
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Order Date
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Amount
-            </TableCell>
-            {isMarketer && (
+    <>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleSnackbarClose}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarData.variation }
+          sx={{ width: "100%" }}
+        >
+          {snackbarData.body }
+        </Alert>
+      </Snackbar>
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead style={{ background: theme.palette.primary.main }}>
+            <TableRow>
               <TableCell
                 style={{
                   color: theme.palette.primary.contrastText,
@@ -88,37 +62,8 @@ export default function BasicTable({ ordersData, isMarketer }) {
                 }}
                 align="center"
               >
-                Comission
+                #
               </TableCell>
-            )}
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Bill No.
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Transfer Doc
-            </TableCell>
-            <TableCell
-              style={{
-                color: theme.palette.primary.contrastText,
-                fontWeight: "700",
-              }}
-              align="center"
-            >
-              Order State
-            </TableCell>
-            {data.some((item) => item.status === "تم الالغاء") && (
               <TableCell
                 style={{
                   color: theme.palette.primary.contrastText,
@@ -126,10 +71,8 @@ export default function BasicTable({ ordersData, isMarketer }) {
                 }}
                 align="center"
               >
-                Cancel Reason
+                Name
               </TableCell>
-            )}
-            {data.some((item) => item.can_cancel === true) && (
               <TableCell
                 style={{
                   color: theme.palette.primary.contrastText,
@@ -137,10 +80,8 @@ export default function BasicTable({ ordersData, isMarketer }) {
                 }}
                 align="center"
               >
-                Cancel Order
+                Number
               </TableCell>
-            )}
-            {data.some((item) => item.can_edit === true) && (
               <TableCell
                 style={{
                   color: theme.palette.primary.contrastText,
@@ -148,61 +89,186 @@ export default function BasicTable({ ordersData, isMarketer }) {
                 }}
                 align="center"
               >
-                Edit Order
+                Address
               </TableCell>
-            )}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.map((order) => (
-            <React.Fragment key={order.id}>
-              <Row order={order} isMarketer={isMarketer} />
-            </React.Fragment>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+              <TableCell
+                style={{
+                  color: theme.palette.primary.contrastText,
+                  fontWeight: "700",
+                }}
+                align="center"
+              >
+                Order Date
+              </TableCell>
+              <TableCell
+                style={{
+                  color: theme.palette.primary.contrastText,
+                  fontWeight: "700",
+                }}
+                align="center"
+              >
+                Amount
+              </TableCell>
+              {isMarketer && (
+                <TableCell
+                  style={{
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: "700",
+                  }}
+                  align="center"
+                >
+                  Comission
+                </TableCell>
+              )}
+              <TableCell
+                style={{
+                  color: theme.palette.primary.contrastText,
+                  fontWeight: "700",
+                }}
+                align="center"
+              >
+                Bill No.
+              </TableCell>
+              <TableCell
+                style={{
+                  color: theme.palette.primary.contrastText,
+                  fontWeight: "700",
+                }}
+                align="center"
+              >
+                Transfer Doc
+              </TableCell>
+              <TableCell
+                style={{
+                  color: theme.palette.primary.contrastText,
+                  fontWeight: "700",
+                }}
+                align="center"
+              >
+                Order State
+              </TableCell>
+              {data.some((item) => item.status === "تم الالغاء") && (
+                <TableCell
+                  style={{
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: "700",
+                  }}
+                  align="center"
+                >
+                  Cancel Reason
+                </TableCell>
+              )}
+              {data.some((item) => item.can_cancel === true) && (
+                <TableCell
+                  style={{
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: "700",
+                  }}
+                  align="center"
+                >
+                  Cancel Order
+                </TableCell>
+              )}
+              {data.some((item) => item.can_edit === true) && (
+                <TableCell
+                  style={{
+                    color: theme.palette.primary.contrastText,
+                    fontWeight: "700",
+                  }}
+                  align="center"
+                >
+                  Edit Order
+                </TableCell>
+              )}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((order) => (
+              <React.Fragment key={order.id}>
+                <Row
+                  order={order}
+                  isMarketer={isMarketer}
+                  snackbarOpen={snackbarOpen}
+                  setSnackbarOpen={setSnackbarOpen}
+                  setSnackbarData={setSnackbarData}
+                />
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 
-const Row = ({ order, isMarketer }) => {
+const Row = ({
+  order,
+  isMarketer,
+  snackbarOpen,
+  setSnackbarOpen,
+  setSnackbarData,
+}) => {
   const theme = useTheme();
+  const { userToken } = useAppContext();
+  const orderID = order.id;
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
-  const [modalData, setModalData] = React.useState({
-    title: null,
-    body: null,
-    buttons: null,
-  });
+  const [modalCancelInput, setModalCancelInput] = React.useState("");
+  const [modalContentType, setModalContentType] = React.useState(null);
+  const [loadingBtn, setLoadingBtn] = React.useState(false);
 
   const handleSubTableOpen = () => {
     setOpen(!open);
   };
 
+  const handleModalCancelInputChange = (e) => {
+    const { value } = e.target;
+    setModalCancelInput(value);
+  };
+
   const handleCancel = () => {
-    const buttons = (
-      <Box sx={{ display: "flex", justifyContent: "end", width: "100%" }}>
-        <Button>Submit</Button>
-        <Button>Submit</Button>
-      </Box>
-    );
+    setModalContentType("cancel");
     setOpenModal(true);
-    setModalData({
-      title: (
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          You're about to cancel your order.
-        </Typography>
-      ),
-      body: (
-        <Box>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Please Let Us Know Why
-          </Typography>
-          
-        </Box>
-      ),
-      buttons,
-    });
+  };
+
+  const handleCancelSubmit = async () => {
+    setLoadingBtn(true);
+    try {
+      const headers = {
+        "X-localization": "ar",
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const body = JSON.stringify({
+        order_id: `${orderID}`,
+        reason: modalCancelInput,
+      });
+
+      const request = await usePostFetch(
+        "https://sinbad-store.com/api/v2/cancel-my-order",
+        headers,
+        body
+      );
+      const data = await request.data;
+      if (request) {
+        setLoadingBtn(false);
+        setSnackbarOpen(true);
+        if (data.success) {
+          setSnackbarData({ variation: "success", body: data.message });
+        } else {
+          setSnackbarData({ variation: "error", body: data.message });
+        }
+      }
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleEdit = () => {
+    setModalContentType("edit");
+    setOpenModal(true);
   };
 
   const orderCommissionSum = order.order_details.reduce(
@@ -214,11 +280,91 @@ const Row = ({ order, isMarketer }) => {
 
   return (
     <>
-      <ModalComponent
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        modalData={modalData}
-      />
+      <ModalComponent openModal={openModal} setOpenModal={setOpenModal}>
+        {modalContentType === "cancel" && (
+          <>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              You're about to cancel your order.
+            </Typography>
+            <Box>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Please Let Us Know Why
+              </Typography>
+              <TextField
+                id="outlined-basic"
+                label=""
+                variant="outlined"
+                name="modalCancelInput"
+                value={modalCancelInput}
+                onChange={handleModalCancelInputChange}
+                sx={{ marginBottom: "1rem", marginTop: ".5rem" }}
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "end",
+                width: "100%",
+                gap: "10px",
+              }}
+            >
+              <Button
+                variant="text"
+                onClick={() => setOpenModal(false)}
+              >
+                close
+              </Button>
+              {/* {loadingBtn ? (
+                <LoadingButton loading variant="outlined">
+                  Submit
+                </LoadingButton>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCancelSubmit}
+                >
+                  Submit
+                </Button>
+              )} */}
+              <LoadingButton
+                loading={loadingBtn}
+                color="primary"
+                variant="outlined"
+                onClick={handleCancelSubmit}
+              >
+                Submit
+              </LoadingButton>
+            </Box>
+          </>
+        )}
+        {modalContentType === "edit" && (
+          <>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Edit Your Orders.
+            </Typography>
+            <Box>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Please Let Us Know Why
+              </Typography>
+              {/* <TextField
+                id="outlined-basic"
+                label=""
+                variant="outlined"
+                name="modalCancelInput"
+                value={modalCancelInput}
+                onChange={handleModalCancelInputChange}
+                sx={{ margin: "1rem 0" }}
+              /> */}
+            </Box>
+            <Box sx={{ display: "flex", justifyContent: "end", width: "100%" }}>
+              <Button>Submit</Button>
+              <Button>Submit</Button>
+            </Box>
+          </>
+        )}
+      </ModalComponent>
+
       <TableRow>
         <TableCell
           onClick={() => handleSubTableOpen()}
@@ -304,7 +450,7 @@ const Row = ({ order, isMarketer }) => {
           {order.can_edit ? (
             <Button
               sx={{ color: theme.palette.secondary.main }}
-              onClick={() => console.log("edit")}
+              onClick={handleEdit}
             >
               edit
             </Button>
@@ -407,8 +553,8 @@ const SubTable = ({ order, isMarketer }) => {
   );
 };
 
-const ModalComponent = ({ openModal, setOpenModal, modalData }) => {
-  const { title, body, buttons } = modalData;
+const ModalComponent = (props) => {
+  const { openModal, setOpenModal, children } = props;
   const modalStyle = {
     position: "absolute",
     top: "50%",
@@ -417,7 +563,7 @@ const ModalComponent = ({ openModal, setOpenModal, modalData }) => {
     width: 400,
     bgcolor: "background.paper",
     boxShadow: 24,
-    p: 3,
+    p: 4,
     borderRadius: 1,
   };
 
@@ -431,17 +577,7 @@ const ModalComponent = ({ openModal, setOpenModal, modalData }) => {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Box sx={modalStyle}>
-        {/* <Typography id="modal-modal-title" variant="h6" component="h2">
-          Text in a modal
-        </Typography> */}
-        {title}
-        {body}
-        {buttons}
-        {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-          Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-        </Typography> */}
-      </Box>
+      <Box sx={modalStyle}>{children}</Box>
     </Modal>
   );
 };
