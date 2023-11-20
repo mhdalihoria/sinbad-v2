@@ -222,6 +222,8 @@ const Row = ({
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [modalCancelInput, setModalCancelInput] = React.useState("");
+  const [modalCancelInputError, setModalCancelInputError] =
+    React.useState(null);
   const [modalContentType, setModalContentType] = React.useState(null);
   const [loadingBtn, setLoadingBtn] = React.useState(false);
 
@@ -240,6 +242,10 @@ const Row = ({
   };
 
   const handleCancelSubmit = async () => {
+    if (!modalCancelInput.trim()) {
+      setModalCancelInputError("Please provide a reason for cancellation");
+      return;
+    }
     setLoadingBtn(true);
     try {
       const headers = {
@@ -261,6 +267,7 @@ const Row = ({
       const data = await request.data;
       if (request) {
         setLoadingBtn(false);
+        setModalCancelInputError(null);
         setSnackbarOpen(true);
         if (data.success) {
           setSnackbarData({ variation: "success", body: data.message });
@@ -351,13 +358,19 @@ const Row = ({
               <TextField
                 id="outlined-basic"
                 fullWidth
+                required
                 label=""
                 variant="outlined"
                 name="modalCancelInput"
                 value={modalCancelInput}
                 onChange={handleModalCancelInputChange}
-                sx={{ marginBottom: "1rem", marginTop: ".5rem" }}
+                sx={{ marginBottom: ".5rem", marginTop: ".5rem" }}
               />
+              {modalCancelInputError && (
+                <Typography sx={{ marginBottom: ".5rem", color: theme.palette.error.main }}>
+                  {modalCancelInputError}
+                </Typography>
+              )}
             </Box>
             <Box
               sx={{
@@ -365,9 +378,16 @@ const Row = ({
                 justifyContent: "end",
                 width: "100%",
                 gap: "10px",
+                marginTop: "1rem"
               }}
             >
-              <Button variant="text" onClick={() => setOpenModal(false)}>
+              <Button
+                variant="text"
+                onClick={() => {
+                  setOpenModal(false);
+                  setModalCancelInputError(null);
+                }}
+              >
                 close
               </Button>
               <LoadingButton
@@ -388,7 +408,7 @@ const Row = ({
             </Typography>
             <Box>
               {quantityValues.map((item, index) => (
-                <div key={item.order_detail_id} style={{margin: "2rem 0"}}>
+                <div key={item.order_detail_id} style={{ margin: "2rem 0" }}>
                   <Box
                     sx={{
                       margin: "1rem 0",
@@ -420,7 +440,14 @@ const Row = ({
                 </div>
               ))}
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "end", width: "100%" }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "end",
+                width: "100%",
+                gap: "10px",
+              }}
+            >
               <Button variant="text" onClick={() => setOpenModal(false)}>
                 Cancel
               </Button>
