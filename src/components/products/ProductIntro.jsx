@@ -562,14 +562,14 @@ const ProductIntro = ({
                     }}
                   ></i>
                 </div>
-                {typeof offer !== undefined && offer && (
+                {typeof offer !== undefined && offer && offer.offer_end_at && (
                   <div style={{ marginTop: "2rem" }}>
-                    <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
+                    {/* <div style={{ marginBottom: ".5rem", fontWeight: "600" }}>
                       العرض:
                     </div>
                     <div>
                       سعر العرض: <span>{offer.offer_price}</span>
-                    </div>
+                    </div> */}
                     {has_offer && offer.offer_end_at && (
                       <CountDown direction="row" offer={offer} />
                     )}
