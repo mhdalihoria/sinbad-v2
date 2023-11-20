@@ -367,7 +367,12 @@ const Row = ({
                 sx={{ marginBottom: ".5rem", marginTop: ".5rem" }}
               />
               {modalCancelInputError && (
-                <Typography sx={{ marginBottom: ".5rem", color: theme.palette.error.main }}>
+                <Typography
+                  sx={{
+                    marginBottom: ".5rem",
+                    color: theme.palette.error.main,
+                  }}
+                >
                   {modalCancelInputError}
                 </Typography>
               )}
@@ -378,7 +383,7 @@ const Row = ({
                 justifyContent: "end",
                 width: "100%",
                 gap: "10px",
-                marginTop: "1rem"
+                marginTop: "1rem",
               }}
             >
               <Button
@@ -516,10 +521,17 @@ const Row = ({
           {order.bill_no}
         </TableCell>
         <TableCell
-          onClick={() => handleSubTableOpen()}
+          onClick={() =>
+            order.transfer_document
+              ? window.open(
+                  `https://sinbad-store.com${order.transfer_document}`,
+                  "_blank"
+                )
+              : handleSubTableOpen()
+          }
           sx={{ cursor: "pointer" }}
         >
-          {order.transfer_document}
+          {order.transfer_document && "Click Here to Open Document"}
         </TableCell>
         <TableCell
           onClick={() => handleSubTableOpen()}
