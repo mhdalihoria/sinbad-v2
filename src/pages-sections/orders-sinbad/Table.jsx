@@ -15,6 +15,7 @@ import {
   useTheme,
   Alert,
   Snackbar,
+  Divider,
 } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { currency } from "lib";
@@ -48,7 +49,7 @@ export default function BasicTable({ ordersData, isMarketer }) {
           severity={snackbarData.variation}
           sx={{ width: "100%" }}
         >
-          {snackbarData.body }
+          {snackbarData.body}
         </Alert>
       </Snackbar>
       <TableContainer component={Paper}>
@@ -211,6 +212,13 @@ const Row = ({
   const theme = useTheme();
   const { userToken } = useAppContext();
   const orderID = order.id;
+  const [quantityValues, setQuantityValues] = React.useState(
+    order.order_details.map((detail) => ({
+      order_detail_id: detail.id,
+      quantity: detail.quantity,
+      productName: detail.product_name,
+    }))
+  );
   const [open, setOpen] = React.useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [modalCancelInput, setModalCancelInput] = React.useState("");
@@ -271,6 +279,56 @@ const Row = ({
     setOpenModal(true);
   };
 
+  const handleEditQuantityChange = (order_detail_id, newQuantity) => {
+    if (newQuantity > 0) {
+      setQuantityValues((prevValues) =>
+        prevValues.map((item) =>
+          item.order_detail_id === order_detail_id
+            ? { ...item, quantity: newQuantity }
+            : item
+        )
+      );
+    }
+  };
+
+  const handleEditSubmit = async () => {
+    setLoadingBtn(true);
+    try {
+      const headers = {
+        "X-localization": "ar",
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const body = JSON.stringify({
+        order_id: `${orderID}`,
+        quantity: quantityValues.map((value) => ({
+          order_detail_id: value.order_detail_id,
+          quantity: value.quantity,
+        })),
+      });
+
+      const request = await usePostFetch(
+        "https://sinbad-store.com/api/v2/cancel-my-order",
+        headers,
+        body
+      );
+      const data = await request.data;
+      if (request) {
+        setLoadingBtn(false);
+        setSnackbarOpen(true);
+        if (data.success) {
+          setSnackbarData({ variation: "success", body: data.message });
+        } else {
+          setSnackbarData({ variation: "error", body: data.message });
+        }
+      }
+      console.log(data);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const orderCommissionSum = order.order_details.reduce(
     (orderSum, orderDetail) => {
       return orderSum + orderDetail.commission;
@@ -309,29 +367,13 @@ const Row = ({
                 gap: "10px",
               }}
             >
-              <Button
-                variant="text"
-                onClick={() => setOpenModal(false)}
-              >
+              <Button variant="text" onClick={() => setOpenModal(false)}>
                 close
               </Button>
-              {/* {loadingBtn ? (
-                <LoadingButton loading variant="outlined">
-                  Submit
-                </LoadingButton>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleCancelSubmit}
-                >
-                  Submit
-                </Button>
-              )} */}
               <LoadingButton
                 loading={loadingBtn}
                 color="primary"
-                variant="outlined"
+                variant="contained"
                 onClick={handleCancelSubmit}
               >
                 Submit
@@ -342,25 +384,54 @@ const Row = ({
         {modalContentType === "edit" && (
           <>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              Edit Your Orders.
+              Edit Your Order
             </Typography>
             <Box>
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                Please Let Us Know Why
-              </Typography>
-              {/* <TextField
-                id="outlined-basic"
-                label=""
-                variant="outlined"
-                name="modalCancelInput"
-                value={modalCancelInput}
-                onChange={handleModalCancelInputChange}
-                sx={{ margin: "1rem 0" }}
-              /> */}
+              {quantityValues.map((item, index) => (
+                <div key={item.order_detail_id}>
+                  <Box
+                    sx={{
+                      margin: "1rem 0",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-evenly",
+                    }}
+                  >
+                    <span>{item.productName}</span>
+                    <TextField
+                      id="outlined-number"
+                      label="Qty"
+                      type="number"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        handleEditQuantityChange(
+                          item.order_detail_id,
+                          e.target.value
+                        )
+                      }
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                  </Box>
+                  {quantityValues.length !== index + 1 && (
+                    <Divider variant="middle" />
+                  )}
+                </div>
+              ))}
             </Box>
             <Box sx={{ display: "flex", justifyContent: "end", width: "100%" }}>
-              <Button>Submit</Button>
-              <Button>Submit</Button>
+              <Button variant="text" onClick={() => setOpenModal(false)}>
+                Cancel
+              </Button>
+              <LoadingButton
+                loading={loadingBtn}
+                color="primary"
+                variant="contained"
+                onClick={handleEditSubmit}
+              >
+                Submit
+              </LoadingButton>
             </Box>
           </>
         )}
