@@ -388,7 +388,7 @@ const Row = ({
             </Typography>
             <Box>
               {quantityValues.map((item, index) => (
-                <div key={item.order_detail_id}>
+                <div key={item.order_detail_id} style={{margin: "2rem 0"}}>
                   <Box
                     sx={{
                       margin: "1rem 0",
