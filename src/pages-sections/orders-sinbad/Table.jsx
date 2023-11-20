@@ -45,7 +45,7 @@ export default function BasicTable({ ordersData, isMarketer }) {
       >
         <Alert
           onClose={handleSnackbarClose}
-          severity={snackbarData.variation }
+          severity={snackbarData.variation}
           sx={{ width: "100%" }}
         >
           {snackbarData.body }
@@ -292,6 +292,7 @@ const Row = ({
               </Typography>
               <TextField
                 id="outlined-basic"
+                fullWidth
                 label=""
                 variant="outlined"
                 name="modalCancelInput"
