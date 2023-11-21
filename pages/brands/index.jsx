@@ -43,12 +43,30 @@ const Brands = ({ pagination, pageParam }) => {
   const router = useRouter();
   const page = router.query.page || 1;
 
-
-  const changeHandler = (e) => {
-    console.log(e.target.textContent);
-    router.push(`/brands?page=${e.target.textContent}`);
-    setAllBrands(null)
+  const changeHandler = (event, page) => {
+    router.push(`/brands?page=${page}`);
+    setAllBrands(null);
   };
+  
+  // useEffect(() => {
+  //   const doFetch = async () => {
+  //     const requestOptions = {
+  //       method: "GET",
+  //       headers: { "X-localization": "ar" },
+  //     };
+  //     const url = `https://sinbad-store.com/api/v2/brands?page=${page}`;
+  //     const response = await useGetFetch(url, requestOptions);
+
+  //     setAllBrands();
+  //     setAllBrands((prevShops) => {
+  //       return (
+  //         prevShops !== response.data.data.brands && response.data.data.brands
+  //       );
+  //     });
+  //   };
+
+  //   doFetch();
+  // }, [page]);
 
   useEffect(() => {
     const doFetch = async () => {
@@ -58,17 +76,15 @@ const Brands = ({ pagination, pageParam }) => {
       };
       const url = `https://sinbad-store.com/api/v2/brands?page=${page}`;
       const response = await useGetFetch(url, requestOptions);
-
-      setAllBrands();
-      setAllBrands((prevShops) => {
-        return (
-          prevShops !== response.data.data.brands && response.data.data.brands
-        );
-      });
+  
+      setAllBrands(
+        response?.data?.data?.brands || []
+      );
     };
-
+  
     doFetch();
   }, [page]);
+  
 
   return (
     <ShopsContainer>
@@ -102,9 +118,9 @@ const Brands = ({ pagination, pageParam }) => {
           >
             <Pagination
               count={pagination.last_page}
-              page={page}
+              page={Number(page)}
               color="primary"
-              onChange={(e) => changeHandler(e)}
+              onChange={changeHandler}
             />
           </div>
         </>
@@ -141,10 +157,6 @@ export const getStaticProps = async (ctx) => {
 };
 
 export default Brands;
-
-
-
-
 
 // import React, { useEffect, useState } from "react";
 // import useGetFetch from "../../src/components/fetch/useGetFetch";
