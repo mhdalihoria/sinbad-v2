@@ -3,12 +3,13 @@ import AppStore from "components/AppStore";
 import Image from "next/image";
 import LeftSectionItem from "./LeftSectionItem";
 import Logo from "../../../public/assets/images/header/logo.jpg";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import NewsTicker from "./NewsTicker";
 import PageHeaderUpper from "./PageHeaderUpper";
 import Navbar from "components/navbar/Navbar";
 import TopSection from "./TopSection";
 import { SettingsContext } from "contexts/SettingContext";
+// import { debounce, throttle } from "lodash";
 const AppStoreSection = styled(Box)({
   width: "145px",
   display: "flex",
@@ -48,8 +49,10 @@ const Header = () => {
   const [windowSize, setWindowSize] = useState();
   const { siteSettingsData } = useContext(SettingsContext);
   const { settings } = siteSettingsData;
+  const [search, setSearch] = useState("");
 
   const breakPointMD = 960;
+  console.log(search);
 
   useEffect(() => {
     const handleResizeWindow = () => {
@@ -65,6 +68,10 @@ const Header = () => {
 
   const searchHandler = () => {
     console.log("searched");
+  };
+
+  const searchChangeHandler = (event) => {
+    setSearch(event.target.value);
   };
 
   return (
@@ -94,7 +101,7 @@ const Header = () => {
             )}
             {windowSize > breakPointMD && (
               <AppStoreSection>
-                <AppStore android={settings.AndroidApp}/>
+                <AppStore android={settings.AndroidApp} />
               </AppStoreSection>
             )}
           </Grid>
@@ -132,8 +139,11 @@ const Header = () => {
                 <TextField
                   id="outlined-basic"
                   label="Search"
+                  name="search"
                   variant="outlined"
+                  value={search}
                   style={{ width: "50%" }}
+                  onChange={(e) => searchChangeHandler(e)}
                 />
 
                 <OptionsButton onClick={searchHandler}>Search</OptionsButton>
