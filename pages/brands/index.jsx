@@ -94,7 +94,7 @@ const Brands = ({ pagination, pageParam }) => {
           <Grid container>
             {allBrands.map((shop) => (
               <Grid item xs={12} sm={6} md={4} lg={3} key={shop.id}>
-                <Link href={`/brands/${shop.slug}`}>
+                <Link href={`/products?brands=${shop.slug}`}>
                   <ShopItem>
                     <Image
                       src={shop.logo || "https://placehold.jp/150x150.png"}
