@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
 import ProductCard1 from "../../src/components/product-cards/ProductCard1";
-import { Grid, Pagination, styled } from "@mui/material";
+import { Grid, Pagination, styled, Button } from "@mui/material";
 import { useAppContext } from "../../src/contexts/AppContext";
 import Loader from "../../src/components/loader-spinner/Loader";
 import PageLoader from "../../src/components/loader-spinner/PageLoader";
 import CardLoader from "../../src/components/loader-spinner/CardLoader";
+import { useRouter } from "next/router";
 
 const FilterBlock = styled("div")(({ theme }) => ({
   paddingRight: "10px",
@@ -43,12 +44,14 @@ const LoaderOverlay = styled("div")(({ theme }) => ({
 
 const Products = ({}) => {
   const { userToken } = useAppContext();
+  const router = useRouter();
+  const { brands } = router.query;
   const [allProducts, setAllProducts] = useState({});
   const [products, setProducts] = useState([]);
   const [paginationData, setPaginationData] = useState(null);
   const { filters } = allProducts.data || {};
   const [categoryFilter, setCategoryFilter] = useState([]);
-  const [brandFilter, setBrandFilter] = useState(0);
+  const [brandFilter, setBrandFilter] = useState(() => (brands ? brands : 0));
   const [valuesFilter, setValuesFilter] = useState([]);
   const [price, setPrice] = useState({ id: 0, min: 0, max: 0 });
   const [withOffer, setWithOffer] = useState(0);
@@ -68,7 +71,7 @@ const Products = ({}) => {
         md={4}
         lg={3}
         key={product.id}
-        style={{position: "relative"}}
+        style={{ position: "relative" }}
       >
         {loading && <CardLoader />}
         <ProductCard1
@@ -209,6 +212,15 @@ const Products = ({}) => {
 
   const changeHandler = (page) => {
     setPaginationIndicator(page);
+    setLoading(true);
+  };
+
+  const handleResetFilter = () => {
+    setCategoryFilter([]);
+    setBrandFilter(0);
+    setValuesFilter([]);
+    setPrice({ id: 0, min: 0, max: 0 });
+    setWithOffer(0);
     setLoading(true);
   };
 
@@ -365,6 +377,15 @@ const Products = ({}) => {
                       </FilterBlock>
                     );
                   })}
+                <FilterBlock>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleResetFilter}
+                  >
+                    Reset Filters
+                  </Button>
+                </FilterBlock>
               </div>
             </Grid>
           </Grid>
@@ -474,11 +495,14 @@ const Products = ({}) => {
   );
 };
 
-// export const getStaticProps = async ({locale}) => {
-
-//   return {
-//     props: { ...(await serverSideTranslations(locale, ["common"])) },
-//   };
-// };
+export const getStaticProps = async ({ locale, params }) => {
+  // const brand = params?.brand;
+  return {
+    props: {
+      // brand
+    },
+    // props: { ...(await serverSideTranslations(locale, ["common"])) },
+  };
+};
 
 export default Products;
