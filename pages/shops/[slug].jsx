@@ -234,7 +234,11 @@ const ShopDetails = ({ id, shopData }) => {
       </IntroContainer> */}
       <IntroContainer>
         <ShopIntroCard
-          name={"shop.name"}
+          name={
+            profileSetting.company_name
+              ? profileSetting.company_name
+              : "shop.name"
+          }
           phone={contacts.length > 0 ? contacts[0].value : null}
           supportNum={contacts.length > 0 ? contacts[1].value : null}
           address={contacts.length > 0 ? contacts[2].value : null}
