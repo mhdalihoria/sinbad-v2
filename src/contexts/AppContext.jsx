@@ -97,6 +97,7 @@ export const AppProvider = ({ children }) => {
   });
   const [userToken, setUserToken] = useState(null);
   const [isMarketer, setIsMarketer] = useState(null);
+  const [search, setSearch] = useState(null);
   const contextValue = useMemo(
     () => ({
       state,
@@ -109,8 +110,19 @@ export const AppProvider = ({ children }) => {
       setUserToken,
       isMarketer,
       setIsMarketer,
+      search,
+      setSearch,
     }),
-    [state, dispatch, discount, orderData, userToken, isMarketer]
+    [
+      state,
+      dispatch,
+      discount,
+      orderData,
+      userToken,
+      isMarketer,
+      search,
+      setSearch,
+    ]
   );
 
   console.log("Context", orderData);
