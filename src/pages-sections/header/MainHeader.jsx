@@ -241,25 +241,24 @@ const Header = () => {
 };
 
 const SearchSection = () => {
-  const { userToken } = useAppContext();
+  const { userToken, search, setSearch } = useAppContext();
   const router = useRouter();
-  const [search, setSearch] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchedProds, setSearchedProds] = useState(null);
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.log(searchedProds);
-
   const searchHandler = useCallback(() => {
-    router.push(`/products?search=${search}`);
-    setSearch("");
+    router.push(`/products`);
+    setSearch(searchQuery)
+    setSearchQuery("");
     handlePopoverClose();
-  }, [search]);
+  }, [searchQuery]);
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
-    if (search.length > 2) {
+    if (searchQuery.length > 2) {
       setPopoverOpen(true);
     }
   };
@@ -278,7 +277,7 @@ const SearchSection = () => {
   );
 
   const searchChangeHandler = throttle((event) => {
-    setSearch(event.target.value);
+    setSearchQuery(event.target.value);
     handlePopoverOpen(event); // Open popover when there is text in the search state
   }, 500);
 
@@ -292,7 +291,7 @@ const SearchSection = () => {
         "Content-Type": "application/json",
       };
       const body = JSON.stringify({
-        search,
+        search: searchQuery,
       });
 
       const response = await usePostFetch(
@@ -311,10 +310,10 @@ const SearchSection = () => {
       setLoading(false);
     };
 
-    if (search.length > 2) {
+    if (searchQuery.length > 2) {
       doFetch();
     }
-  }, [search]);
+  }, [searchQuery]);
 
   const searchedElments =
     searchedProds &&
@@ -346,7 +345,7 @@ const SearchSection = () => {
           label="Search"
           name="search"
           variant="outlined"
-          value={search}
+          value={searchQuery}
           onChange={(e) => searchChangeHandler(e)}
           onKeyDown={handleKeyPress}
         />
