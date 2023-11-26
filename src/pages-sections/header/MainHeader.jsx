@@ -1,15 +1,29 @@
-import { Box, Button, Grid, TextField, styled } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  TextField,
+  styled,
+  Popover,
+  Typography,
+  Skeleton,
+  Stack,
+} from "@mui/material";
+import Link from "next/link";
 import AppStore from "components/AppStore";
 import Image from "next/image";
 import LeftSectionItem from "./LeftSectionItem";
 import Logo from "../../../public/assets/images/header/logo.jpg";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import NewsTicker from "./NewsTicker";
 import PageHeaderUpper from "./PageHeaderUpper";
 import Navbar from "components/navbar/Navbar";
 import TopSection from "./TopSection";
 import { SettingsContext } from "contexts/SettingContext";
-// import { debounce, throttle } from "lodash";
+import { useAppContext } from "contexts/AppContext";
+import usePostFetch from "components/fetch/usePostFetch";
+import { debounce, throttle } from "lodash";
+import { useRouter } from "next/router";
 const AppStoreSection = styled(Box)({
   width: "145px",
   display: "flex",
@@ -49,10 +63,8 @@ const Header = () => {
   const [windowSize, setWindowSize] = useState();
   const { siteSettingsData } = useContext(SettingsContext);
   const { settings } = siteSettingsData;
-  const [search, setSearch] = useState("");
 
   const breakPointMD = 960;
-  console.log(search);
 
   useEffect(() => {
     const handleResizeWindow = () => {
@@ -65,14 +77,6 @@ const Header = () => {
       window.removeEventListener("resize", handleResizeWindow);
     };
   }, [windowSize]);
-
-  const searchHandler = () => {
-    console.log("searched");
-  };
-
-  const searchChangeHandler = (event) => {
-    setSearch(event.target.value);
-  };
 
   return (
     <>
@@ -136,7 +140,7 @@ const Header = () => {
                     <i className={`fa-solid fa-${isOpen ? "x" : "bars"}`}></i>
                   </OptionsButton>
                 )}
-                <TextField
+                {/* <TextField
                   id="outlined-basic"
                   label="Search"
                   name="search"
@@ -146,7 +150,8 @@ const Header = () => {
                   onChange={(e) => searchChangeHandler(e)}
                 />
 
-                <OptionsButton onClick={searchHandler}>Search</OptionsButton>
+                <OptionsButton onClick={searchHandler}>Search</OptionsButton> */}
+                <SearchSection />
               </div>
               <div className="buttons"></div>
             </LogoSection>
@@ -235,4 +240,156 @@ const Header = () => {
   );
 };
 
+const SearchSection = () => {
+  const { userToken, search, setSearch } = useAppContext();
+  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [searchedProds, setSearchedProds] = useState(null);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const searchHandler = useCallback(() => {
+    router.push(`/products`);
+    setSearch(searchQuery)
+    setSearchQuery("");
+    handlePopoverClose();
+  }, [searchQuery]);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+    if (searchQuery.length > 2) {
+      setPopoverOpen(true);
+    }
+  };
+
+  const handlePopoverClose = () => {
+    setPopoverOpen(false);
+  };
+
+  const handleKeyPress = useCallback(
+    (event) => {
+      if (event.key === "Enter") {
+        searchHandler();
+      }
+    },
+    [searchHandler]
+  );
+
+  const searchChangeHandler = throttle((event) => {
+    setSearchQuery(event.target.value);
+    handlePopoverOpen(event); // Open popover when there is text in the search state
+  }, 500);
+
+  useEffect(() => {
+    setLoading(true);
+
+    const doFetch = async () => {
+      const headers = {
+        "X-localization": "ar",
+        Authorization: `Bearer ${userToken}`,
+        "Content-Type": "application/json",
+      };
+      const body = JSON.stringify({
+        search: searchQuery,
+      });
+
+      const response = await usePostFetch(
+        `https://sinbad-store.com/api/v2/filter-products`,
+        headers,
+        body
+      );
+      const data = await response.data;
+      if (data.status) {
+        setSearchedProds(
+          data.data.data.products.length > 10
+            ? data.data.data.products.slice(0, 10)
+            : data.data.data.products
+        );
+      }
+      setLoading(false);
+    };
+
+    if (searchQuery.length > 2) {
+      doFetch();
+    }
+  }, [searchQuery]);
+
+  const searchedElments =
+    searchedProds &&
+    searchedProds.length > 0 &&
+    searchedProds.map((product) => (
+      <Link href={`/products/${product.id}`} key={product.id}>
+        <a onClick={handlePopoverClose}>
+          <Stack
+            direction="row"
+            justifyContent="space-around"
+            alignItems="flex-start"
+            spacing={2}
+            sx={{ padding: "1rem", width: "275px", cursor: "pointer" }}
+          >
+            <Image src={product.product_image} width={100} height={70} />
+            <Box>
+              <h4 style={{ marginTop: "5px" }}>{product.product_name}</h4>
+            </Box>
+          </Stack>
+        </a>
+      </Link>
+    ));
+
+  return (
+    <>
+      <div>
+        <TextField
+          id="outlined-basic"
+          label="Search"
+          name="search"
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => searchChangeHandler(e)}
+          onKeyDown={handleKeyPress}
+        />
+
+        <OptionsButton onClick={searchHandler}>Search</OptionsButton>
+      </div>
+      <Popover
+        open={popoverOpen}
+        anchorEl={anchorEl}
+        onClose={handlePopoverClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "center",
+        }}
+        disableAutoFocus
+      >
+        {loading ? (
+          <Stack
+            direction="row"
+            justifyContent="space-around"
+            alignItems="flex-start"
+            spacing={2}
+            sx={{ padding: "1rem", width: "275px" }}
+          >
+            <Skeleton variant="rectangular" width={100} height={70} />
+            <Box sx={{ padding: "0 15px" }}>
+              <Skeleton
+                variant="rectangular"
+                width={150}
+                height={20}
+                sx={{ marginBottom: "10px" }}
+              />
+              <Skeleton variant="rectangular" width={150} height={10} />
+            </Box>
+          </Stack>
+        ) : (
+          <Box sx={{ maxHeight: "300px" }}>{searchedElments}</Box>
+        )}
+      </Popover>
+    </>
+  );
+};
 export default Header;
