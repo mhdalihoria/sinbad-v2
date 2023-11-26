@@ -43,7 +43,7 @@ const LoaderOverlay = styled("div")(({ theme }) => ({
 }));
 
 const Products = ({}) => {
-  const { userToken } = useAppContext();
+  const { userToken, search, setSearch } = useAppContext();
   const router = useRouter();
   const { brands } = router.query;
   const [allProducts, setAllProducts] = useState({});
@@ -123,7 +123,7 @@ const Products = ({}) => {
           max_price: price.max,
           with_offer: withOffer,
           values: valuesFilter,
-          // search: "بطارية",
+          search: search,
           // shop: [4],
         }).reduce((acc, [key, value]) => {
           if (Array.isArray(value) && value.length === 0) {
@@ -141,6 +141,7 @@ const Products = ({}) => {
         body
       );
       const data = await response.data;
+      console.log(data);
 
       setLoading(false);
       setFilteredProducts(data.data);
@@ -149,7 +150,8 @@ const Products = ({}) => {
         brandFilter > 0 ||
         price.id > 0 ||
         valuesFilter.length > 0 ||
-        withOffer !== 0
+        withOffer !== 0 ||
+        (search && search.length > 0)
       ) {
         setShowFilteredProducts(true);
       }
@@ -162,6 +164,7 @@ const Products = ({}) => {
     valuesFilter,
     withOffer,
     paginationIndicator,
+    search,
   ]);
 
   useEffect(() => {
@@ -221,6 +224,7 @@ const Products = ({}) => {
     setValuesFilter([]);
     setPrice({ id: 0, min: 0, max: 0 });
     setWithOffer(0);
+    setSearch(null);
     setLoading(true);
   };
 
