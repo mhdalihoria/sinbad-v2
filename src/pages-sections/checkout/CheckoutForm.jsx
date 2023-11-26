@@ -12,6 +12,7 @@ import {
   Select,
   TextField,
   Typography,
+  FormHelperText,
 } from "@mui/material";
 import * as yup from "yup";
 import { Formik, useFormik } from "formik";
@@ -64,7 +65,7 @@ const CheckoutForm = ({ allCountries }) => {
         shippedLocation_id: values.location,
         shippedMobile: values.phoneNum,
       });
-      router.push("/delivery")
+      router.push("/delivery");
     },
   });
 
@@ -166,6 +167,14 @@ const CheckoutForm = ({ allCountries }) => {
                   }
                   style={{ marginBottom: "1rem", width: "90%" }}
                 />
+                {touched.location && errors.location && (
+                  <FormHelperText
+                    error
+                    sx={{ marginTop: "-1rem", marginLeft: ".4rem", marginBottom: "1rem" }}
+                  >
+                    {errors.location}
+                  </FormHelperText>
+                )}
               </Grid>
             </Grid>
 
