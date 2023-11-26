@@ -45,6 +45,7 @@ const ProductIntro = ({
     product_name,
     product_short_description,
     shop_name,
+    shop,
     slug,
     thumbnail,
     has_offer,
@@ -447,7 +448,7 @@ const ProductIntro = ({
             {shop_name.length > 1 && (
               <FlexBox alignItems="center" mb={2}>
                 <Box>المتجر:</Box>
-                <Link href="/" passHref>
+                <Link href={`/shops/${shop}`} passHref>
                   <a>
                     <H6 ml={1}>{shop_name}</H6>
                   </a>
