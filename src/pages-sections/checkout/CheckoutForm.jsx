@@ -167,14 +167,20 @@ const CheckoutForm = ({ allCountries }) => {
                   }
                   style={{ marginBottom: "1rem", width: "90%" }}
                 />
-                {touched.location && errors.location && (
-                  <FormHelperText
-                    error
-                    sx={{ marginTop: "-1rem", marginLeft: ".4rem", marginBottom: "1rem" }}
-                  >
-                    {errors.location}
-                  </FormHelperText>
-                )}
+                {values.country === "" &&
+                  touched.location &&
+                  errors.location && (
+                    <FormHelperText
+                      error
+                      sx={{
+                        marginTop: "-1rem",
+                        marginLeft: ".4rem",
+                        marginBottom: "1rem",
+                      }}
+                    >
+                      {errors.location}
+                    </FormHelperText>
+                  )}
               </Grid>
             </Grid>
 
@@ -185,38 +191,73 @@ const CheckoutForm = ({ allCountries }) => {
             >
               <Grid item sm={6} xs={6}>
                 {values.country !== "" && (
-                  <Form
-                    data={
-                      { ...allCountries[Number(values.country) - 1] }.cities
-                    }
-                    label={"المدينة*"}
-                    selected={values.city}
-                    setSelected={(nextValue) =>
-                      setFieldValue("city", nextValue)
-                    }
-                    style={{ marginBottom: "1rem", width: "90%" }}
-                  />
+                  <>
+                    <Form
+                      data={
+                        { ...allCountries[Number(values.country) - 1] }.cities
+                      }
+                      label={"المدينة*"}
+                      selected={values.city}
+                      setSelected={(nextValue) =>
+                        setFieldValue("city", nextValue)
+                      }
+                      style={{ marginBottom: "1rem", width: "90%" }}
+                    />
+                    {values.country !== "" &&
+                      values.city === "" &&
+                      touched.location &&
+                      errors.location && (
+                        <FormHelperText
+                          error
+                          sx={{
+                            marginTop: "-1rem",
+                            marginLeft: ".4rem",
+                            marginBottom: "1rem",
+                          }}
+                        >
+                          {errors.location}
+                        </FormHelperText>
+                      )}
+                  </>
                 )}
               </Grid>
 
               <Grid item sm={6} xs={6}>
                 {values.country !== "" && values.city !== "" && (
-                  <Form
-                    data={
-                      { ...allCountries[Number(values.country) - 1] }.cities[
-                        Number(values.city) - 1
-                      ].locations &&
-                      { ...allCountries[Number(values.country) - 1] }.cities[
-                        Number(values.city) - 1
-                      ].locations
-                    }
-                    label={"المنطقة*"}
-                    selected={values.location}
-                    setSelected={(nextValue) =>
-                      setFieldValue("location", nextValue)
-                    }
-                    style={{ marginBottom: "1rem", width: "90%" }}
-                  />
+                  <>
+                    <Form
+                      data={
+                        { ...allCountries[Number(values.country) - 1] }.cities[
+                          Number(values.city) - 1
+                        ].locations &&
+                        { ...allCountries[Number(values.country) - 1] }.cities[
+                          Number(values.city) - 1
+                        ].locations
+                      }
+                      label={"المنطقة*"}
+                      selected={values.location}
+                      setSelected={(nextValue) =>
+                        setFieldValue("location", nextValue)
+                      }
+                      style={{ marginBottom: "1rem", width: "90%" }}
+                    />
+                    {values.country !== "" &&
+                      values.city !== "" &&
+                      values.location === "" &&
+                      touched.location &&
+                      errors.location && (
+                        <FormHelperText
+                          error
+                          sx={{
+                            marginTop: "-1rem",
+                            marginLeft: ".4rem",
+                            marginBottom: "1rem",
+                          }}
+                        >
+                          {errors.location}
+                        </FormHelperText>
+                      )}
+                  </>
                 )}
               </Grid>
               <Grid item sm={12} xs={12}>
