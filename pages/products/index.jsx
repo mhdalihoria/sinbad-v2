@@ -45,7 +45,7 @@ const LoaderOverlay = styled("div")(({ theme }) => ({
 const Products = ({}) => {
   const { userToken } = useAppContext();
   const router = useRouter();
-  const { brands } = router.query;
+  const { brands, search } = router.query;
   const [allProducts, setAllProducts] = useState({});
   const [products, setProducts] = useState([]);
   const [paginationData, setPaginationData] = useState(null);
@@ -56,6 +56,11 @@ const Products = ({}) => {
   const [price, setPrice] = useState({ id: 0, min: 0, max: 0 });
   const [withOffer, setWithOffer] = useState(0);
   const [filteredProducts, setFilteredProducts] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(() =>
+    search ? search : null
+  );
+  /* TODO: if on products page, it doesn't seem to load up the searchQuery state, 
+   triggering the fetching proccess */
   const [showFilteredProducts, setShowFilteredProducts] = useState(false);
   const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -123,7 +128,7 @@ const Products = ({}) => {
           max_price: price.max,
           with_offer: withOffer,
           values: valuesFilter,
-          // search: "بطارية",
+          search: searchQuery
           // shop: [4],
         }).reduce((acc, [key, value]) => {
           if (Array.isArray(value) && value.length === 0) {
@@ -141,6 +146,7 @@ const Products = ({}) => {
         body
       );
       const data = await response.data;
+      console.log(data)
 
       setLoading(false);
       setFilteredProducts(data.data);
@@ -149,7 +155,9 @@ const Products = ({}) => {
         brandFilter > 0 ||
         price.id > 0 ||
         valuesFilter.length > 0 ||
-        withOffer !== 0
+        withOffer !== 0 || 
+        searchQuery ||
+        searchQuery.length > 0
       ) {
         setShowFilteredProducts(true);
       }
@@ -162,6 +170,7 @@ const Products = ({}) => {
     valuesFilter,
     withOffer,
     paginationIndicator,
+    searchQuery
   ]);
 
   useEffect(() => {
@@ -221,6 +230,7 @@ const Products = ({}) => {
     setValuesFilter([]);
     setPrice({ id: 0, min: 0, max: 0 });
     setWithOffer(0);
+    setSearchQuery(null)
     setLoading(true);
   };
 
