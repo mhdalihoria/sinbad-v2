@@ -9,14 +9,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 const OrderSummerySummery = ({ setCouponToken }) => {
   const [discountInput, setDiscountInput] = useState(0);
-  const {
-    state,
-    setDiscount,
-    discount,
-    orderData,
-    setOrderData,
-    userToken,
-  } = useAppContext();
+  const { state, setDiscount, discount, orderData, setOrderData, userToken } =
+    useAppContext();
   const [discountResponseMsg, setDiscountResponseMsg] = useState({
     status: false,
     message: "",
@@ -106,8 +100,8 @@ const OrderSummerySummery = ({ setCouponToken }) => {
             (acc, current) => acc + Number(current.qty) * Number(current.price),
             0
           ) +
-            0 -
-            0
+            (orderData.shippingCost ? orderData.shippingCost : 0) -
+            (discount ? discount : 0)
         )}
       </Typography>
       {router.pathname === "/delivery" && (
