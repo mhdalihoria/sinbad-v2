@@ -2,7 +2,7 @@ import { Box, Card, styled } from "@mui/material";
 import Link from "next/link";
 
 // styled components
-const Wrapper = styled(Card)(({ theme }) => ({
+const Wrapper = styled(Box)(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   overflow: "hidden",
