@@ -128,20 +128,16 @@ const PaymentForm = ({ banks }) => {
   }, [bankPaymentForm]);
 
   useEffect(() => {
-    const totalPrice =
-      orderSummeryResponse &&
-      typeof orderSummeryResponse.cart_items !== "undefined"
-        ? orderSummeryResponse.cart_items.reduce(
-            (acc, current) => acc + Number(current.qty) * Number(current.price),
-            0
-          ) +
-          (orderSummeryResponse.shipping_cost
-            ? orderSummeryResponse.shipping_cost
-            : 0) -
-          (discount ? discount : 0)
-        : getTotalPrice();
+    const totalPrice = cartList
+      ? cartList.reduce(
+          (acc, current) => acc + Number(current.qty) * Number(current.price),
+          0
+        ) +
+        +(orderData.shippingCost ? orderData.shippingCost : 0) -
+        (discount ? discount : 0)
+      : 0;
     setAmountForm(totalPrice);
-  }, [orderSummeryResponse]);
+  }, [ cartList]);
 
   const submitOrder = async () => {
     const headers = {
@@ -150,20 +146,6 @@ const PaymentForm = ({ banks }) => {
       Authorization: `Bearer ${userToken}`,
       "Content-Type": "application/json",
     };
-    // const body = JSON.stringify({
-    //   "coupon_code": "302539",
-    //   "carrier_id": "5",
-    //   "total_price": 2350000,
-    //   "shipping_cost": 2500,
-    //   "shipped_mobile": "944683077",
-    //   "shipped_location_id": 1,
-    //   "shipped_full_name": "MZH",
-    //   "shipped_address": "Midan",
-    //   "payment_method": "Credit",
-    //   "notes": "this is a note",
-    //   "reference_no": "234234324324",
-    //   "cart_items": state.cart
-    // });
     const body = JSON.stringify({
       coupon_code: orderData.couponCode,
       carrier_id: orderData.carrierId,
@@ -307,10 +289,16 @@ const PaymentForm = ({ banks }) => {
                     />
                   </Grid>
                   <Grid item sm={6} xs={12}>
-                    <div style={{ marginTop: "-0.5rem", display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-                      <div >
-                        وصل التحويل البنكي:
-                      </div>
+                    <div
+                      style={{
+                        marginTop: "-0.5rem",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      <div>وصل التحويل البنكي:</div>
                       <FileButton variant="outlined" component="label">
                         Choose File
                         <input
