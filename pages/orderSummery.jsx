@@ -8,10 +8,12 @@ import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
 import useGetFetch from "../src/components/fetch/useGetFetch";
 import usePostFetch from "../src/components/fetch/usePostFetch";
+import NoCartItemsCard from "../src/pages-sections/checkout/NoCartItemsCard";
 
-const OrderSummery = ({banks}) => {
-  const {orderData, userToken, state} = useAppContext();
+const OrderSummery = ({ banks }) => {
+  const { orderData, userToken, state } = useAppContext();
   const [orderSummeryResponse, setOrderSummeryResponse] = useState(null);
+  const cartList = state.cart;
 
   useEffect(() => {
     const doFetch = async () => {
@@ -31,47 +33,54 @@ const OrderSummery = ({banks}) => {
         body
       );
       const data = response.data.data;
-      setOrderSummeryResponse(prevOrder=> {
-        if(prevOrder !== data) {
-          return data
+      setOrderSummeryResponse((prevOrder) => {
+        if (prevOrder !== data) {
+          return data;
         }
       });
     };
-      doFetch()
+    doFetch();
   }, [orderData.carrierId]);
 
-  console.log("order page", orderSummeryResponse)
+  console.log("order page", orderSummeryResponse);
 
   return (
     <CheckoutNavLayout>
-      <Grid container flexWrap="wrap-reverse" spacing={3}>
-        <Grid item lg={8} md={8} xs={12}>
-          <OrderSummeryTable data={orderSummeryResponse} />
-          <PaymentForm banks={banks}/>
-        </Grid>
+      {cartList.length > 0 ? (
+        <Grid container flexWrap="wrap-reverse" spacing={3}>
+          <Grid item lg={8} md={8} xs={12}>
+            <OrderSummeryTable data={orderSummeryResponse} />
+            <PaymentForm banks={banks} />
+          </Grid>
 
-        <Grid item lg={4} md={4} xs={12}>
-          <OrderSummerySummery />
+          <Grid item lg={4} md={4} xs={12}>
+            <OrderSummerySummery />
+          </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        <NoCartItemsCard />
+      )}
     </CheckoutNavLayout>
   );
 };
 
 export const getStaticProps = async (ctx) => {
   const requestOptions = {
-    method: 'GET',
-    headers: {"X-localization": "ar"},
-    redirect: 'follow'
+    method: "GET",
+    headers: { "X-localization": "ar" },
+    redirect: "follow",
   };
-  
-  const response = await useGetFetch("https://sinbad-store.com/api/v2/get-banks",requestOptions)
+
+  const response = await useGetFetch(
+    "https://sinbad-store.com/api/v2/get-banks",
+    requestOptions
+  );
 
   return {
     props: {
-      banks: response.data.banks
-    }
-  }
-}
+      banks: response.data.banks,
+    },
+  };
+};
 
 export default OrderSummery;

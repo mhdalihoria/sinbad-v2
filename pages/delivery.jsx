@@ -5,16 +5,13 @@ import OrderSummerySummery from "pages-sections/order/OrderSummerySummery";
 import CheckoutNavLayout from "components/layouts/CheckoutNavLayout";
 import { useAppContext } from "../src/contexts/AppContext";
 import usePostFetch from "../src/components/fetch/usePostFetch";
+import NoCartItemsCard from "../src/pages-sections/checkout/NoCartItemsCard";
 
 const Delivery = () => {
-  const {
-    state,
-    orderData,
-    setOrderData,
-    userToken,
-  } = useAppContext();
+  const { state, orderData, setOrderData, userToken } = useAppContext();
+  const cartList = state.cart;
   const [carrier, setCarrier] = useState(null);
-  const [checked, setChecked] = useState({id: null, price: null});
+  const [checked, setChecked] = useState({ id: null, price: null });
   const [couponToken, setCouponToken] = useState(null);
 
   useEffect(() => {
@@ -57,7 +54,7 @@ const Delivery = () => {
         return {
           ...prevData,
           carrierId: checked.id,
-          shippingCost: checked.price
+          shippingCost: checked.price,
         };
       });
     }
@@ -65,21 +62,23 @@ const Delivery = () => {
 
   return (
     <CheckoutNavLayout>
-      <Grid container flexWrap="wrap-reverse" spacing={3}>
-        <Grid item lg={8} md={8} xs={12}>
-          <DeliveryTable
-            data={carrier}
-            checked={checked}
-            setChecked={setChecked}
-          />
-        </Grid>
+      {cartList.length > 0 ? (
+        <Grid container flexWrap="wrap-reverse" spacing={3}>
+          <Grid item lg={8} md={8} xs={12}>
+            <DeliveryTable
+              data={carrier}
+              checked={checked}
+              setChecked={setChecked}
+            />
+          </Grid>
 
-        <Grid item lg={4} md={4} xs={12}>
-          <OrderSummerySummery
-            setCouponToken={setCouponToken}
-          />
+          <Grid item lg={4} md={4} xs={12}>
+            <OrderSummerySummery setCouponToken={setCouponToken} />
+          </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        <NoCartItemsCard />
+      )}
     </CheckoutNavLayout>
   );
 };
