@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
 import ProductCard1 from "../../src/components/product-cards/ProductCard1";
-import { Grid, Pagination, styled, Button } from "@mui/material";
+import { Grid, Pagination, styled, Button, Card } from "@mui/material";
 import { useAppContext } from "../../src/contexts/AppContext";
 import Loader from "../../src/components/loader-spinner/Loader";
 import PageLoader from "../../src/components/loader-spinner/PageLoader";
 import CardLoader from "../../src/components/loader-spinner/CardLoader";
 import { useRouter } from "next/router";
+import Logo from "../../public/assets/images/header/logo.jpg";
 
 const FilterBlock = styled("div")(({ theme }) => ({
   paddingRight: "10px",
@@ -438,35 +440,25 @@ const Products = ({}) => {
                   </Grid>
                 ))
               ) : (
+                <NoProductsAlert />
+              )}
+              {filteredProducts.data.products.length > 0 && (
                 <div
                   style={{
                     width: "100%",
-                    height: "100%",
                     display: "flex",
-                    alignItems: "center",
                     justifyContent: "center",
-                    fontSize: "2rem",
-                    color: "red",
+                    marginBottom: "2rem",
+                    marginTop: "2rem",
                   }}
                 >
-                  No Products Here, Try Again Later
+                  <Pagination
+                    count={filteredProducts.pagination.last_page}
+                    color="primary"
+                    onChange={(event, page) => changeHandler(page)}
+                  />
                 </div>
               )}
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: "2rem",
-                  marginTop: "2rem",
-                }}
-              >
-                <Pagination
-                  count={filteredProducts.pagination.last_page}
-                  color="primary"
-                  onChange={(event, page) => changeHandler(page)}
-                />
-              </div>
             </Grid>
           ) : (
             <Grid container spacing={2}>
@@ -496,6 +488,34 @@ const Products = ({}) => {
         </div>
       </div>
     </>
+  );
+};
+
+const NoProductsAlert = () => {
+  return (
+    <Card
+      sx={{
+        width: "100%",
+        minHeight: "300px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: "column",
+        gap: "1rem",
+        fontSize: "1.25rem",
+        marginTop: "1rem",
+        padding: "3rem",
+      }}
+    >
+      <Image src={Logo} width={160} height={110} />
+      <div style={{ textAlign: "center" }}>
+        <p style={{ marginBottom: 0 }}>Oops, No Products Here</p>
+
+        <p style={{ fontSize: "1rem", marginTop: 0 }}>
+          Try different search words or filters
+        </p>
+      </div>
+    </Card>
   );
 };
 
