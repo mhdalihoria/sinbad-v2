@@ -86,7 +86,7 @@ const MiniCart = ({ toggleSidenav }) => {
           <FlexBox
             py={2}
             px={2.5}
-            key={item.id}
+            key={item.nanoId}
             alignItems="center"
             borderBottom={`1px solid ${palette.divider}`}
           >
