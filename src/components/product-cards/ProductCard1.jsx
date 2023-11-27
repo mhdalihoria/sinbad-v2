@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import { Add, Favorite, Remove, RemoveRedEye } from "@mui/icons-material";
 import { Box, Button, Chip, IconButton, Skeleton, styled } from "@mui/material";
 import { useSnackbar } from "notistack";
@@ -13,6 +13,7 @@ import ProductViewDialog from "components/products/ProductViewDialog";
 import { FlexBox } from "../flex-box";
 import { calculateDiscount, currency } from "lib";
 import CountDown from "components/products-components/CountDown";
+import { nanoid } from "nanoid";
 
 // styled components
 const StyledBazaarCard = styled(BazaarCard)({
@@ -100,6 +101,8 @@ const ProductCard1 = ({
   const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
   const toggleDialog = useCallback(() => setOpenModal((open) => !open), []);
   const cartItem = state.cart.find((item) => item.slug === slug);
+  // const nanoId = nanoid();
+  const uniqueIdRef = useRef(nanoid());
   const handleCartAmountChange = (product, type) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -338,6 +341,7 @@ const ProductCard1 = ({
                     slug,
                     price,
                     imgUrl,
+                    nanoId: uniqueIdRef.current,
                     name: title,
                     qty: (cartItem?.qty || 0) + 1,
                     product_attribute_id: "",
@@ -364,6 +368,7 @@ const ProductCard1 = ({
                           slug,
                           price,
                           imgUrl,
+                          nanoId: uniqueIdRef.current,
                           name: title,
                           qty: (cartItem?.qty || 0) - 1,
                         },
