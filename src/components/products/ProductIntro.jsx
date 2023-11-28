@@ -161,7 +161,9 @@ const ProductIntro = ({
       "Content-Type": "application/json",
     };
     const response = await usePostFetch(
-      "https://sinbad-store.com/api/v2/add-to-wishlist",
+      `https://sinbad-store.com/api/v2/${
+        isFavorite ? "remove-from" : "add-to"
+      }-wishlist`,
       headers,
       body
     );
