@@ -62,7 +62,7 @@ const MiniCart = ({ toggleSidenav }) => {
             alignItems="center"
             flexDirection="column"
             justifyContent="center"
-            height="calc(100% - 74px)"
+            height="calc(100% - 100px)"
           >
             <LazyImage
               width={90}
