@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Add, Remove } from "@mui/icons-material";
 import {
   Avatar,
@@ -61,6 +61,7 @@ const ProductIntro = ({
     is_external,
     role_prices,
   } = product;
+  const theme = useTheme();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
@@ -85,7 +86,14 @@ const ProductIntro = ({
   const [mazadPrice, setMazadPrice] = useState(
     mazad.max_bid ? mazad.max_bid : mazad.start_price
   );
-  const theme = useTheme();
+  const uniqueIdRef = useRef(nanoid());
+  const cartItem = state.cart.find(
+    (item) =>
+      item.slug === slug &&
+      item.attributes[0].name === selectAttributes[0].name &&
+      item.attributes[0].value === selectAttributes[0].value
+  );
+
   const changeMazadUserValue = (e) => {
     setMazadUserValue(e.target.value);
   };
@@ -167,11 +175,11 @@ const ProductIntro = ({
       type: "CHANGE_CART_AMOUNT",
       payload: {
         price: sale_price ? sale_price : product_price,
-        qty: amount,
+        qty: cartItem ? cartItem.qty + amount : amount,
         name: product_name,
         imgUrl: productImages[0],
         id: id,
-        nanoId: nanoid(),
+        nanoId: cartItem ? cartItem.nanoId : uniqueIdRef.current,
         slug,
         attributes: selectAttributes,
         product_attribute_id: "",

@@ -100,9 +100,10 @@ const ProductCard1 = ({
   const [isFavorite, setIsFavorite] = useState(isFavorited);
   const toggleIsFavorite = () => setIsFavorite((fav) => !fav);
   const toggleDialog = useCallback(() => setOpenModal((open) => !open), []);
-  const cartItem = state.cart.find((item) => item.slug === slug);
   // const nanoId = nanoid();
   const uniqueIdRef = useRef(nanoid());
+  const cartItem = state.cart.find((item) => item.slug === slug);
+  // const cartItem = state.cart.find((item) => item.nanoId === uniqueIdRef.current);
   const handleCartAmountChange = (product, type) => () => {
     dispatch({
       type: "CHANGE_CART_AMOUNT",
@@ -341,7 +342,9 @@ const ProductCard1 = ({
                     slug,
                     price,
                     imgUrl,
-                    nanoId: uniqueIdRef.current,
+                    nanoId: cartItem?.nanoId
+                      ? cartItem.nanoId
+                      : uniqueIdRef.current,
                     name: title,
                     qty: (cartItem?.qty || 0) + 1,
                     product_attribute_id: "",
@@ -368,7 +371,9 @@ const ProductCard1 = ({
                           slug,
                           price,
                           imgUrl,
-                          nanoId: uniqueIdRef.current,
+                          nanoId: cartItem?.nanoId
+                            ? cartItem.nanoId
+                            : uniqueIdRef.current,
                           name: title,
                           qty: (cartItem?.qty || 0) - 1,
                         },
