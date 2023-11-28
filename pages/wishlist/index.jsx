@@ -108,6 +108,7 @@ const WishList = () => {
                         shopName={item.product.shop_name}
                         hoverEffect
                         isFuture={item.product.is_future}
+                        isFavorited={true}
                       />
                     </Grid>
                   )}
@@ -126,32 +127,36 @@ const WishList = () => {
             </FlexBox>
           </>
         ) : (
-          
           <DialogPrompt
             title={"No Products"}
             description={
               "There's no products here, visit store page to get some..."
             }
             buttons={
-              <Button onClick={()=> router.push("/")} variant="contained" color="primary">
+              <Button
+                onClick={() => router.push("/")}
+                variant="contained"
+                color="primary"
+              >
                 Store
               </Button>
             }
           />
         )
       ) : (
-        
         <DialogPrompt
-        title={"You Are Not Logged In"}
-        description={
-          "To view this Page, you need to be logged in"
-        }
-        buttons={
-          <Button onClick={()=> router.push("/login")} variant="contained" color="primary">
-            Login
-          </Button>
-        }
-      />
+          title={"You Are Not Logged In"}
+          description={"To view this Page, you need to be logged in"}
+          buttons={
+            <Button
+              onClick={() => router.push("/login")}
+              variant="contained"
+              color="primary"
+            >
+              Login
+            </Button>
+          }
+        />
       )}
     </CustomerDashboardLayout>
   );
