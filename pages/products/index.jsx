@@ -408,7 +408,7 @@ const Products = ({}) => {
                     md={4}
                     lg={3}
                     key={product.id}
-                    style={{ position: "relative" }}
+                    style={{ position: "relative" }} //position relative is needed to make the card loader work
                   >
                     <ProductCard1
                       id={product.id}
@@ -436,7 +436,6 @@ const Products = ({}) => {
                       // }
                       isFuture={product.is_future}
                     />
-                    {loading && <CardLoader />}
                   </Grid>
                 ))
               ) : (
