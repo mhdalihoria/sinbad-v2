@@ -14,6 +14,7 @@ import { FlexBox } from "../flex-box";
 import { calculateDiscount, currency } from "lib";
 import CountDown from "components/products-components/CountDown";
 import { nanoid } from "nanoid";
+import CardLoader from "components/loader-spinner/CardLoader";
 
 // styled components
 const StyledBazaarCard = styled(BazaarCard)({
@@ -93,6 +94,7 @@ const ProductCard1 = ({
   isFavorited = false,
   offer = null,
   isFuture = false,
+  loading = false,
 }) => {
   const { enqueueSnackbar } = useSnackbar();
   const { state, dispatch, favItems, setFavItems } = useAppContext();
@@ -389,6 +391,7 @@ const ProductCard1 = ({
           </FlexBox>
         </ContentWrapper>
       </StyledBazaarCard>
+      {loading && <CardLoader />}
     </>
   );
 };
