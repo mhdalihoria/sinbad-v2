@@ -5,10 +5,10 @@ import { styled } from "@mui/material";
 
 const CardLoaderStyles = styled("div")({
   position: "absolute",
-  top: "0",
+  top: "2rem",
   left: "0",
   width: "100%",
-  height: "100%",
+  height: "94%",
   backgroundColor: "rgba(255, 255, 255, .9)",
   display: "flex",
   justifyContent: " center",
@@ -21,7 +21,7 @@ const CardLoaderStyles = styled("div")({
 const CardLoader = () => {
   return (
     <CardLoaderStyles>
-      <Image src={cardLoader} width={80} height={80}/>
+      <Image src={cardLoader} width={80} height={80} />
     </CardLoaderStyles>
   );
 };
