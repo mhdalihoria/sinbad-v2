@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import useGetFetch from "../../src/components/fetch/useGetFetch";
 import { styled, Grid, Pagination } from "@mui/material";
 import ProductCard1 from "../../src/components/product-cards/ProductCard1";
+import NoProductsAlert from "../../src/components/NoProductsAlert";
+import PageLoader from "../../src/components/loader-spinner/PageLoader";
 
 const StyledContainer = styled("div")(({ theme }) => ({
   width: "80%",
@@ -16,7 +18,8 @@ const CustomProduct = () => {
   const [productDetails, setProductDetails] = useState(null);
   const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
-
+  const [initialLoad, setInitialLoad] = useState(true);
+  console.log(loading);
   useEffect(() => {
     setLoading(true);
 
@@ -33,6 +36,7 @@ const CustomProduct = () => {
         );
         const data = response.data;
         setLoading(false);
+        setInitialLoad(false);
 
         if (data) {
           setProductDetails({
@@ -52,7 +56,7 @@ const CustomProduct = () => {
     setPaginationIndicator(page);
   };
 
-  const prodcutGridElements =
+  const productGridElements =
     productDetails &&
     productDetails.products.map((product) => (
       <Grid
@@ -96,32 +100,38 @@ const CustomProduct = () => {
 
   return (
     <StyledContainer>
-      {productDetails ? (
+      {initialLoad ? (
+        <PageLoader />
+        ) : (
         <>
-          <h1>{productDetails.pageTitle}</h1>
-          <Grid container columnSpacing={4} rowSpacing={4}>
-            {prodcutGridElements}
-            {productDetails.products.length > 0 && (
-              <div
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: "2rem",
-                  marginTop: "2rem",
-                }}
-              >
-                <Pagination
-                  count={productDetails.pagination.last_page}
-                  color="primary"
-                  onChange={(event, page) => changeHandler(page)}
-                />
-              </div>
-            )}
-          </Grid>
+          {productDetails ? (
+            <>
+              <h1>{productDetails.pageTitle}</h1>
+              <Grid container columnSpacing={4} rowSpacing={4}>
+                {productGridElements} {/* Fix the variable name here */}
+                {productDetails.products.length > 0 && (
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      marginBottom: "2rem",
+                      marginTop: "2rem",
+                    }}
+                  >
+                    <Pagination
+                      count={productDetails.pagination.last_page}
+                      color="primary"
+                      onChange={(event, page) => changeHandler(page)}
+                    />
+                  </div>
+                )}
+              </Grid>
+            </>
+          ) : (
+            <NoProductsAlert />
+          )}
         </>
-      ) : (
-        <span>it's null</span>
       )}
     </StyledContainer>
   );
