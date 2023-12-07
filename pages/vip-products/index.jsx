@@ -63,6 +63,15 @@ const VipProducts = () => {
     });
 
   useEffect(() => {
+    const storedCredentials = JSON.parse(
+      sessionStorage.getItem("user-credentials")
+    );
+    if (storedCredentials) {
+      setUserCredentials(storedCredentials);
+    }
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
 
     const doFetch = async () => {
@@ -80,13 +89,18 @@ const VipProducts = () => {
           body
         );
         const data = response.data;
-        console.log(data);
         setLoading(false);
         if (data.status === false) {
           setOpen(true);
-          setErrorMsg(data.message)
+          setErrorMsg(data.message);
         }
         if (data.status) {
+          if (typeof window !== "undefined") {
+            sessionStorage.setItem(
+              "user-credentials",
+              JSON.stringify(userCredentials)
+            );
+          }
           setProductDetails({
             pagination: data.data.pagination,
             products: data.data.data.products,
@@ -248,7 +262,9 @@ const VipProducts = () => {
                 severity="error"
                 sx={{ width: "100%" }}
               >
-                {errorMsg ? errorMsg : "Something Went Wrong... Check Your Credentials And Try Again"}
+                {errorMsg
+                  ? errorMsg
+                  : "Something Went Wrong... Check Your Credentials And Try Again"}
               </Alert>
             </Snackbar>
           )}
