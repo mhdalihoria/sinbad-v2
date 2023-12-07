@@ -38,6 +38,7 @@ const VipProducts = () => {
   const [paginationIndicator, setPaginationIndicator] = useState(1);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const togglePasswordVisibility = useCallback(() => {
     setPasswordVisibility((visible) => !visible);
@@ -60,7 +61,6 @@ const VipProducts = () => {
       onSubmit: handleFormSubmit,
       validationSchema: formSchema,
     });
-  // console.log(productDetails);
 
   useEffect(() => {
     setLoading(true);
@@ -84,14 +84,9 @@ const VipProducts = () => {
         setLoading(false);
         if (data.status === false) {
           setOpen(true);
+          setErrorMsg(data.message)
         }
-        if (
-          data &&
-          data.data &&
-          data.data.pagination &&
-          data.data.data &&
-          data.data.data.products
-        ) {
+        if (data.status) {
           setProductDetails({
             pagination: data.data.pagination,
             products: data.data.data.products,
@@ -102,7 +97,10 @@ const VipProducts = () => {
         console.error(err);
       }
     };
-    doFetch();
+
+    if (userCredentials) {
+      doFetch();
+    }
   }, [userCredentials, paginationIndicator]);
 
   const changeHandler = (page) => {
@@ -189,8 +187,6 @@ const VipProducts = () => {
             onSubmit={handleSubmit}
             style={{ maxWidth: "400px", margin: "0 auto" }}
           >
-            {/* {loginError && <span style={{ color: "red" }}> {loginError}</span>} */}
-
             <BazaarTextField
               mb={1.5}
               fullWidth
@@ -252,7 +248,7 @@ const VipProducts = () => {
                 severity="error"
                 sx={{ width: "100%" }}
               >
-                Something Went Wrong... Check Your Credentials And Try Again
+                {errorMsg ? errorMsg : "Something Went Wrong... Check Your Credentials And Try Again"}
               </Alert>
             </Snackbar>
           )}
