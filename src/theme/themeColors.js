@@ -117,6 +117,7 @@ export const white = {
   main: "#fff"
 };
 export const themeColors = {
+  white,
   dark,
   grey,
   paste,
