@@ -112,21 +112,16 @@ const CustomFooter = () => {
     product_pages: productPages,
     site_pages: sitePages,
   } = siteSettingsData;
-  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [phoneNum, setPhoneNum] = useState(null);
   const [activationCode, setActivationCode] = useState(null);
 
-  const handleClose = (event, reason, setOpenFunction) => {
-    if (reason === "clickaway") {
-      return;
-    }
+  const handleClose = (setOpenFunction) => {
     setOpenFunction(false);
   };
 
   const handleAddSubscriber = async (values) => {
-    setLoading(true);
     try {
       const headers = {
         "X-localization": "ar",
@@ -140,19 +135,16 @@ const CustomFooter = () => {
         headers,
         body
       );
-      setLoading(false);
       if (response) {
         setOpen(true);
         setPhoneNum(values.phoneNum);
       }
     } catch (err) {
-      setLoading(false);
       console.error(err);
     }
   };
 
   const handleActivateSub = async (values) => {
-    setLoading(true);
     try {
       const headers = {
         "X-localization": "ar",
@@ -167,7 +159,6 @@ const CustomFooter = () => {
         headers,
         body
       );
-      setLoading(false);
       if (response) {
         setActivationCode({
           status: response.data.status,
@@ -176,7 +167,6 @@ const CustomFooter = () => {
         setSnackbarOpen(true);
       }
     } catch (err) {
-      setLoading(false);
       console.error(err);
     }
   };
@@ -298,11 +288,7 @@ const CustomFooter = () => {
           </Box>
         </Box>
       )}
-      <Modal
-        open={open}
-        // open={open}
-        // onClose={}
-      >
+      <Modal open={open} >
         <Box sx={{ ...style, width: 400 }}>
           <div
             style={{
@@ -313,7 +299,7 @@ const CustomFooter = () => {
           >
             <IconButton
               aria-label="close"
-              onClose={(event, reason) => handleClose(event, reason, setOpen)}
+              onClick={() => handleClose(setOpen)}
               size="small"
             >
               <CloseIcon />
@@ -368,12 +354,9 @@ const CustomFooter = () => {
           </Formik>
         </Box>
       </Modal>
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={3000}
-      >
+      <Snackbar open={snackbarOpen} autoHideDuration={3000}>
         <Alert
-          onClose={(event, reason) => handleClose(event, reason, setSnackbarOpen)}
+          onClose={() => handleClose(setSnackbarOpen)}
           severity={
             activationCode && activationCode?.status ? "success" : "error"
           }
