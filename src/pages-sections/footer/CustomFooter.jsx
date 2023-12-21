@@ -9,9 +9,11 @@ import {
   styled,
   Button,
   useTheme,
+  Modal,
   Alert,
   Snackbar,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import AppStore from "components/AppStore";
 import Image from "components/BazaarImage";
 import { FlexBox } from "components/flex-box";
@@ -66,16 +68,40 @@ const NewsletterSection = styled("div")({
   gap: "10px",
 });
 
-const INITIAL_VALUES = {
+const addSubInitialValues = {
   phoneNum: "",
 };
 
-const checkoutSchema = yup.object().shape({
+const activateSubInitialValues = {
+  code: "",
+};
+
+const addSubSchema = yup.object().shape({
   phoneNum: yup
     .string()
     .required("Phone Number is required")
     .matches(/^\d+$/, "Phone Number must be a valid number"),
 });
+
+const activateSubSchema = yup.object().shape({
+  code: yup
+    .string()
+    .required("Activation Code is Required")
+    .matches(/^\d+$/, "Activation Code must be a valid number"),
+});
+
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
 
 const CustomFooter = () => {
   const theme = useTheme();
@@ -88,15 +114,26 @@ const CustomFooter = () => {
   } = siteSettingsData;
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [newsletterResponse, setNewsletterResponse] = useState(null);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [phoneNum, setPhoneNum] = useState(null);
+  const [activationCode, setActivationCode] = useState(null);
 
   const handleClose = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
     setOpen(false);
   };
-  const handleFormSubmit = async (values) => {
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  };
+  
+  const handleAddSubscriber = async (values) => {
     setLoading(true);
     try {
       const headers = {
@@ -113,11 +150,38 @@ const CustomFooter = () => {
       );
       setLoading(false);
       if (response) {
-        setNewsletterResponse({
+        setOpen(true);
+        setPhoneNum(values.phoneNum);
+      }
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+    }
+  };
+
+  const handleActivateSub = async (values) => {
+    setLoading(true);
+    try {
+      const headers = {
+        "X-localization": "ar",
+        "Content-Type": "application/json",
+      };
+      const body = JSON.stringify({
+        mobile: phoneNum,
+        code: values.code,
+      });
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/active-subscriber",
+        headers,
+        body
+      );
+      setLoading(false);
+      if (response) {
+        setActivationCode({
           status: response.data.status,
           message: response.data.message,
         });
-        setOpen(true);
+        setSnackbarOpen(true);
       }
     } catch (err) {
       setLoading(false);
@@ -158,9 +222,9 @@ const CustomFooter = () => {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                   <Formik
-                    onSubmit={handleFormSubmit}
-                    initialValues={INITIAL_VALUES}
-                    validationSchema={checkoutSchema}
+                    onSubmit={handleAddSubscriber}
+                    initialValues={addSubInitialValues}
+                    validationSchema={addSubSchema}
                   >
                     {({
                       values,
@@ -187,7 +251,7 @@ const CustomFooter = () => {
                             InputProps={{ style: { color: "#fff" } }}
                             onBlur={handleBlur}
                             onChange={handleChange}
-                            value={values.full_name}
+                            value={values.phoneNum}
                             helperText={touched.phoneNum && errors.phoneNum}
                             error={touched.phoneNum && Boolean(errors.phoneNum)}
                           />
@@ -242,17 +306,85 @@ const CustomFooter = () => {
           </Box>
         </Box>
       )}
-      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+      <Modal
+        open={open}
+        // open={open}
+        // onClose={}
+      >
+        <Box sx={{ ...style, width: 400 }}>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
+            <IconButton aria-label="close" onClick={handleClose} size="small">
+              <CloseIcon />
+            </IconButton>
+          </div>
+          <H1>Activate Your Number</H1>
+          <p style={{ marginTop: "0" }}>Enter the code you got via message</p>
+          <Formik
+            onSubmit={handleActivateSub}
+            initialValues={activateSubInitialValues}
+            validationSchema={activateSubSchema}
+          >
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              setFieldValue,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Grid
+                  container
+                  justifyContent={"space-between"}
+                  alignItems={"flex-end"}
+                  spacing={2}
+                  sx={{ marginTop: "2rem" }}
+                >
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      id="filled-basic"
+                      label="Activation Code"
+                      name="code"
+                      variant="standard"
+                      color="white"
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      value={values.code}
+                      helperText={touched.code && errors.code}
+                      error={touched.code && Boolean(errors.code)}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Button type="submit" variant="outlined">
+                      Subscribe
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            )}
+          </Formik>
+        </Box>
+      </Modal>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
         <Alert
-          onClose={handleClose}
+          onClose={handleCloseSnackbar}
           severity={
-            newsletterResponse && newsletterResponse.status
-              ? "success"
-              : "error"
+            activationCode && activationCode?.status ? "success" : "error"
           }
           sx={{ width: "100%" }}
         >
-          {newsletterResponse && newsletterResponse.message}
+          {activationCode && activationCode.message}
         </Alert>
       </Snackbar>
     </footer>
