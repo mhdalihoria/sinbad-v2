@@ -113,14 +113,12 @@ const CustomFooter = () => {
       );
       setLoading(false);
       if (response) {
-        console.log(response.data);
         setNewsletterResponse({
           status: response.data.status,
           message: response.data.message,
         });
         setOpen(true);
       }
-      console.log(values);
     } catch (err) {
       setLoading(false);
       console.error(err);
@@ -174,7 +172,6 @@ const CustomFooter = () => {
                       setFieldValue,
                     }) => (
                       <form onSubmit={handleSubmit}>
-                        {console.log(values)}
                         <NewsletterSection>
                           <TextField
                             id="filled-basic"
@@ -187,6 +184,7 @@ const CustomFooter = () => {
                                 color: "#fff",
                               },
                             }}
+                            InputProps={{ style: { color: "#fff" } }}
                             onBlur={handleBlur}
                             onChange={handleChange}
                             value={values.full_name}
