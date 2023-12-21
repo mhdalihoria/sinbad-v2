@@ -1,7 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { SettingsContext } from "contexts/SettingContext";
 import Link from "next/link";
-import { Box, Container, Grid, IconButton, styled } from "@mui/material";
+import {
+  Box,
+  TextField,
+  Grid,
+  IconButton,
+  styled,
+  Button,
+  useTheme,
+  Alert,
+  Snackbar,
+} from "@mui/material";
 import AppStore from "components/AppStore";
 import Image from "components/BazaarImage";
 import { FlexBox } from "components/flex-box";
@@ -13,7 +23,9 @@ import Facebook from "components/icons/Facebook";
 import Instagram from "components/icons/Instagram";
 import DummyFooterSection from "components/footer/DummyFooterSection";
 import DummyFooterLower from "components/footer/DummyFooterLower";
-// import newFooterData from "../../utils/__api__/footerData"
+import * as yup from "yup";
+import { Formik } from "formik";
+import usePostFetch from "components/fetch/usePostFetch";
 
 // styled component
 const StyledLink = styled("a")(({ theme }) => ({
@@ -44,7 +56,29 @@ const FooterLowerPart = styled(Box)({
   width: "99%",
   flexWrap: "wrap",
 });
+
+const NewsletterSection = styled("div")({
+  maxWidth: "80%",
+  margin: "0 auto",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: "10px",
+});
+
+const INITIAL_VALUES = {
+  phoneNum: "",
+};
+
+const checkoutSchema = yup.object().shape({
+  phoneNum: yup
+    .string()
+    .required("Phone Number is required")
+    .matches(/^\d+$/, "Phone Number must be a valid number"),
+});
+
 const CustomFooter = () => {
+  const theme = useTheme();
   const { siteSettingsData } = useContext(SettingsContext);
   const {
     social_links: socialLinks,
@@ -52,9 +86,49 @@ const CustomFooter = () => {
     product_pages: productPages,
     site_pages: sitePages,
   } = siteSettingsData;
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [newsletterResponse, setNewsletterResponse] = useState(null);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
+  };
+  const handleFormSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const headers = {
+        "X-localization": "ar",
+        "Content-Type": "application/json",
+      };
+      const body = JSON.stringify({
+        mobile: values.phoneNum,
+      });
+      const response = await usePostFetch(
+        "https://sinbad-store.com/api/v2/add-subscriber",
+        headers,
+        body
+      );
+      setLoading(false);
+      if (response) {
+        console.log(response.data);
+        setNewsletterResponse({
+          status: response.data.status,
+          message: response.data.message,
+        });
+        setOpen(true);
+      }
+      console.log(values);
+    } catch (err) {
+      setLoading(false);
+      console.error(err);
+    }
+  };
 
   return (
-    <footer style={{marginTop: "5rem"}}>
+    <footer style={{ marginTop: "5rem" }}>
       {siteSettingsData && (
         <Box bgcolor="#222935">
           <Box
@@ -76,6 +150,62 @@ const CustomFooter = () => {
                   />
                   <DummyFooterSection data={sitePages} title={"صفحات الموقع"} />
                 </FlexBox>
+              </Grid>
+
+              <Grid container sx={{ marginBottom: "2rem" }}>
+                <Grid item xs={12} sm={12}>
+                  <FooterTitle style={{ width: "100%", marginRight: "1.5rem" }}>
+                    اشترك بالنشرة البريدية
+                  </FooterTitle>
+                </Grid>
+                <Grid item xs={12} sm={12}>
+                  <Formik
+                    onSubmit={handleFormSubmit}
+                    initialValues={INITIAL_VALUES}
+                    validationSchema={checkoutSchema}
+                  >
+                    {({
+                      values,
+                      errors,
+                      touched,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      setFieldValue,
+                    }) => (
+                      <form onSubmit={handleSubmit}>
+                        {console.log(values)}
+                        <NewsletterSection>
+                          <TextField
+                            id="filled-basic"
+                            label="Phone Number"
+                            name="phoneNum"
+                            variant="filled"
+                            color="white"
+                            InputLabelProps={{
+                              style: {
+                                color: "#fff",
+                              },
+                            }}
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            value={values.full_name}
+                            helperText={touched.phoneNum && errors.phoneNum}
+                            error={touched.phoneNum && Boolean(errors.phoneNum)}
+                          />
+
+                          <Button
+                            variant="filled"
+                            style={{ color: "#fff" }}
+                            type="submit"
+                          >
+                            Subscribe
+                          </Button>
+                        </NewsletterSection>
+                      </form>
+                    )}
+                  </Formik>
+                </Grid>
               </Grid>
 
               <FooterLowerPart>
@@ -114,6 +244,19 @@ const CustomFooter = () => {
           </Box>
         </Box>
       )}
+      <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+        <Alert
+          onClose={handleClose}
+          severity={
+            newsletterResponse && newsletterResponse.status
+              ? "success"
+              : "error"
+          }
+          sx={{ width: "100%" }}
+        >
+          {newsletterResponse && newsletterResponse.message}
+        </Alert>
+      </Snackbar>
     </footer>
   );
 };
