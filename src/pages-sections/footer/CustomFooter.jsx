@@ -118,21 +118,13 @@ const CustomFooter = () => {
   const [phoneNum, setPhoneNum] = useState(null);
   const [activationCode, setActivationCode] = useState(null);
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
+  const handleClose = (event, reason, setOpenFunction) => {
+    if (reason === "clickaway") {
       return;
     }
-    setOpen(false);
+    setOpenFunction(false);
   };
 
-  const handleCloseSnackbar = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setSnackbarOpen(false);
-  };
-  
   const handleAddSubscriber = async (values) => {
     setLoading(true);
     try {
@@ -319,7 +311,11 @@ const CustomFooter = () => {
               justifyContent: "flex-end",
             }}
           >
-            <IconButton aria-label="close" onClick={handleClose} size="small">
+            <IconButton
+              aria-label="close"
+              onClose={(event, reason) => handleClose(event, reason, setOpen)}
+              size="small"
+            >
               <CloseIcon />
             </IconButton>
           </div>
@@ -375,10 +371,9 @@ const CustomFooter = () => {
       <Snackbar
         open={snackbarOpen}
         autoHideDuration={3000}
-        onClose={handleCloseSnackbar}
       >
         <Alert
-          onClose={handleCloseSnackbar}
+          onClose={(event, reason) => handleClose(event, reason, setSnackbarOpen)}
           severity={
             activationCode && activationCode?.status ? "success" : "error"
           }
