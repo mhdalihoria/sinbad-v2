@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Container,
   Tabs,
@@ -8,22 +8,48 @@ import {
   Button,
   Alert,
   Snackbar,
+  Card,
+  CardActions,
+  CardContent,
+  Typography,
+  Grid,
+  Paper,
 } from "@mui/material";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { FlexBox } from "../../src/components/flex-box";
+import BazaarRating from "../../src/components/BazaarRating";
 import { H2, H5 } from "../../src/components/Typography";
 import { useAppContext } from "../../src/contexts/AppContext";
 import usePostFetch from "../../src/components/fetch/usePostFetch";
+import useGetFetch from "../../src/components/fetch/useGetFetch";
 
 const Testimonials = () => {
   const { userToken } = useAppContext();
-
+  const [testimonialArr, setTestimonialArr] = useState(null);
   const [value, setValue] = useState(0);
-  console.log(value);
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+  useEffect(() => {
+    const doFetch = async () => {
+      const headers = {
+        "X-localization": "ar",
+      };
+      const body = "";
+      const response = await useGetFetch(
+        "https://sinbad-store.com/api/v2/testimonials",
+        headers,
+        body
+      );
+      const data = response.data.reviews;
+      setTestimonialArr(data);
+      console.log(data);
+    };
+    doFetch();
+  }, []);
 
   return (
     <div
@@ -53,12 +79,42 @@ const Testimonials = () => {
       </Container>
       <Container maxWidth="md">
         {value === 0 ? (
-          <div>Testies</div>
+          <PostedTestimonial testimonialArr={testimonialArr} />
         ) : (
           <AddTestimonial userToken={userToken} />
         )}
       </Container>
     </div>
+  );
+};
+
+const PostedTestimonial = ({ testimonialArr }) => {
+  return (
+    <Grid container rowSpacing={2} columnSpacing={2}>
+      {testimonialArr && testimonialArr.length > 0 ? (
+        testimonialArr.map((testimonial) => (
+          <Grid item xs={6} sm={6} md={4}>
+            <Card sx={{ minWidth: 275 }}>
+              <CardContent sx={{ textAlign: "center" }}>
+                <Typography variant="h5" color="secondary" gutterBottom>
+                  {testimonial.title}
+                </Typography>
+                <BazaarRating
+                  value={testimonial.grade || 0}
+                  color="warn"
+                  readOnly
+                />
+                <Typography variant="body2">{testimonial.message}</Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))
+      ) : (
+        <Grid item xs={12} sx={{ textAlign: "center" }}>
+          <Paper elevation={2} sx={{padding: "3rem", margin: "2rem"}}>لايوجد شهادات في الوقت الحالي</Paper>
+        </Grid>
+      )}
+    </Grid>
   );
 };
 
