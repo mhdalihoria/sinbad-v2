@@ -11,6 +11,7 @@ import {
   Stack,
   TextField,
   Grid,
+  Pagination,
 } from "@mui/material";
 import FolderIcon from "@mui/icons-material/Folder";
 import CreateIcon from "@mui/icons-material/Create";
@@ -53,6 +54,8 @@ const MyGift = () => {
   const { userToken } = useAppContext();
   const [activeStep, setActiveStep] = useState(0);
   const [values, setValues] = useState([]);
+  const [categoryFilters, setCategoryFilters] = useState(null);
+  const [categoryData, setCategoryData] = useState(null);
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState({ min: "0", max: "500000" });
 
@@ -82,6 +85,45 @@ const MyGift = () => {
       stateSetter([...state, id]);
     }
   };
+  // ---------------------------------------------------------------
+  useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      headers: { "X-localization": "ar" },
+    };
+    const getProductFilters = async () => {
+      const response = await useGetFetch(
+        "https://sinbad-store.com/api/v2/products",
+        requestOptions
+      );
+      const filters = await response.data.data.filters;
+      const { product_filters } = await filters;
+
+      setCategoryFilters(product_filters);
+    };
+
+    getProductFilters();
+  }, []);
+  // ---------------------------------------------------------------
+  // ---------------------------------------------------------------
+  useEffect(() => {
+    const requestOptions = {
+      method: "GET",
+      headers: { "X-localization": "ar" },
+    };
+    const getCategoryFilters = async () => {
+      const response = await useGetFetch(
+        "https://sinbad-store.com/api/v2/categories",
+        requestOptions
+      );
+      const data = await response.data;
+
+      setCategoryData(data);
+    };
+
+    getCategoryFilters();
+  }, []);
+  // ---------------------------------------------------------------
 
   return (
     <Box sx={{ width: "100%", margin: "4rem 0" }}>
@@ -119,6 +161,8 @@ const MyGift = () => {
                 values={values}
                 setValues={setValues}
                 handleCheckboxChange={handleCheckboxChange}
+                categoryFilters={categoryFilters}
+                setCategoryFilters={setCategoryFilters}
               />
             )}
             {activeStep + 1 === 2 && (
@@ -126,6 +170,8 @@ const MyGift = () => {
                 categories={categories}
                 setCategories={setCategories}
                 handleCheckboxChange={handleCheckboxChange}
+                categoryData={categoryData}
+                setCategoryData={setCategoryData}
               />
             )}
             {activeStep + 1 === 3 && (
@@ -163,29 +209,13 @@ const MyGift = () => {
   );
 };
 
-const StepOne = ({ values, setValues, handleCheckboxChange }) => {
-  // VALUES STEP
-  const [categoryFilters, setCategoryFilters] = useState(null);
-
-  useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      headers: { "X-localization": "ar" },
-    };
-    const getCategoryFilters = async () => {
-      const response = await useGetFetch(
-        "https://sinbad-store.com/api/v2/products",
-        requestOptions
-      );
-      const filters = await response.data.data.filters;
-      const { product_filters } = await filters;
-
-      setCategoryFilters(product_filters);
-    };
-
-    getCategoryFilters();
-  }, []);
-
+const StepOne = ({
+  values,
+  setValues,
+  categoryFilters,
+  setCategoryFilters,
+  handleCheckboxChange,
+}) => {
   return (
     categoryFilters &&
     categoryFilters.map((filter) => {
@@ -211,28 +241,13 @@ const StepOne = ({ values, setValues, handleCheckboxChange }) => {
   );
 };
 
-const StepTwo = ({ categories, setCategories, handleCheckboxChange }) => {
-  // VALUES STEP
-  const [categoryData, setCategoryData] = useState(null);
-
-  useEffect(() => {
-    const requestOptions = {
-      method: "GET",
-      headers: { "X-localization": "ar" },
-    };
-    const getCategoryFilters = async () => {
-      const response = await useGetFetch(
-        "https://sinbad-store.com/api/v2/categories",
-        requestOptions
-      );
-      const data = await response.data;
-
-      setCategoryData(data);
-    };
-
-    getCategoryFilters();
-  }, []);
-
+const StepTwo = ({
+  categories,
+  setCategories,
+  categoryData,
+  setCategoryData,
+  handleCheckboxChange,
+}) => {
   return (
     categoryData &&
     categoryData.map((category) => {
@@ -363,9 +378,14 @@ const StepFour = (values, price, categories, userToken) => {
     };
     doFetch();
   }, []);
+
+  if (filteredProducts === null) {
+    return <div>loading</div>;
+  }
+
   return (
     <Grid container spacing={2}>
-      {filteredProducts && filteredProducts.data.products.length > 0 ? (
+      {filteredProducts?.data.products.length > 0 ? (
         filteredProducts.data.products.map((product) => (
           <Grid
             item
@@ -407,7 +427,7 @@ const StepFour = (values, price, categories, userToken) => {
       ) : (
         <NoProductsAlert />
       )}
-      {filteredProducts && filteredProducts.data.products.length > 0 && (
+      {filteredProducts?.data.products.length > 0 && (
         <div
           style={{
             width: "100%",
