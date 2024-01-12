@@ -46,6 +46,38 @@ const FilterBlock = styled(Card)(({ theme }) => ({
   },
 }));
 
+const CardFilterBlock = styled(Card)(({ theme }) => ({
+  padding: "2rem",
+  margin: "1rem 0",
+  overflow: "hidden",
+  minHeight: "200px",
+  maxHeight: "200px",
+  position: "relative",
+
+  "& h2": {
+    marginBottom: ".5em",
+    marginTop: ".5em",
+    color: theme.palette.primary.main,
+  },
+
+  "& div": {
+    fontSize: "1rem",
+    padding: ".125em 0",
+  },
+  '& div input[type="checkbox"]': {
+    accentColor: theme.palette.primary.main,
+  },
+}));
+
+// SeeMoreButton remains the same
+const SeeMoreButton = styled(Button)({
+  position: "absolute",
+  bottom: -1,
+  left: 0,
+  width: "100%",
+  background: "rgba(255,255,255,.9)",
+});
+
 const steps = ["", "", "", ""];
 
 //------------------------------------------------------
@@ -60,7 +92,7 @@ const MyGift = () => {
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState({ min: "0", max: "500000" });
 
-  console.log(price);
+  console.log(categories);
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -204,41 +236,23 @@ const StepOne = ({
   categoryFilters,
   handleCheckboxChange,
 }) => {
-  const [showFullContent, setShowFullContent] = useState(false);
-
-  const toggleShowFullContent = () => {
-    setShowFullContent(!showFullContent);
-  };
   return (
-    <Grid container columnSpacing={3} rowSpacing={3}>
+    <Grid container columnSpacing={3} rowSpacing={1}>
+      <Grid item xs={12} sm={12} md={12}>
+        <h1>فلاتر</h1>
+      </Grid>
       {categoryFilters &&
-        categoryFilters.map((filter) => {
-          return (
-            <Grid item key={filter.title} xs={12} sm={6} md={4}>
-              <FilterBlock>
-                <h2>{filter.title}</h2>
-                {filter.filter_values.map((filterValue) => (
-                  <div key={filterValue.id}>
-                    <input
-                      type="checkbox"
-                      id={filterValue.id}
-                      checked={values.includes(filterValue.id)}
-                      onChange={(_) =>
-                        handleCheckboxChange(values, setValues, filterValue.id)
-                      }
-                    />
-                    <label htmlFor={filterValue.id}>{filterValue.value}</label>
-                  </div>
-                ))}
-                {filter.filter_values.length > 2 && (
-                  <Button onClick={toggleShowFullContent}>
-                    {showFullContent ? "See Less" : "See More"}
-                  </Button>
-                )}
-              </FilterBlock>
-            </Grid>
-          );
-        })}
+        categoryFilters.map((filter) => (
+          <Grid item key={filter.title} xs={12} sm={6} md={4}>
+            <FilterBlockWithButton
+              filter={filter}
+              values={values}
+              setValues={setValues}
+              mappedArr={filter.filter_values}
+              handleCheckboxChange={handleCheckboxChange}
+            />
+          </Grid>
+        ))}
     </Grid>
   );
 };
@@ -247,39 +261,30 @@ const StepTwo = ({
   categories,
   setCategories,
   categoryData,
-  setCategoryData,
   handleCheckboxChange,
 }) => {
   return (
-    categoryData &&
-    categoryData.map((category) => {
-      return (
-        category.subcategories.length > 0 && (
-          <FilterBlock key={category.id}>
-            <h2>{category.category_name}</h2>
-            {category.subcategories.map((subcategory) => (
-              <div key={subcategory.id}>
-                <input
-                  type="checkbox"
-                  id={subcategory.id}
-                  checked={categories.includes(subcategory.id)}
-                  onChange={(_) =>
-                    handleCheckboxChange(
-                      categories,
-                      setCategories,
-                      subcategory.id
-                    )
-                  }
+    <Grid container columnSpacing={3} rowSpacing={1}>
+      <Grid item xs={12} sm={12} md={12}>
+        <h1>تصنيفات</h1>
+      </Grid>
+      {categoryData &&
+        categoryData.map((category) => {
+          return (
+            category.subcategories.length > 0 && (
+              <Grid item key={category.id} xs={12} sm={6} md={4}>
+                <FilterBlockWithButton
+                  filter={category}
+                  values={categories}
+                  setValues={setCategories}
+                  mappedArr={category.subcategories}
+                  handleCheckboxChange={handleCheckboxChange}
                 />
-                <label htmlFor={subcategory.id}>
-                  {subcategory.category_name}
-                </label>
-              </div>
-            ))}
-          </FilterBlock>
-        )
-      );
-    })
+              </Grid>
+            )
+          );
+        })}
+    </Grid>
   );
 };
 
@@ -297,11 +302,16 @@ const StepThree = ({ price, setPrice }) => {
   };
   return (
     <Container maxWidth="md" sx={{ margin: "3rem 0" }}>
-      <Stack direction="column" spacing={2}>
-        <h2>السعر</h2>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={{ xs: 3, sm: 3, md: 4 }}
+      <Grid container columnSpacing={3} rowSpacing={1}>
+        <Grid item xs={12} sm={12} md={12}>
+          <h1>السعر</h1>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          sx={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}
         >
           <TextField
             id="from"
@@ -327,8 +337,8 @@ const StepThree = ({ price, setPrice }) => {
               },
             }}
           />
-        </Stack>
-      </Stack>
+        </Grid>
+      </Grid>
     </Container>
   );
 };
@@ -447,6 +457,48 @@ const StepFour = (values, price, categories, userToken) => {
         </div>
       )}
     </Grid>
+  );
+};
+
+const FilterBlockWithButton = ({
+  filter,
+  values,
+  setValues,
+  mappedArr,
+  handleCheckboxChange,
+}) => {
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const toggleShowFullContent = () => {
+    setShowFullContent(!showFullContent);
+  };
+
+  return (
+    <CardFilterBlock
+      style={{ maxHeight: showFullContent ? "fit-content" : "200px" }}
+    >
+      <h2>{filter.title || filter.category_name}</h2>
+      {mappedArr.map((mappedItem, index) => (
+        <div key={mappedItem.id}>
+          <input
+            type="checkbox"
+            id={mappedItem.id}
+            checked={values.includes(mappedItem.id)}
+            onChange={() =>
+              handleCheckboxChange(values, setValues, mappedItem.id)
+            }
+          />
+          <label htmlFor={mappedItem.id}>
+            {mappedItem.value || mappedItem.category_name}
+          </label>
+        </div>
+      ))}
+      {mappedArr.length > 2 && (
+        <SeeMoreButton color="primary" onClick={toggleShowFullContent}>
+          {showFullContent ? "See Less" : "See More"}
+        </SeeMoreButton>
+      )}
+    </CardFilterBlock>
   );
 };
 
