@@ -92,7 +92,7 @@ const MyGift = () => {
   const [categories, setCategories] = useState([]);
   const [price, setPrice] = useState({ min: "0", max: "500000" });
 
-  console.log(categories);
+  console.log(price);
 
   const isStepOptional = (step) => {
     return step === 1;
@@ -207,23 +207,23 @@ const MyGift = () => {
               userToken={userToken}
             />
           )}
-          {activeStep + 1 !== 4 && (
-            <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: "1 1 auto" }} />
 
+          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+            <Button
+              color="inherit"
+              disabled={activeStep === 0}
+              onClick={handleBack}
+              sx={{ mr: 1 }}
+            >
+              Back
+            </Button>
+            <Box sx={{ flex: "1 1 auto" }} />
+            {activeStep + 1 !== 4 && (
               <Button onClick={handleNext}>
                 {activeStep === 2 ? "Finish" : "Next"}
               </Button>
-            </Box>
-          )}
+            )}
+          </Box>
         </Box>
       </Container>
     </Box>
@@ -296,7 +296,7 @@ const StepThree = ({ price, setPrice }) => {
     setPrice((prevPrice) => {
       return {
         ...prevPrice,
-        [type]: numericValue,
+        [type]: numericValue === "" ? "0" : numericValue,
       };
     });
   };
@@ -377,6 +377,7 @@ const StepFour = (values, price, categories, userToken) => {
           return acc;
         }, {}),
       });
+
       const response = await usePostFetch(
         `https://sinbad-store.com/api/v2/filter-products?page=${paginationIndicator}`,
         headers,
@@ -397,6 +398,9 @@ const StepFour = (values, price, categories, userToken) => {
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <h1>الهدايا</h1>
+      </Grid>
       {filteredProducts?.data.products.length > 0 ? (
         filteredProducts.data.products.map((product) => (
           <Grid
