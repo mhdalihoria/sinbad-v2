@@ -11,6 +11,7 @@ import {
   Stack,
   TextField,
   Grid,
+  Card,
   Pagination,
 } from "@mui/material";
 import FolderIcon from "@mui/icons-material/Folder";
@@ -26,8 +27,8 @@ import NoProductsAlert from "../../src/components/NoProductsAlert";
 //------------------------------------------------------
 //------------------------------------------------------
 
-const FilterBlock = styled("div")(({ theme }) => ({
-  paddingRight: "10px",
+const FilterBlock = styled(Card)(({ theme }) => ({
+  padding: "2rem",
   margin: "1rem 0",
 
   "& h2": {
@@ -144,66 +145,54 @@ const MyGift = () => {
           })}
         </Stepper>
 
-        {activeStep === steps.length ? (
-          <React.Fragment>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
+        <Box sx={{ marginTop: "3rem" }}>
+          {activeStep + 1 === 1 && (
+            <StepOne
+              values={values}
+              setValues={setValues}
+              handleCheckboxChange={handleCheckboxChange}
+              categoryFilters={categoryFilters}
+              setCategoryFilters={setCategoryFilters}
+            />
+          )}
+          {activeStep + 1 === 2 && (
+            <StepTwo
+              categories={categories}
+              setCategories={setCategories}
+              handleCheckboxChange={handleCheckboxChange}
+              categoryData={categoryData}
+              setCategoryData={setCategoryData}
+            />
+          )}
+          {activeStep + 1 === 3 && (
+            <StepThree price={price} setPrice={setPrice} />
+          )}
+          {activeStep + 1 === 4 && (
+            <StepFour
+              price={price}
+              categories={categories}
+              values={values}
+              userToken={userToken}
+            />
+          )}
+          {activeStep + 1 !== 4 && (
             <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+              <Button
+                color="inherit"
+                disabled={activeStep === 0}
+                onClick={handleBack}
+                sx={{ mr: 1 }}
+              >
+                Back
+              </Button>
               <Box sx={{ flex: "1 1 auto" }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            {activeStep + 1 === 1 && (
-              <StepOne
-                values={values}
-                setValues={setValues}
-                handleCheckboxChange={handleCheckboxChange}
-                categoryFilters={categoryFilters}
-                setCategoryFilters={setCategoryFilters}
-              />
-            )}
-            {activeStep + 1 === 2 && (
-              <StepTwo
-                categories={categories}
-                setCategories={setCategories}
-                handleCheckboxChange={handleCheckboxChange}
-                categoryData={categoryData}
-                setCategoryData={setCategoryData}
-              />
-            )}
-            {activeStep + 1 === 3 && (
-              <StepThree price={price} setPrice={setPrice} />
-            )}
-            {activeStep + 1 === 4 && (
-              <StepFour
-                price={price}
-                categories={categories}
-                values={values}
-                userToken={userToken}
-              />
-            )}
-            {activeStep + 1 !== 4 && (
-              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                <Button
-                  color="inherit"
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  sx={{ mr: 1 }}
-                >
-                  Back
-                </Button>
-                <Box sx={{ flex: "1 1 auto" }} />
 
-                <Button onClick={handleNext}>
-                  {activeStep === 2 ? "Finish" : "Next"}
-                </Button>
-              </Box>
-            )}
-          </React.Fragment>
-        )}
+              <Button onClick={handleNext}>
+                {activeStep === 2 ? "Finish" : "Next"}
+              </Button>
+            </Box>
+          )}
+        </Box>
       </Container>
     </Box>
   );
@@ -213,31 +202,44 @@ const StepOne = ({
   values,
   setValues,
   categoryFilters,
-  setCategoryFilters,
   handleCheckboxChange,
 }) => {
+  const [showFullContent, setShowFullContent] = useState(false);
+
+  const toggleShowFullContent = () => {
+    setShowFullContent(!showFullContent);
+  };
   return (
-    categoryFilters &&
-    categoryFilters.map((filter) => {
-      return (
-        <FilterBlock key={filter.title}>
-          <h2>{filter.title}</h2>
-          {filter.filter_values.map((filterValue) => (
-            <div key={filterValue.id}>
-              <input
-                type="checkbox"
-                id={filterValue.id}
-                checked={values.includes(filterValue.id)}
-                onChange={(_) =>
-                  handleCheckboxChange(values, setValues, filterValue.id)
-                }
-              />
-              <label htmlFor={filterValue.id}>{filterValue.value}</label>
-            </div>
-          ))}
-        </FilterBlock>
-      );
-    })
+    <Grid container columnSpacing={3} rowSpacing={3}>
+      {categoryFilters &&
+        categoryFilters.map((filter) => {
+          return (
+            <Grid item key={filter.title} xs={12} sm={6} md={4}>
+              <FilterBlock>
+                <h2>{filter.title}</h2>
+                {filter.filter_values.map((filterValue) => (
+                  <div key={filterValue.id}>
+                    <input
+                      type="checkbox"
+                      id={filterValue.id}
+                      checked={values.includes(filterValue.id)}
+                      onChange={(_) =>
+                        handleCheckboxChange(values, setValues, filterValue.id)
+                      }
+                    />
+                    <label htmlFor={filterValue.id}>{filterValue.value}</label>
+                  </div>
+                ))}
+                {filter.filter_values.length > 2 && (
+                  <Button onClick={toggleShowFullContent}>
+                    {showFullContent ? "See Less" : "See More"}
+                  </Button>
+                )}
+              </FilterBlock>
+            </Grid>
+          );
+        })}
+    </Grid>
   );
 };
 
