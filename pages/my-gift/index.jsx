@@ -24,6 +24,8 @@ import usePostFetch from "../../src/components/fetch/usePostFetch";
 import { useAppContext } from "../../src/contexts/AppContext";
 import ProductCard1 from "../../src/components/product-cards/ProductCard1";
 import NoProductsAlert from "../../src/components/NoProductsAlert";
+import Image from "next/image";
+import pageLoader from "../../public/assets/images/loader/pageLoader.gif";
 //------------------------------------------------------
 //------------------------------------------------------
 
@@ -70,13 +72,13 @@ const CardFilterBlock = styled(Card)(({ theme }) => ({
 }));
 
 // SeeMoreButton remains the same
-const SeeMoreButton = styled(Button)({
+const SeeMoreButton = styled(Button)(({ theme }) => ({
   position: "absolute",
   bottom: -1,
   left: 0,
   width: "100%",
   background: "rgba(255,255,255,.9)",
-});
+}));
 
 const steps = ["", "", "", ""];
 
@@ -116,6 +118,32 @@ const MyGift = () => {
       stateSetter(state.filter((item) => item !== id));
     } else {
       stateSetter([...state, id]);
+    }
+  };
+
+  const doNotSkipIfValueNotSelected = () => {
+    if (activeStep + 1 === 1) {
+      if (values.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    if (activeStep + 1 === 2) {
+      if (categories.length > 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    if (activeStep + 1 === 3) {
+      if (Number(price.max) > 0) {
+        return false;
+      } else {
+        return true;
+      }
     }
   };
   // ---------------------------------------------------------------
@@ -176,25 +204,36 @@ const MyGift = () => {
             );
           })}
         </Stepper>
-
         <Box sx={{ marginTop: "3rem" }}>
           {activeStep + 1 === 1 && (
-            <StepOne
-              values={values}
-              setValues={setValues}
-              handleCheckboxChange={handleCheckboxChange}
-              categoryFilters={categoryFilters}
-              setCategoryFilters={setCategoryFilters}
-            />
+            <>
+              {categoryFilters === null ? (
+                <SectionLoader />
+              ) : (
+                <StepOne
+                  values={values}
+                  setValues={setValues}
+                  handleCheckboxChange={handleCheckboxChange}
+                  categoryFilters={categoryFilters}
+                  setCategoryFilters={setCategoryFilters}
+                />
+              )}
+            </>
           )}
           {activeStep + 1 === 2 && (
-            <StepTwo
-              categories={categories}
-              setCategories={setCategories}
-              handleCheckboxChange={handleCheckboxChange}
-              categoryData={categoryData}
-              setCategoryData={setCategoryData}
-            />
+            <>
+              {categoryData === null ? (
+                <SectionLoader />
+              ) : (
+                <StepTwo
+                  categories={categories}
+                  setCategories={setCategories}
+                  handleCheckboxChange={handleCheckboxChange}
+                  categoryData={categoryData}
+                  setCategoryData={setCategoryData}
+                />
+              )}
+            </>
           )}
           {activeStep + 1 === 3 && (
             <StepThree price={price} setPrice={setPrice} />
@@ -219,7 +258,7 @@ const MyGift = () => {
             </Button>
             <Box sx={{ flex: "1 1 auto" }} />
             {activeStep + 1 !== 4 && (
-              <Button onClick={handleNext}>
+              <Button onClick={handleNext} disabled={doNotSkipIfValueNotSelected()}>
                 {activeStep === 2 ? "Finish" : "Next"}
               </Button>
             )}
@@ -393,7 +432,7 @@ const StepFour = (values, price, categories, userToken) => {
   }, []);
 
   if (filteredProducts === null) {
-    return <div>loading</div>;
+    return <SectionLoader />;
   }
 
   return (
@@ -503,6 +542,22 @@ const FilterBlockWithButton = ({
         </SeeMoreButton>
       )}
     </CardFilterBlock>
+  );
+};
+
+const SectionLoader = () => {
+  const loadingContainerStyles = {
+    width: "100%",
+    height: "500px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
+  return (
+    <div style={loadingContainerStyles}>
+      <Image src={pageLoader} width={200} height={200} />
+    </div>
   );
 };
 
